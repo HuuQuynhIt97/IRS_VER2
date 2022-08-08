@@ -1,0 +1,131 @@
+<ejs-grid
+  #grid
+  id="grid"
+  [dataSource]="data"
+  [allowPaging]="false"
+  [allowResizing]="true"
+  [allowSorting]="true"
+  gridLines="Both"
+  [locale]="locale"
+  (actionBegin)="actionBegin($event)"
+  (actionComplete)="actionComplete($event)"
+  [editSettings]="editSettings"
+  [pageSettings]="pageSettings"
+  [toolbar]="toolbarOptions"
+  [allowExcelExport]="true"
+  [enableInfiniteScrolling]="true"
+  (recordDoubleClick)="onDoubleClick($event)"
+  (rowSelected)="rowSelected($event)"
+  (toolbarClick)="toolbarClick($event)"
+  (headerCellInfo)="headerCellInfo($event)"
+  (dataBound)="dataBound()"
+  [height]="topHeight"
+  (excelExportComplete)="excelExpComplete($event)"
+>
+  <e-columns>
+    <ng-template #odsTemplate let-data>
+      <button
+        class="e-tbar-btn e-tbtn-txt e-control e-btn e-lib"
+        type="button"
+        id="grid_odsexport"
+        tabindex="-1"
+        (click)="odsExport()"
+        style="width: auto"
+      >
+        <span class="e-btn-icon e-pdfexport e-icons e-icon-left"></span
+        ><span class="e-tbar-btn-text">{{ "Ods Export" | translate }} </span>
+      </button>
+    </ng-template>
+    <e-column
+      field="option"
+      textAlign="Left"
+      headerTextAlign="Center"
+      [autoFit]="true"
+      headerTextAlign="Center"
+      [allowSorting]="false"
+      [allowSearching]="false"
+      [allowGrouping]="false"
+      [allowFiltering]="false"
+      [allowEditing]="false"
+      headerText="{{ 'OPTION' | translate }}"
+    >
+      <ng-template #template let-data>
+        <span (click)="delete(data.id)" class="delete-grid">
+          <i class="fa fa-trash"></i>
+        </span>
+      </ng-template>
+    </e-column>
+    <e-column
+      field="type"
+      textAlign="Left"
+      headerTextAlign="Center"
+      [validationRules]="commonRules"
+      headerText="{{ 'SYSTEM_CONFIG_TYPE' | translate }}"
+    >
+    </e-column>
+
+    <e-column
+      field="no"
+      textAlign="Left"
+      headerTextAlign="Center"
+      [validationRules]="commonRules"
+      headerText="{{ 'SYSTEM_CONFIG_NO' | translate }}"
+    >
+    </e-column>
+    <e-column
+    field="value"
+    textAlign="Left"
+    headerTextAlign="Center"
+    [validationRules]="commonRules"
+    headerText="{{ 'SYSTEM_CONFIG_VALUE' | translate }}"
+  >
+  </e-column>
+
+  <e-column
+    field="sort"
+    textAlign="Left"
+    headerTextAlign="Center"
+    editType='numericedit'
+    headerText="{{ 'SYSTEM_CONFIG_SORT' | translate }}"
+  >
+  </e-column>
+  <!-- <e-column
+  field="link"
+  textAlign="Left"
+  headerTextAlign="Center"
+  [allowSearching]="false"
+  [autoFit]="true"
+  headerText="{{ 'LINK' | translate }}"
+>
+</e-column> -->
+  <e-column
+  field="webBuildingId"
+  textAlign="Left"
+  headerTextAlign="Center"
+  [visible]="false"
+[allowSearching]="false"
+  headerText="{{ 'WEB_BUILDINGID' | translate }}"
+>
+</e-column>
+
+<e-column
+field="accountId"
+textAlign="Left"
+headerTextAlign="Center"
+[visible]="false"
+[allowSearching]="false"
+headerText="{{ 'ACCOUNTID' | translate }}"
+>
+</e-column>
+
+<e-column
+  field="comment"
+  [allowSearching]="false"
+  textAlign="Left"
+  headerTextAlign="Center"
+  headerText="{{ 'COMMENT' | translate }}"
+  >
+</e-column>
+
+  </e-columns>
+</ejs-grid>

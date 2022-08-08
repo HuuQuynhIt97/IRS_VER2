@@ -1,0 +1,62 @@
+.e-quick-popup-wrapper .e-popup-header {
+    height: 30px;
+    background-color: #1aaa55;
+  }
+  .e-quick-popup-wrapper .e-header-icon-wrapper {
+    height: inherit;
+  }
+  
+  .e-quick-popup-wrapper .e-header-icon-wrapper .subject {
+    left: 0;
+    position: absolute;
+    font-size: 14px;
+    font-weight: 500;
+    color: #fff;
+    padding: 2px 5px;
+  }
+  
+
+  
+  .e-quick-popup-wrapper .e-cell-footer .right-button,
+  .e-quick-popup-wrapper .e-event-footer .right-button {
+    position: absolute;
+    right: 0;
+  }
+  
+  .e-quick-popup-wrapper .e-cell-footer button,
+  .e-quick-popup-wrapper .e-event-footer button {
+    margin: 10px;
+    padding: 4px;
+  }
+  
+  .e-quick-popup-wrapper .e-event-content .start-time,
+  .e-quick-popup-wrapper .e-event-content .end-time,
+  .e-quick-popup-wrapper .e-event-content .hall-name,
+  .e-quick-popup-wrapper .e-event-content .order-no,
+  .e-quick-popup-wrapper .e-event-content .order-name,
+  .e-quick-popup-wrapper .e-event-content .room-name {
+    padding: 8px;
+  }
+
+  input, textarea {
+    box-shadow: 0.5px 0.5px 1px;
+  }
+  label {
+    font-weight: 700;
+    font-size: 1rem;
+  }
+  .e-input-group {
+    box-shadow: 0.5px 0.5px 1px !important;
+    padding:3px !important;
+  
+  }
+
+ 
+  .e-quick-popup-wrapper .e-event-popup .e-popup-footer {
+    display: block;
+  }
+  
+  .e-quick-popup-wrapper .e-cell-popup .e-popup-footer button:first-child,
+  .e-quick-popup-wrapper .e-event-popup .e-popup-footer button:first-child {
+    margin-right: 5px;
+  }

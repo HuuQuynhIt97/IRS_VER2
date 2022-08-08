@@ -1,0 +1,83 @@
+
+<header [style.background-color]="sysConf.SystemTopBGColor + '!important'" class="navbar navbar-dark sticky-top flex-md-nowrap p-0 bg-main header">
+  <div class="navbar-brand mr-0 logo" [style.background-color]="sysConf.SystemLogoBGColor + '!important'">
+    <span class="logo-lg" style="cursor: pointer;"> <a class="nav-bar-link" href="/dashboard">
+        <font style="vertical-align: inherit;">
+          <!-- <font style="vertical-align: inherit;">{{ 'New Generation Ranch System' | translate}}</font> -->
+          <font style="vertical-align: inherit;">{{sysConf.SystemName}}</font>
+        </font>
+      </a></span><span class="logo-mini">
+      <font style="vertical-align: inherit;">
+        <font style="vertical-align: inherit;">{{ 'NGRS' | translate}}</font>
+      </font>
+    </span>
+  </div>
+  <ul class="nav top-links">
+
+    <div class="sidebar-toggle">
+      <div><i class="fas fa-bars"></i></div>
+    </div>
+    <div class="farm-select">
+        <ejs-dropdownlist 
+        id="farm-select-dropdown" 
+        [allowFiltering]="true" 
+        [(value)]='farmGuid' 
+        (change)="farmValueChange($event)" 
+        [fields]="fields" placeholder='Select Farm' [dataSource]='farmData'></ejs-dropdownlist>
+    </div>
+    <div class="lang-select">
+      <ejs-dropdownlist  id="lang-select-dropdown" [(ngModel)]="lang" (change)="langValueChange($event)" [fields]="fieldsLang" [dataSource]="languageData">
+        <ng-template #itemTemplate="" let-data="">
+          <div class="text-black">{{data.id | translate}}</div>
+      </ng-template>
+      <ng-template #valueTemplate="" let-data="">
+        <div class="text-black">{{data.id | translate}}</div>
+      </ng-template>
+    </ejs-dropdownlist>
+  </div>
+  <div class="ml-auto">
+    <div class="sidebar-toggle">
+      <div>
+        <span>
+          <font style="vertical-align: inherit;">
+            <font style="vertical-align: inherit;">{{currentTime}}</font>
+          </font>
+        </span>
+      </div>
+    </div>
+ 
+  </div>
+    <div class="dropdown ml-auto">
+      <div class="sidebar-toggle">
+
+        <div><i class="fas fa-user-tie"></i><span>
+            <font style="vertical-align: inherit;">
+              <font style="vertical-align: inherit;">{{username}} | {{nickName}}</font>
+            </font>
+          </span></div>
+      </div>
+      <div class="dropdown-menu dropdown-menu-right navbar-dropdown" style="z-index: 1020;">
+        <a class="dropdown-item my-btn" (click)="logout()">
+          <font style="vertical-align: inherit;">
+            <font style="vertical-align: inherit;">{{'SIGN_OUT' | translate}}</font>
+          </font>
+        </a>
+        <a class="dropdown-item my-btn" (click)="goToProfile()">
+          <font style="vertical-align: inherit;">
+            <font style="vertical-align: inherit;">{{'PROFILE' | translate}}</font>
+          </font>
+        </a>
+        <a class="dropdown-item my-btn" (click)="goToChangePassword()">
+          <font style="vertical-align: inherit;">
+            <font style="vertical-align: inherit;">{{'CHANGE_PASSWORD' | translate}}</font>
+          </font>
+        </a>
+        <!-- <a class="dropdown-item my-btn" routerLink="/mobile/home">
+          <font style="vertical-align: inherit;">
+            <font style="vertical-align: inherit;">{{'Mobile App' | translate}}</font>
+          </font>
+        </a> -->
+      </div>
+    </div>
+  </ul>
+</header>

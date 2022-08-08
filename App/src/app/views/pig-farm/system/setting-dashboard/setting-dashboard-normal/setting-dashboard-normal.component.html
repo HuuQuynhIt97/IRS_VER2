@@ -1,0 +1,142 @@
+<ejs-grid
+#grid
+id="grid"
+[dataSource]="data"
+[allowPaging]="true"
+[allowResizing]="true"
+[allowSorting]="true"
+gridLines="Both"
+[locale]="locale"
+(actionBegin)="actionBegin($event)"
+(actionComplete)="actionComplete($event)"
+[editSettings]="editSettings"
+[toolbar]="toolbarOptions"
+[allowExcelExport]="true"
+[pageSettings]="pageSettings"
+(recordDoubleClick)="onDoubleClick($event)"
+(rowSelected)="rowSelected($event)"
+(toolbarClick)="toolbarClick($event)"
+(headerCellInfo)="headerCellInfo($event)"
+>
+<e-columns>
+  <e-column
+    field="option"
+    textAlign="Left"
+    headerTextAlign="Center"
+    width="80"
+    headerTextAlign="Center"
+    [allowSorting]="false"
+    [allowSearching]="false"
+    [allowGrouping]="false"
+    [allowFiltering]="false"
+    [allowEditing]="false"
+    headerText="{{ 'OPTION' | translate }}"
+  >
+    <ng-template #template let-data>
+      <span (click)="delete(data.id)" class="delete-grid">
+        <i class="fa fa-trash"></i>
+      </span>
+    </ng-template>
+  </e-column>
+
+  <e-column
+    field="type"
+    width="90"
+    textAlign="Left"
+    headerTextAlign="Center"
+    headerText="{{ 'Type' | translate }}"
+  >
+  <ng-template #template let-data>
+    {{data.type}}
+  </ng-template>
+  <ng-template #editTemplate let-data>
+    <ejs-dropdownlist
+          [(ngModel)]="type"
+          [dataSource]="[ 'A', 'B', 'C','D']"
+        ></ejs-dropdownlist>
+  </ng-template>
+  </e-column>
+
+  <e-column
+    field="text01"
+    textAlign="Left"
+    headerTextAlign="Center"
+    [validationRules]="commonRules"
+    headerText="{{ 'Text01' | translate }}"
+  >
+  </e-column>
+
+  <e-column
+  width="125"
+    field="textColor01"
+    textAlign="Left"
+    headerTextAlign="Center"
+    headerText="{{ 'TextColor01' | translate }}"
+  >
+  <ng-template #template let-data>
+    <input ejs-colorpicker [disabled]="true" [value]='data.textColor01' type="color" />
+  </ng-template>
+  <ng-template #editTemplate let-data>
+    <input ejs-colorpicker id="textColor01" [(ngModel)]='data.textColor01' (ngModelChange)="onChangeColor(data,$event)" type="color" />
+  </ng-template>
+  </e-column>
+
+  <e-column
+    field="value01"
+    textAlign="Left"
+    headerTextAlign="Center"
+    [validationRules]="commonRules"
+    headerText="{{ 'Value01' | translate }}"
+  >
+  </e-column>
+
+
+  <e-column
+  width="125"
+    field="valueColor01"
+    textAlign="Left"
+    headerTextAlign="Center"
+    headerText="{{ 'ValueColor01' | translate }}"
+  >
+  <ng-template #template let-data>
+    <input ejs-colorpicker [disabled]="true" [value]='data.valueColor01' type="color" />
+  </ng-template>
+  <ng-template #editTemplate let-data>
+    <input ejs-colorpicker id="valueColor01" [(ngModel)]='valueColor01' (ngModelChange)="onChangeColor(data,$event)" type="color" />
+  </ng-template>
+  </e-column>
+
+  <e-column
+    field="value02"
+    textAlign="Left"
+    headerTextAlign="Center"
+    headerText="{{ 'Value02' | translate }}"
+  >
+  </e-column>
+
+  <e-column
+  width="125"
+    field="valueColor02"
+    textAlign="Left"
+    headerTextAlign="Center"
+    headerText="{{ 'ValueColor02' | translate }}"
+  >
+  <ng-template #template let-data>
+    <input ejs-colorpicker [disabled]="true" [value]='data.valueColor02' type="color" />
+  </ng-template>
+  <ng-template #editTemplate let-data>
+    <input ejs-colorpicker id="valueColor02" [(ngModel)]='valueColor02' (ngModelChange)="onChangeColor(data,$event)" type="color" />
+  </ng-template>
+  </e-column>
+
+  <e-column
+  field="sortId"
+  width="80"
+  textAlign="Left"
+  headerTextAlign="Center"
+  headerText="{{ 'Sort' | translate }}"
+>
+</e-column>
+
+</e-columns>
+</ejs-grid>

@@ -1,0 +1,308 @@
+<!-- <div style="background-color: red !important;"
+  class="d-flex justify-content-center"
+  *ngIf="reportType === 'Default'; else other_content"
+>
+  <div class="spinner-grow text-primary" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+  <div class="spinner-grow text-secondary" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+  <div class="spinner-grow text-success" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+  <div class="spinner-grow text-danger" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+  <div class="spinner-grow text-warning" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+  <div class="spinner-grow text-info" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+  <div class="spinner-grow text-light" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+</div>
+<ng-template #other_content>
+  <div class="col-12 flex-container">
+    <div>{{ "YearMonth" | translate }}</div>
+    <div style="width: 120px">
+      <ejs-datepicker
+        format="yyyy/MM"
+        [(value)]="yearMonth"
+        (change)="onChange($event)"
+        depth="Year"
+        start="Year"
+        [enableMask]="true"
+      ></ejs-datepicker>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="reportType === 'NoData' && dataSource.length === 0">
+    <div class="col-12">
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <h3>{{ "No data to display" | translate }}</h3>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="alert"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    <div class="col-12 d-flex justify-content-center" *ngIf="dashboardGuid">
+      <button
+        class="btn btn-warning btn-lg mt-2"
+        style="width: 200px"
+        (click)="back()"
+      >
+        {{ "Back" | translate }}
+      </button>
+    </div>
+  </div>
+
+  <div
+    class="row"
+    *ngIf="reportType === 'EmptyData' && dataSource.length === 0"
+  >
+    <div class="col-12">
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <h3>{{ "No data to display" | translate }}</h3>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="alert"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <ng-container *ngFor="let item of dataSource; let i = index">
+    <div class="col-12 flex-container">
+      <div>
+        <h3 class="heading">{{ item.areaName }}</h3>
+      </div>
+    </div>
+
+    <div
+      class="col-12"
+      *ngIf="
+        !item.hasNormalA &&
+        !item.hasNormalB &&
+        !item.hasNormalC &&
+        !item.hasNormalD &&
+        !item.hasChart &&
+        !item.hasTable
+      "
+    >
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <h3>{{ "No data to display" | translate }}</h3>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="alert"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    <div class="row mt-2" *ngIf="item.hasChart">
+      <div class="col" *ngFor="let item of item.chartItems; let j = index">
+        <div class="card">
+          <div class="card-body">
+            <ejs-chart
+              style="display: block"
+              [legendSettings]="legendSettings"
+              [chartArea]="chartArea"
+              [width]="width"
+              align="center"
+              [id]="'chartcontainer1' + j"
+              [primaryXAxis]="primaryXAxis"
+              [primaryYAxis]="primaryYAxis"
+              [title]="item.title"
+              [tooltip]="tooltip"
+              (load)="load($event)"
+            >
+              <e-series-collection>
+                <e-series
+                  *ngFor="let chart of item.data; let i = index"
+                  [dataSource]="chart.dataSource"
+                  [fill]="chart.fill"
+                  type="Column"
+                  xName="x"
+                  yName="y"
+                  name=""
+                  width="2"
+                  [marker]="marker"
+                >
+                </e-series>
+              </e-series-collection>
+            </ejs-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-2" *ngIf="item.hasTable">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <table class="table table-bordered">
+              <tbody>
+                <tr *ngFor="let item of item.tableItems">
+                  <td
+                    class="text-center"
+                    [style.backgroundColor]="item.textColor01"
+                    *ngIf="item.text01"
+                  >
+                    {{ item.text01 }}
+                  </td>
+                  <td
+                    class="text-center"
+                    [style.backgroundColor]="item.valueColor01"
+                    *ngIf="item.value01"
+                  >
+                    {{ item.value01 }}
+                  </td>
+                  <td
+                    class="text-center"
+                    [style.backgroundColor]="item.valueColor02"
+                    *ngIf="item.value02"
+                  >
+                    {{ item.value02 }}
+                  </td>
+                  <td
+                    class="text-center"
+                    [style.backgroundColor]="item.valueColor03"
+                    *ngIf="item.value03"
+                  >
+                    {{ item.value03 }}
+                  </td>
+                  <td
+                    class="text-center"
+                    [style.backgroundColor]="item.valueColor04"
+                    *ngIf="item.value04"
+                  >
+                    {{ item.value04 }}
+                  </td>
+                  <td
+                    class="text-center"
+                    [style.backgroundColor]="item.valueColor05"
+                    *ngIf="item.value05"
+                  >
+                    {{ item.value05 }}
+                  </td>
+                  <td
+                    class="text-center"
+                    [style.backgroundColor]="item.valueColor06"
+                    *ngIf="item.value06"
+                  >
+                    {{ item.value06 }}
+                  </td>
+                  <td
+                    class="text-center"
+                    [style.backgroundColor]="item.valueColor07"
+                    *ngIf="item.value07"
+                  >
+                    {{ item.value07 }}
+                  </td>
+                  <td
+                    class="text-center"
+                    [style.backgroundColor]="item.valueColor08"
+                    *ngIf="item.value08"
+                  >
+                    {{ item.value08 }}
+                  </td>
+                  <td
+                    class="text-center"
+                    [style.backgroundColor]="item.valueColor09"
+                    *ngIf="item.value09"
+                  >
+                    {{ item.value09 }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-container
+      *ngIf="
+        item.hasNormalA || item.hasNormalB || item.hasNormalC || item.hasNormalD
+      "
+    >
+      <div class="row mb-2" *ngIf="item.hasNormalA">
+        <div class="col-2 mb-4" *ngFor="let item of item.normalItemsA">
+          <div class="card-group">
+            <div
+              class="card text-white"
+              [style.backgroundColor]="item.textColor01"
+            >
+              <div class="card-body">
+                <h5 class="card-title">{{ item.text01 }}</h5>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-body text-center">
+                <h5 class="card-title text-6">{{ item.value01 }}</h5>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mb-2" *ngIf="item.hasNormalB">
+        <div class="col-4 mb-4" *ngFor="let item of item.normalItemsB">
+          <div class="card-group">
+            <div
+              class="card text-white color6 text-6"
+              [style.color]="item.textColor01"
+            >
+              <div class="card-body">
+                <h5 class="card-title">{{ item.text01 }}</h5>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-body text-center">
+                <h5 class="card-title text-6">{{ item.value01 }}</h5>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mb-2" *ngIf="item.hasNormalC">
+        <div class="col-12 flex-container4" *ngIf="item.hasNormalC">
+          <div class="flex-container5" *ngFor="let item of item.normalItemsC">
+            <div>{{ item.text01 }}</div>
+            <div [style.color]="item.valueColor01">{{ item.value01 }}</div>
+          </div>
+        </div>
+
+    
+      </div>
+
+      <div class="row mb-2" *ngIf="item.hasNormalD">
+        <div class="col-12 flex-container1" *ngIf="item.hasNormalD">
+          <div class="flex-container2" *ngFor="let item of item.normalItemsD">
+            <div [style.color]="item.textColor01">{{ item.text01 }}</div>
+            <div class="flex-container3">
+              <div [style.color]="item.valueColor01">{{ item.value01 }}</div>
+              <div [style.color]="item.valueColor02">{{ item.value02 }}</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </ng-container>
+  </ng-container>
+</ng-template> -->

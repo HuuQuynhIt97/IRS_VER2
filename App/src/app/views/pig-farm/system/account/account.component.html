@@ -1,0 +1,436 @@
+<div class="col-md-12" style="box-shadow: 1px 1px 20px; padding: 0">
+  <div class="card main-card">
+    <div class="card-body table-responsive p-0">
+      <ejs-grid
+        #grid
+        id="grid"
+        [dataSource]="data"
+        [allowPaging]="true"
+        [allowResizing]="true"
+        [allowSorting]="true"
+        gridLines="Both"
+        [locale]="locale"
+        (actionBegin)="actionBegin($event)"
+        (actionComplete)="actionComplete($event)"
+        [toolbar]="toolbarOptions"
+        [pageSettings]="pageSettings"
+        [searchSettings]='searchOptions'
+        [allowExcelExport]="true"
+        (recordDoubleClick)="onDoubleClick($event)"
+        (toolbarClick)="toolbarClick($event)"
+        [editSettings]="editSettings"
+        (excelExportComplete)="excelExpComplete($event)"
+        >
+        <ng-template #odsTemplate let-data>
+          <button
+            class="e-tbar-btn e-tbtn-txt e-control e-btn e-lib"
+            type="button"
+            id="grid_odsexport"
+            tabindex="-1"
+            (click)="odsExport()"
+            style="width: auto"
+          >
+            <span class="e-btn-icon e-pdfexport e-icons e-icon-left"></span
+            ><span class="e-tbar-btn-text">{{ 'Ods Export' | translate}} </span>
+          </button>
+        </ng-template>
+        <e-columns>
+          <!-- <e-column
+            field="id"
+[allowSearching]="false"
+            textAlign="Left"
+          headerTextAlign="Center"
+            width="80"
+            [allowSorting]="false"
+            [allowSearching]="false"
+            [allowGrouping]="false"
+            [allowFiltering]="false"
+            [allowEditing]="false"
+            isPrimaryKey="true"
+            headerText="#"
+          >
+            <ng-template #template let-data>
+              {{ NO(data.index) }}
+            </ng-template>
+          </e-column> -->
+
+          <e-column
+            field="option"
+            textAlign="Left"
+          headerTextAlign="Center"
+            width="80"
+            headerTextAlign="Center"
+            [allowSorting]="false"
+            [allowSearching]="false"
+            [allowGrouping]="false"
+            [allowFiltering]="false"
+            [allowEditing]="false"
+            headerText="{{ 'OPTION' | translate }}"
+          >
+            <ng-template #template let-data>
+              <span (click)="delete(data.accountId)" class="delete-grid">
+                <i class="fa fa-trash"></i>
+              </span>
+              <span (click)="openModal(optionModal, data)" class="edit-grid">
+                <i class="fa fa-edit"></i>
+              </span>
+              <span
+                (click)="openPermissionModal(permissionModal, data)"
+                class="permission-grid"
+              >
+                <i class="fa fa-cog"></i>
+              </span>
+            </ng-template>
+          </e-column>
+
+          <e-column
+            field="farmName"
+            headerTextAlign="Center"
+            width="120px"
+            textAlign="Left"
+            headerText="{{ 'ACCOUNT_SITE' | translate }}"
+          >
+          </e-column>
+          <e-column field="photoPath" textAlign="Left" headerTextAlign="Center" [allowSorting]="false" [allowFiltering]="false"
+            width="120px"
+
+            headerText="{{ 'Photo Path' | translate }}"
+          >
+            <ng-template #template let-data>
+              <img
+                style="cursor: pointer"
+                [src]="imagePath(data.photoPath) | image: 'url'"
+                class="avatar"
+                
+                (click)="preview(previewModal, data)"
+                [alt]="data.nickName"
+              />
+            </ng-template>
+          </e-column>
+          <e-column
+          field="accountNo"
+          textAlign="Left"
+          headerTextAlign="Center"
+          width="80px"
+          headerText="{{ 'ACCOUNT_NO' | translate }}"
+        >
+        </e-column>
+          <e-column
+            field="accountName"
+            width="120px"
+            textAlign="Left"
+          headerTextAlign="Center"
+            headerText="{{ 'ACCOUNT_NAME' | translate }}"
+          >
+          </e-column>
+          <e-column
+            field="uid"
+            width="120px"
+            textAlign="Left"
+          headerTextAlign="Center"
+            headerText="{{ 'ACCOUNT_USERNAME' | translate }}"
+          >
+          </e-column>
+
+          <e-column
+            field="employeeNickName"
+            width="120px"
+            textAlign="Left"
+          headerTextAlign="Center"
+            headerText="{{ 'ACCOUNT_EMPLOYEE' | translate }}"
+          >
+          </e-column>
+
+          <e-column
+            field="accountGroupName"
+            textAlign="Left"
+          headerTextAlign="Center"
+            headerText="{{ 'ACCOUNT_ACCOUNT_GROUP' | translate }}"
+          >
+          </e-column>
+        </e-columns>
+      </ejs-grid>
+    </div>
+    <!-- /.card-body -->
+  </div>
+</div>
+
+<ng-template #optionModal let-modal>
+  <div class="modal-header my-modal">
+    <h4 [ngbTooltip]="title" class="modal-title">
+      <i class="fas fa-plus"></i> {{ title | translate }}
+    </h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="d-flex justify-content-center" *ngIf="loading == 1">
+      <div class="spinner-border text-primary" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+     </div>
+    <div class="row">
+      <div class="col-md-4 text-center">
+        <div class="kv-avatar">
+          <div class="file-loading">
+            <input
+              id="avatar-1"
+              name="avatar-1"
+              (change)="onFileChangeLogo($event)"
+              type="file"
+              required
+            />
+          </div>
+        </div>
+        <div class="kv-avatar-hint">
+          <small>Select file < 5000 KB</small>
+        </div>
+      </div>
+
+      <div class="col-md-8">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label ngbTooltip="ACCOUNT_NAME" for="name">{{ "ACCOUNT_NAME" | translate }}</label>
+              <span *ngIf="!(model.accountId > 0)" style="color: red">(*)</span>
+              <span ngbTooltip="Text length" class="max-length"> {{ '( Text length <= 20 )' | translate }}</span>
+              <input
+                [(ngModel)]="model.accountName"
+                maxlength="20"
+                type="text"
+                class="form-control"
+              />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label ngbTooltip="ACCOUNT_NO" for="no">{{ "ACCOUNT_NO" | translate }}</label>
+              <span *ngIf="!(model.accountId > 0)" style="color: red">(*)</span>
+              <span ngbTooltip="Text length" class="max-length"> {{ '( Text length <= 20 )' | translate }}</span>
+              <input
+                [(ngModel)]="model.accountNo"
+                maxlength="20"
+                type="text"
+                class="form-control"
+              />
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label ngbTooltip="ACCOUNT_USERNAME" for="uid">{{ "ACCOUNT_USERNAME" | translate }}</label>
+              <span *ngIf="!(model.accountId > 0)" style="color: red">(*)</span>
+              <span ngbTooltip="( Text length <= 50 )" class="max-length"> ( {{"Text length"| translate }} <= 50 )</span>
+              <input
+                [(ngModel)]="model.uid"
+                maxlength="50"
+                type="text"
+                class="form-control"
+              />
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label ngbTooltip="ACCOUNT_PASSWORD" for="password">{{ "ACCOUNT_PASSWORD" | translate }}</label>
+              <span *ngIf="!(model.accountId > 0)" style="color: red">(*)</span>
+              <span ngbTooltip="( Text length <= 50 )" class="max-length"> ( {{"Text length"| translate }} <= 50 )</span>
+              <div class="input-group">
+                <input
+                maxlength="50"
+                  [attr.type]="status ? 'text' : 'password'"
+                  [(ngModel)]="model.upwd"
+                  class="form-control"
+                />
+                <div class="input-group-append" (click)="togglePassword()">
+                  <span
+                    class="input-group-text"
+                    style="box-shadow: 0.5px 0.5px 1px; cursor: pointer"
+                  >
+                    <i [ngClass]="status ? 'fa fa-eye' : 'fa fa-eye-slash'"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label ngbTooltip="ACCOUNT_SITE" for="">{{ "ACCOUNT_SITE" | translate }}</label>
+              <ejs-dropdownlist
+                [dataSource]="siteData"
+                [(ngModel)]="model.farmGuid"
+                (valueChange)="siteValueChange($event)"
+                [fields]="siteFields"
+                [allowFiltering]="true"
+                placeholder="Select sites"
+                (filtering)="onFiltering($event)"
+              ></ejs-dropdownlist>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label ngbTooltip="ACCOUNT_ACCOUNT_GROUP" for="accountGroup">{{
+                "ACCOUNT_ACCOUNT_GROUP" | translate
+              }}</label>
+              <span *ngIf="!(model.accountId > 0)" style="color: red">(*)</span>
+              <ejs-dropdownlist
+                [(ngModel)]="model.accountGroup"
+                (valueChange)="valueChange($event)"
+                [fields]="xaccountGroupFields"
+                placeholder="Select account group"
+                [dataSource]="xaccountGroupData"
+              >
+              </ejs-dropdownlist>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md">
+        <label ngbTooltip="ACCOUNT_COMMENT">{{ "ACCOUNT_COMMENT" | translate }} </label>
+        <div class="form-group">
+          <textarea
+            class="form-control"
+            [(ngModel)]="model.comment"
+            cols="4"
+            rows="4"
+          ></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="mr-auto" *ngIf="model?.accountId > 0">
+      <p>
+        <span class='mr-2'> <span class='my-font-weight-bold'>{{ 'Create by' | translate}}</span> : {{audit?.createBy}}</span>
+        <span><span class='my-font-weight-bold'>{{ 'Create date time' | translate}}</span> : {{audit?.createDate}}</span>
+      </p>
+      <p>
+        <span class='mr-2'><span class='my-font-weight-bold'>{{ 'Update by' | translate}}</span> : {{audit?.updateBy}}</span>
+        <span><span class='my-font-weight-bold'>{{ 'Update date time' | translate}}</span> : {{audit?.updateDate}}</span>
+      </p>
+    </div>
+    <span *ngIf="!(model.accountId > 0)" class="my-note mr-auto">
+      {{ 'Note: (*) is a required field' | translate }}
+    </span>
+    <button
+      type="button"
+      class="btn btn-light"
+      ngbTooltip="CLOSE"
+      (click)="modal.close('Close click')"
+    >
+      {{ "CLOSE" | translate }}
+    </button>
+    <button
+      type="submit"
+      [disabled]="
+        !model.accountName ||
+        !model.accountNo ||
+        !model.uid ||
+        !model.upwd ||
+        !model.accountGroup 
+      "
+      (click)="save()"
+      ngbTooltip="SAVE"
+      class="btn btn-primary"
+    >
+      {{ "SAVE" | translate }}
+    </button>
+  </div>
+</ng-template>
+<div id="kv-avatar-errors-1" class="text-center" style="display: none"></div>
+<ng-template #previewModal let-modal>
+  <div class="modal-header my-modal">
+    <h4 ngbTooltip="ACCOUNT_PREVIEW" class="modal-title">
+      <i class="fas fa-eye"></i> {{ "ACCOUNT_PREVIEW" | translate }}
+    </h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body align-self-center">
+    <img [src]="previewImg" class="img-fluid" alt="preview image" />
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-light"
+      ngbTooltip="ACCOUNT_PERMISSION_CLOSE"
+      (click)="modal.close('Close click')"
+    >
+      {{ "ACCOUNT_PERMISSION_CLOSE" | translate }}
+    </button>
+  </div>
+</ng-template>
+<ng-template #permissionModal let-modal>
+  <div class="modal-header my-modal">
+    <h4 ngbTooltip="ACCOUNT_PERMISSION" class="modal-title">
+      <i class="fas fa-plus"></i> {{ "ACCOUNT_PERMISSION" | translate }}
+    </h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-12">
+       <div class="d-flex justify-content-center" *ngIf="loading == 1">
+        <div class="spinner-border text-primary" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+       </div>
+        <div class="form-group" *ngIf="loading == 0">
+          <label ngbTooltip="CHOOSE PERMISSIONS" for="permission">{{ "CHOOSE PERMISSIONS" | translate }}</label>
+          <ejs-multiselect
+            id="permission"
+            [showDropDownIcon]="true"
+            [(ngModel)]="permissions"
+            [dataSource]="permissionData"
+            placeholder="{{ 'CHOOSE PERMISSIONS' | translate }}"
+            [fields]="fields"
+            (filtering)="onFiltering($event)"
+            [mode]="'Box'"
+          >
+          </ejs-multiselect>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-light"
+      ngbTooltip="CLOSE"
+      (click)="modal.close('Close click')"
+    >
+      {{ "CLOSE" | translate }}
+    </button>
+    <button ngbTooltip="SAVE" type="submit" (click)="storePermiison()" class="btn btn-primary">
+      {{ "SAVE" | translate }}
+    </button>
+  </div>
+</ng-template>

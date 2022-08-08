@@ -1,0 +1,79 @@
+<ejs-grid
+  #grid
+  id="grid"
+  [dataSource]="data"
+  [allowPaging]="false"
+  [allowResizing]="true"
+  [allowSorting]="true"
+  gridLines="Both"
+  [locale]="locale"
+  [editSettings]="chemicalEditSettings"
+  [toolbar]="toolbarOptions"
+  [allowExcelExport]="true"
+  [enableInfiniteScrolling]="true"
+  (rowSelected)="rowSelected($event)"
+  (recordClick)="recordClick($event)"
+  (actionBegin)="actionBegin($event)"
+  [selectionSettings]="selectionOptions"
+  (toolbarClick)="toolbarClick($event)"
+  (dataBound)='dataBound()'
+  [height]="height"
+>
+
+  <e-columns>
+    <e-column
+      field="option"
+      [allowSorting]="false"
+      [allowSearching]="false"
+      [allowGrouping]="false"
+      [allowFiltering]="false"
+      [allowEditing]="false"
+      textAlign="Center"
+      headerTextAlign="Center"
+      width="50"
+      headerTextAlign="Center"
+      headerText="{{ 'OPTION' | translate}}"
+    >
+      <ng-template #template let-data>
+        <span (click)="delete(data.id)" *ngIf="groupCode === 'ADMIN'" class="delete-grid">
+          <i class="fa fa-trash"></i>
+        </span>
+      </ng-template>
+    </e-column>
+    <e-column
+    field="position"
+    textAlign="Left"
+    headerText="{{ 'CHEMICAL_POSITION' | translate }}"
+  >
+  <ng-template #editTemplate let-data>
+    <ejs-dropdownlist #positionDropdownlist [dataSource]='dataPosition' 
+      [fields]='fieldsPosition' [allowFiltering]='true'
+      [(ngModel)]="glueChemical.position"
+      (change)='onChangePosition($event,data, data.index)'>
+    </ejs-dropdownlist>
+  </ng-template>
+  </e-column>
+  <e-column
+    field="name"
+    textAlign="Left"
+    headerText="{{ 'CHEMICAL_NAME' | translate }}"
+  >
+  <ng-template #editTemplate let-data>
+    <ejs-dropdownlist #chemicalDropdownlist [dataSource]='dataChemical' 
+      [fields]='ChemicalFields' [allowFiltering]='true'
+      [(ngModel)]="glueChemical.chemicalGuid"
+      (change)='onChangeChemical($event,data, data.index)'
+      >
+    </ejs-dropdownlist>
+  </ng-template>
+  </e-column>
+
+  <e-column
+    field="percentage"
+    textAlign="Left"
+    headerText="{{ 'CHEMICAL_PERCENTAGE' | translate }}"
+  >
+  </e-column>
+    
+  </e-columns>
+</ejs-grid>

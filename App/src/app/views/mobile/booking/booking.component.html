@@ -1,0 +1,371 @@
+<div class="main-content" id="main-text">
+    <div class="sidebar-content">
+      <div class="row mr-mobile">
+        <div class="col-12 p-0">
+          <div class="heading">{{'Mobile_Booking' | translate}}</div>
+        </div>
+      </div>
+  
+  
+  <div class="form-group row mt-3 mr-mobile">
+    <label for="cullingMethod-remote" class="col-3 col-sm-2 col-form-label text-truncate">{{ "HALL" | translate }}</label>
+    <div class="col-9 col-sm-10">
+      <ejs-dropdownlist
+        (valueChange)="ngModelChangeHall($event)"
+        [fields]="hallFields"
+        [(ngModel)]="model.hallGuid"
+        placeholder="Select Hall"
+        [dataSource]="hallData"
+      ></ejs-dropdownlist>
+    </div>
+  </div>
+
+  <div class="form-group row mr-mobile">
+    <label for="cullingMethod-remote" class="col-3 col-sm-2 col-form-label text-truncate">{{ "ROOM" | translate }}</label>
+    <div class="col-9 col-sm-10">
+      <ejs-dropdownlist
+        [fields]="roomFields"
+        [(ngModel)]="model.roomGuid"
+        placeholder="Select Room"
+        [dataSource]="roomData"
+      ></ejs-dropdownlist>
+    </div>
+  </div>
+
+  <div class="form-group row mr-mobile">
+    <label for="cullingMethod-remote" class="col-3 col-sm-2 col-form-label text-truncate">{{ "WORKORDER" | translate }}</label>
+    <div class="col-9 col-sm-10">
+      <ejs-dropdownlist
+        [fields]="workOrderFields"
+        [(ngModel)]="model.workOrderGuid"
+        placeholder="Select WorkOrder"
+        [dataSource]="workOrderData"
+      ></ejs-dropdownlist>
+    </div>
+  </div>
+  
+  <div class="form-group row mr-mobile">
+    <label for="culling-reason-remote" class="col-3 col-sm-2 col-form-label text-truncate">{{ "FUNERAL_DIRECTOR" | translate }}</label>
+    <div class="col-9 col-sm-10">
+      <ejs-dropdownlist
+        disabled="true"
+        [fields]="xAccountFields"
+        [(ngModel)]="model.funeralDirector"
+        placeholder="Select Director"
+        [dataSource]="xAccountData"
+      ></ejs-dropdownlist>
+    </div>
+  </div>
+  
+  <div class="form-group row mr-mobile">
+    <label for="cullingWeight" class="col-3 col-sm-2 col-form-label text-truncate">{{ "FUNERAL_MEMO" | translate }}</label>
+    <div class="col-9 col-sm-10">
+      <input
+        maxlength="200"
+        type="text"
+        [(ngModel)]="model.funeralMemo"
+        class="form-control form-control-sm"
+      />
+    </div>
+  </div>
+
+  <div class="form-group row mr-mobile">
+    <label for="cullingWeight" class="col-3 col-sm-2 col-form-label text-truncate">{{ "ORDER_NO" | translate }}</label>
+    <div class="col-9 col-sm-10">
+      <input
+        maxlength="200"
+        type="text"
+        [(ngModel)]="model.orderNo"
+        class="form-control form-control-sm"
+      />
+    </div>
+  </div>
+
+  <div class="form-group row mr-mobile">
+    <label for="cullingWeight" class="col-3 col-sm-2 col-form-label text-truncate">{{ "ORDER_NAME" | translate }}</label>
+    <div class="col-9 col-sm-10">
+      <input
+        maxlength="200"
+        type="text"
+        [(ngModel)]="model.orderName"
+        class="form-control form-control-sm"
+      />
+    </div>
+  </div>
+
+  <div class="form-group row mt-3 mr-mobile">
+    <label for="recordDate" class="col-3 col-sm-2 col-form-label text-truncate">{{ "ORDER_DATE" | translate }}</label>
+    <div class="col-9 col-sm-10 d-flex justify-content-start">
+      <ejs-datepicker
+        format="yyyy/MM/dd"
+        [value]='dateValue'
+        [locale]='dateLocale'
+        [(ngModel)]="dateValue"
+      ></ejs-datepicker>
+    </div>
+  </div>
+
+  <div class="form-group row mr-mobile">
+    <label for="cullingWeight" class="col-3 col-sm-2 col-form-label text-truncate">{{ "ROOM_TYPE" | translate }}</label>
+    <div class="col-9 col-sm-10">
+      <app-code-type-dropdownlist
+        id="room-type-remote"
+        [codeType]="'Room_Type'"
+        [(selectedValue)]="model.roomType"
+        >
+      </app-code-type-dropdownlist>
+    </div>
+  </div>
+
+  <div class="form-group row mr-mobile" *ngIf="model.roomType === 'B'">
+    <label for="cullingWeight" class="col-3 col-sm-2 col-form-label text-truncate">{{ "Prepare_Rice" | translate }}</label>
+    <div class="col-9 col-sm-10">
+      <app-code-type-dropdownlist
+        id="prepare_rice-remote"
+        [codeType]="'Prepare_Rice'"
+        [(selectedValue)]="model.prepareRice"
+        >
+        </app-code-type-dropdownlist>
+    </div>
+  </div>
+
+  <div class="form-group row mr-mobile" *ngIf="model.roomType === 'B'">
+    <label for="cullingWeight" class="col-3 col-sm-2 col-form-label text-truncate">{{ "Prepare_Vegetarian" | translate }}</label>
+    <div class="col-9 col-sm-10">
+      <app-code-type-dropdownlist
+        id="prepare_vegetarian-remote"
+        [codeType]="'Prepare_Vegetarian'"
+        [(selectedValue)]="model.prepareVegetarian"
+        >
+        </app-code-type-dropdownlist>
+    </div>
+  </div>
+
+  <div class="form-group row mr-mobile" *ngIf="model.roomType === 'B'">
+    <label for="cullingWeight" class="col-3 col-sm-2 col-form-label text-truncate">{{ "Prepare_Flower" | translate }}</label>
+    <div class="col-9 col-sm-10">
+      <app-code-type-dropdownlist
+        id="prepare_flower-remote"
+        [codeType]="'Prepare_Flower'"
+        [(selectedValue)]="model.prepareFlower"
+        >
+        </app-code-type-dropdownlist>
+    </div>
+  </div>
+
+  <div class="form-group row mr-mobile" *ngIf="model.roomType === 'B'">
+    <label for="cullingWeight" class="col-3 col-sm-2 col-form-label text-truncate">{{ "Prepare_Fruit" | translate }}</label>
+    <div class="col-9 col-sm-10">
+      <app-code-type-dropdownlist
+        id="prepare_fruit-remote"
+        [codeType]="'Prepare_Fruit'"
+        [(selectedValue)]="model.prepareFruit"
+        >
+      </app-code-type-dropdownlist>
+    </div>
+  </div>
+
+  <div class="form-group row mr-mobile" *ngIf="model.roomType === 'B'">
+    <label for="cullingWeight" class="col-3 col-sm-2 col-form-label text-truncate">{{ "Prepare_Tea" | translate }}</label>
+    <div class="col-9 col-sm-10">
+      <app-code-type-dropdownlist
+        id="prepare_tea-remote"
+        [codeType]="'Prepare_Tea'"
+        [(selectedValue)]="model.prepareTea"
+        >
+      </app-code-type-dropdownlist>
+    </div>
+  </div>
+
+  <div class="form-group row mr-mobile" *ngIf="model.roomType === 'B'">
+    <label for="cullingWeight" class="col-3 col-sm-2 col-form-label text-truncate">{{ "Prepare_Floral" | translate }}</label>
+    <div class="col-9 col-sm-10">
+      <app-code-type-dropdownlist
+        id="prepare_floral-remote"
+        [codeType]="'Prepare_Floral'"
+        [(selectedValue)]="model.prepareFloral"
+        >
+      </app-code-type-dropdownlist>
+    </div>
+  </div>
+
+  <div class="form-group row mr-mobile" *ngIf="model.roomType === 'C'">
+    <label for="cullingWeight" class="col-3 col-sm-2 col-form-label text-truncate">{{ "Chanting_Type" | translate }}</label>
+    <div class="col-9 col-sm-10">
+      <app-code-type-dropdownlist
+      id="chanting_type-remote"
+      [codeType]="'Chanting_Type'"
+      [(selectedValue)]="model.chantingType"
+      >
+      </app-code-type-dropdownlist>
+    </div>
+  </div>
+
+  <div class="form-group row mr-mobile" *ngIf="model.roomType === 'C'">
+    <label for="cullingWeight" class="col-3 col-sm-2 col-form-label text-truncate">{{ "InOut" | translate }}</label>
+    <div class="col-9 col-sm-10">
+      <app-code-type-dropdownlist
+          id="inOut-remote"
+          [codeType]="'InOut'"
+          [(selectedValue)]="model.inOut"
+          >
+      </app-code-type-dropdownlist>
+    </div>
+  </div>
+
+  <div class="form-group row mr-mobile" *ngIf="model.roomType === 'C'">
+    <label for="cullingWeight" class="col-3 col-sm-2 col-form-label text-truncate">{{ "MageMonk" | translate }}</label>
+    <div class="col-9 col-sm-10">
+      <input
+        name="mageMonk"
+        type="number"
+        min="0"
+        [(ngModel)]="model.mageMonk"
+        class="form-control form-control-sm"
+      />
+    </div>
+  </div>
+  <div class="form-group row mr-mobile" *ngIf="model.roomType === 'C'">
+    <label for="cullingWeight" class="col-3 col-sm-2 col-form-label text-truncate">{{ "HouseMonk" | translate }}</label>
+    <div class="col-9 col-sm-10">
+      <input
+        name="houseMonk"
+        type="number"
+        min="0"
+        [(ngModel)]="model.houseMonk"
+        class="form-control form-control-sm"
+      />
+    </div>
+  </div>
+
+  <div class="form-group row mr-mobile" *ngIf="model.roomType === 'C'">
+    <label for="cullingWeight" class="col-3 col-sm-2 col-form-label text-truncate">{{ "Offerings" | translate }}</label>
+    <div class="col-9 col-sm-10">
+      <app-code-type-dropdownlist
+          id="offerings-remote"
+          [codeType]="'Offerings'"
+          [(selectedValue)]="model.offerings"
+          >
+      </app-code-type-dropdownlist>
+    </div>
+  </div>
+
+  <div class="form-group row mr-mobile" *ngIf="model.roomType === 'C'">
+    <label for="MageMemo" class="col-3 col-sm-2 col-form-label text-truncate">{{ "MageMemo" | translate }}</label>
+    <div class="col-9 col-sm-10">
+      <input
+        maxlength="20"
+        type="text"
+        [(ngModel)]="model.mageMemo"
+        class="form-control form-control-sm"
+      />
+    </div>
+  </div>
+
+  <div class="form-group row mr-mobile" *ngIf="model.roomType === 'C'">
+    <label for="MageMoney" class="col-3 col-sm-2 col-form-label text-truncate">{{ "MageMoney" | translate }}</label>
+    <div class="col-9 col-sm-10">
+      <input
+        maxlength="20"
+        type="text"
+        [(ngModel)]="model.mageMoney"
+        class="form-control form-control-sm"
+      />
+    </div>
+  </div>
+  
+  <div class="form-group row mr-mobile" *ngIf="model.roomType === 'C'">
+    <label for="cullingWeight" class="col-3 col-sm-2 col-form-label text-truncate">{{ "InOut" | translate }}</label>
+    <div class="col-9 col-sm-10">
+      <app-code-type-dropdownlist
+          id="inOut-remote"
+          [codeType]="'InOut'"
+          [(selectedValue)]="model.inOut"
+          >
+      </app-code-type-dropdownlist>
+    </div>
+  </div>
+
+  <div class="form-group row mt-3 mr-mobile" *ngIf="model.roomType === 'A'">
+    <label for="OrderMeal" class="col-3 col-sm-2 col-form-label text-truncate">{{ "OrderMeal" | translate }}</label>
+    <div class="col-9 col-sm-10 d-flex justify-content-start">
+      <app-my-checkbox [(checked)]="model.orderMeal"></app-my-checkbox>
+    </div>
+  </div>
+
+  <div class="form-group row mr-mobile" >
+    <label  class="col-3 col-sm-2 col-form-label text-truncate">{{ "HALL_TYPE" | translate }}</label>
+    <div class="col-9 col-sm-10">
+      <app-code-type-dropdownlist
+        id="hall-type-remote"
+        [codeType]="'Hall_Type'"
+        [(selectedValue)]="model.hallType"
+        >
+      </app-code-type-dropdownlist>
+    </div>
+  </div>
+
+  <div class="form-group row mt-3 mr-mobile" >
+    <label  class="col-3 col-sm-2 col-form-label text-truncate">{{ "BOOKING_START" | translate }}</label>
+    <div class="col-9 col-sm-10 d-flex justify-content-start">
+      <ejs-datetimepicker 
+        [locale]='dateLocale'
+        format='yyyy-MM-dd HH:mm' 
+        id="fisrtdatetime" 
+        #fisrtdatetime 
+        [(ngModel)]="start_time"
+        >
+      </ejs-datetimepicker>
+    </div>
+  </div>
+
+  <div class="form-group row mt-3 mr-mobile" >
+    <label  class="col-3 col-sm-2 col-form-label text-truncate">{{ "BOOKING_END" | translate }}</label>
+    <div class="col-9 col-sm-10 d-flex justify-content-start">
+      <ejs-datetimepicker 
+          [locale]='dateLocale'
+          format='yyyy-MM-dd HH:mm' 
+          id="seconddatetime" 
+          #seconddatetime 
+          [(ngModel)]="end_time"
+          >
+      </ejs-datetimepicker>
+    </div>
+  </div>
+  
+  <div class="form-group row mr-mobile" >
+    <label  class="col-3 col-sm-2 col-form-label text-truncate">{{ "ROOM_COMMENT" | translate }}</label>
+    <div class="col-9 col-sm-10">
+      <textarea
+        class="form-control"
+        [(ngModel)]="model.comment"
+        cols="4"
+        rows="4"
+      ></textarea>
+    </div>
+  </div>
+
+  <div class="row my-2">
+    <div class="col-12 d-flex justify-content-start align-items-center">
+      <button
+        [disabled]="!model.hallGuid 
+        || !model.roomGuid 
+        || !model.workOrderGuid
+        || !model.funeralDirector
+        || !model.roomType
+        || !model.hallType
+        "
+        (click)="save()"
+       class="btn btn-sm btn-success mx-2" >{{'Mobile_Save' | translate}}</button>
+
+       <button
+        (click)="cancel()"
+       class="btn btn-sm btn-primary mx-2" >{{'Mobile_Cancel' | translate}}</button>
+    </div>
+  </div>
+  
+  </div>
+  </div>
+  
+  
+  

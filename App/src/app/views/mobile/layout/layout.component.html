@@ -1,0 +1,45 @@
+
+<div class="control-section">
+<div id="wrapper">
+  <div class="col-lg-12 col-sm-12 col-md-12" id="sidebar-section">
+
+    <!-- <nav class="navbar navbar-colslap-md bg-dark navbar-dark">
+      <a class="navbar-brand" href="#">Navbar</a>
+      <button class="navbar-toggler" type="button" >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </nav> -->
+  
+  <div class="main-header" id="header-section">
+    <ul class="header-list">
+      
+      <!-- <li class="float-center" >
+        <ejs-dropdownlist  id="lang-select-dropdown" [(ngModel)]="lang" (change)="langValueChange($event)" [fields]="fieldsLang" [dataSource]="languageData">
+          
+        </ejs-dropdownlist>
+      </li> -->
+     
+      <li
+      class="float-right header-style icon-menu"
+      id="hamburger"
+      (click)="toggleSidebar()"
+      ></li>
+
+      <li class="float-right header-style nav-pane d-flex ">
+        <ejs-dropdownlist  id="lang-select-dropdown" [(ngModel)]="lang" (change)="langValueChange($event)" [fields]="fieldsLang" [dataSource]="languageData">
+          
+        </ejs-dropdownlist>
+      </li>
+
+      <li class="float-left header-style nav-pane d-flex justify-content-start">
+        <b (click)="goBack()" class="mr-sm-2 mr-lg-2  mr-md-2"><span class="e-icons e-arrow-left-2"></span></b>
+        <b (click)="goToHome()"> {{'Booking System' | translate}}</b>
+      </li>
+    </ul>
+  </div>
+
+  <router-outlet></router-outlet>
+
+</div>
+</div>
+</div>

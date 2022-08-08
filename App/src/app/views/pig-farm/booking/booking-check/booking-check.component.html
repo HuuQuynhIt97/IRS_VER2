@@ -1,0 +1,633 @@
+<div class="col-md-12" style="box-shadow: 1px 1px 20px; padding: 0">
+
+
+  <div style="height: 70px;width: calc(100%);">
+    <ejs-toolbar id="toolbar_options" height="70px" overflowMode="Scrollable" scrollStep="100"
+       (clicked)="onToolbarItemClicked($event)">
+      <e-items>
+        
+        <e-item id='select-1' tooltipText='Hall' text='Hall'>
+          <ng-template #template>
+            <form class="form-inline">
+              <div class="form-group">
+                <label for="inputPassword6">{{ translate.instant('HALL') }} </label> 
+                <span style="color: transparent;"> | </span>
+                <ejs-dropdownlist
+                  id='hallDropdown'
+                  #hallDropdown
+                  [dataSource]="hallData"
+                  (change)="ngModelChangeHallFilter($event)"
+                  [fields]="hallFields"
+                  [(ngModel)]="fiterRequest.hallGuidFiter"
+                  name="hallGuidFiter"
+                  placeholder="{{'Select Hall' | translate}}"
+                ></ejs-dropdownlist>
+              </div>
+            </form>
+            
+          </ng-template>
+        </e-item>
+
+        <e-item id='select-2' tooltipText='Room' text='Room'>
+          <ng-template #template>
+            <form class="form-inline">
+              <div class="form-group">
+                <label for="inputPassword6">{{ translate.instant('ROOM') }} </label> 
+                <span style="color: transparent;"> | </span>
+                <ejs-dropdownlist
+                  id='roomDropdown'
+                  #roomDropdown
+                  [fields]="roomFields"
+                  (change)="ngModelChangeRoomFilter($event)"
+                  [(ngModel)]="fiterRequest.roomGuidFiter"
+                  name="roomGuidFiter"
+                  placeholder="{{'Select Room' | translate}}"
+                  [dataSource]="roomData"
+                ></ejs-dropdownlist>
+              </div>
+            </form>
+          </ng-template>
+        </e-item>
+
+        <e-item id='select-3' tooltipText='Funeral director' text='Funeral director'>
+          <ng-template #template>
+            <form class="form-inline">
+              <div class="form-group">
+                <label for="inputPassword6">{{ translate.instant('FUNERAL_DIRECTOR') }}</label> 
+                <span style="color: transparent;"> | </span>
+                <ejs-dropdownlist
+                  id='funeralDropdown'
+                  #funeralDropdown
+                  [fields]="xAccountFields"
+                  (change)="ngModelChangefuneralFilter($event)"
+                  [(ngModel)]="fiterRequest.funeralDirectorFilter"
+                  name="funeralDirectorFilter"
+                  placeholder="{{'Select Director' | translate}}"
+                  [dataSource]="xAccountData"
+                ></ejs-dropdownlist>
+              </div>
+            </form>
+          </ng-template>
+        </e-item>
+
+        <e-item id='select-4' tooltipText='Booking Date' text='Booking Date'>
+          <ng-template #template>
+            <form class="form-inline">
+              <div class="form-group">
+                <label for="inputPassword6">{{ translate.instant('BOOKING_DATE') }} </label>
+                <span> | </span>
+                <ejs-datepicker
+                  name="time"
+                  #date
+                  locale='en-US'
+                  format="yyyy/MM/dd"
+                  [value]='dateValue'
+                  [(ngModel)]="dateValue"
+                  (change)="changeTime($event)"
+                ></ejs-datepicker>
+              </div>
+            </form>
+          </ng-template>
+        </e-item>
+
+        <!-- <e-item id='search'   tooltipText='search' text='search'>
+          <ng-template #template>
+            <form class="form-inline">
+              <div class="form-group">
+                <button type="button" (click)="search()" class="btn btn-primary" ><i class="fa fa-search" aria-hidden="true"></i> {{ translate.instant('Search_Normal') }} </button>
+              </div>
+            </form>
+          </ng-template>
+        </e-item> -->
+
+        <e-item id='refresh'   tooltipText='refresh' text='refresh'>
+          <ng-template #template>
+            <form class="form-inline">
+              <div class="form-group">
+                <button type="button" (click)="refresh()" class="btn btn-danger" ><i class="fa fa-retweet" aria-hidden="true"></i> {{ translate.instant('Refresh') }} </button>
+              </div>
+            </form>
+          </ng-template>
+        </e-item>
+        <e-item type='Separator'></e-item>
+        <!-- <e-item id='select-5' tooltipText='Refresh' text='Refresh'>
+          <ng-template #template>
+            <button type="submit"><i class="icon-refresh"></i> Test</button>
+          </ng-template>
+        </e-item> -->
+        <e-item type='Separator'></e-item>
+
+        <e-item id='grid_add' align='right'   tooltipText='Add' text='Add'>
+          <ng-template #template>
+            <form class="form-inline">
+              <div class="form-group">
+                <button type="button"   class="btn btn-primary" ><i class="fa fa-plus" aria-hidden="true"></i> {{ translate.instant('Add') }} </button>
+              </div>
+            </form>
+            
+          </ng-template>
+        </e-item>
+
+      </e-items>
+    </ejs-toolbar>
+  </div>
+
+  <div class="card main-card">
+    <ejs-grid
+      #grid
+      id="grid"
+      locale='en-US'
+      [dataSource]="data"
+      [allowPaging]="false"
+      [allowResizing]="true"
+      [allowSorting]="true"
+      gridLines="Both"
+      [locale]="locale"
+      [editSettings]="editSettings"
+      [allowExcelExport]="true"
+      [enableInfiniteScrolling]="true"
+      (rowSelected)="rowSelected($event)"
+      [selectionSettings]="selectionOptions"
+      [height]="height"
+    >
+      <e-columns>
+        <e-column
+          field="option"
+          [allowSorting]="false"
+          [allowSearching]="false"
+          [allowGrouping]="false"
+          [allowFiltering]="false"
+          [allowEditing]="false"
+          textAlign="Center"
+          headerTextAlign="Center"
+          width="80"
+          headerTextAlign="Center"
+          headerText="{{ 'OPTION' | translate}}"
+        >
+          <ng-template #template let-data>
+            <span (click)="delete(data.id)" class="delete-grid">
+              <i class="fa fa-trash"></i>
+            </span>
+            <span (click)="openModal(optionModal, data)"  style="color: rgb(52, 184, 250);"  class="edit-grid">
+              <i class="fa fa-edit" aria-hidden="true"></i>
+            </span>
+          </ng-template>
+        </e-column>
+    
+        <e-column field="siteName" textAlign="Left"  headerText="{{ 'SITE' | translate }}"></e-column>
+        <e-column field="hallName" textAlign="Left" headerText="{{ 'HALL' | translate }}" > </e-column>
+        <e-column field="roomName" textAlign="Left" headerText="{{ 'ROOM' | translate }}" > </e-column>
+        <e-column field="workOrderName" textAlign="Left" headerText="{{ 'WORKORDER' | translate }}" > </e-column>
+        <e-column field="accountName" textAlign="Left" headerText="{{ 'FUNERAL_DIRECTOR' | translate }}" > </e-column>
+        <e-column field="orderName" textAlign="Left" headerText="{{ 'ORDER_NAME' | translate }}" > </e-column>
+        <e-column field="orderNo" textAlign="Left" headerText="{{ 'ORDER_NO' | translate }}" > </e-column>
+        <e-column field="orderDate" textAlign="Left" type="date" format="yyyy-MM-dd" headerText="{{ 'ORDER_DATE' | translate }}" > </e-column>
+        
+      </e-columns>
+    </ejs-grid>
+  </div>
+
+</div>
+
+
+<ng-template #optionModal let-modal>
+  <div class="modal-header my-modal">
+    <h4 class="modal-title">
+      <i class="fas fa-plus"></i> {{ title | translate }}
+    </h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+
+    <div class="row">
+      <div class="col-md-12">
+
+        <div class="row">
+
+          <div class="col-md">
+            <label>{{ "HALL" | translate }} </label>
+            <span *ngIf="!(model.id > 0)" style="color: red">(*)</span>
+            <div class="form-group">
+              <ejs-dropdownlist
+              (valueChange)="ngModelChangeHall($event)"
+              [fields]="hallFields"
+              [(ngModel)]="model.hallGuid"
+              placeholder="Select Hall"
+              [dataSource]="hallData"
+            ></ejs-dropdownlist>
+            </div>
+           
+          </div>
+          
+          <div class="col-md">
+            <label>{{ "ROOM" | translate }} </label>
+            <span *ngIf="!(model.id > 0)" style="color: red">(*)</span>
+            <div class="form-group">
+              <ejs-dropdownlist
+              [fields]="roomFields"
+              [(ngModel)]="model.roomGuid"
+              placeholder="Select Room"
+              [dataSource]="roomData"
+            ></ejs-dropdownlist>
+            </div>
+           
+          </div>
+
+          <div class="col-md">
+            <label>{{ "WORKORDER" | translate }} </label>
+            <span *ngIf="!(model.id > 0)" style="color: red">(*)</span>
+            <div class="form-group">
+              <ejs-dropdownlist
+              [fields]="workOrderFields"
+              [(ngModel)]="model.workOrderGuid"
+              placeholder="Select WorkOrder"
+              [dataSource]="workOrderData"
+            ></ejs-dropdownlist>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      
+      <div class="col-md">
+        <label>{{ "FUNERAL_DIRECTOR" | translate }} </label>
+        <span *ngIf="!(model.id > 0)" style="color: red">(*)</span>
+        <div class="form-group">
+          <ejs-dropdownlist
+              [fields]="xAccountFields"
+              [(ngModel)]="model.funeralDirector"
+              placeholder="Select Director"
+              [dataSource]="xAccountData"
+            ></ejs-dropdownlist>
+        </div>
+      </div>
+
+      <div class="col-md">
+        <label>{{ "FUNERAL_MEMO" | translate }} </label>
+        <span class="max-length"> ( {{"Text length"| translate }} <= 200 )</span>
+        <div class="form-group">
+          <input
+            maxlength="200"
+            type="text"
+            [(ngModel)]="model.funeralMemo"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      <div class="col-md">
+        <label>{{ "ORDER_NO" | translate }} </label>
+        <span class="max-length"> ( {{"Text length"| translate }} <= 200 )</span>
+        <div class="form-group">
+          <input
+            maxlength="200"
+            type="text"
+            [(ngModel)]="model.orderNo"
+            class="form-control"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      
+
+      <div class="col-md">
+        <label>{{ "ORDER_NAME" | translate }} </label>
+        <span class="max-length"> ( {{"Text length"| translate }} <= 200 )</span>
+        <div class="form-group">
+          <input
+            maxlength="200"
+            type="text"
+            [(ngModel)]="model.orderName"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      <div class="col-md">
+        <div class="form-group">
+          <label>{{ "ORDER_DATE" | translate }} </label>
+            <ejs-datepicker
+              format="yyyy/MM/dd"
+              [value]='dateValue'
+              [(ngModel)]="dateValue"
+            ></ejs-datepicker>
+        </div>
+      </div>
+
+      
+      <div class="col-md">
+        <label>{{ "ROOM_TYPE" | translate }} </label>
+        <span *ngIf="!(model.id > 0)" style="color: red">(*)</span>
+        <div class="form-group">
+          <app-code-type-dropdownlist
+          id="room-type-remote"
+          [codeType]="'Room_Type'"
+          [(selectedValue)]="model.roomType"
+          >
+          </app-code-type-dropdownlist>
+        </div>
+      </div>
+
+    </div>
+    
+    <div class="row" *ngIf="model.roomType === 'A'">
+      
+      <div class="col-md">
+        <label>{{ "Prepare_Rice" | translate }} </label>
+        <div class="form-group">
+          <app-code-type-dropdownlist
+          id="prepare_rice-remote"
+          [codeType]="'Prepare_Rice'"
+          [(selectedValue)]="model.prepareRice"
+          >
+          </app-code-type-dropdownlist>
+        </div>
+      </div>
+
+      <div class="col-md">
+        <label>{{ "Prepare_Vegetarian" | translate }} </label>
+        <div class="form-group">
+          <app-code-type-dropdownlist
+          id="prepare_vegetarian-remote"
+          [codeType]="'Prepare_Vegetarian'"
+          [(selectedValue)]="model.prepareVegetarian"
+          >
+          </app-code-type-dropdownlist>
+        </div>
+      </div>
+
+      <div class="col-md">
+        <label>{{ "Prepare_Flower" | translate }} </label>
+        <div class="form-group">
+          <app-code-type-dropdownlist
+          id="prepare_flower-remote"
+          [codeType]="'Prepare_Flower'"
+          [(selectedValue)]="model.prepareFlower"
+          >
+          </app-code-type-dropdownlist>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="row" *ngIf="model.roomType === 'A'">
+      
+      <div class="col-md">
+        <label>{{ "Prepare_Fruit" | translate }} </label>
+        <div class="form-group">
+          <app-code-type-dropdownlist
+          id="prepare_fruit-remote"
+          [codeType]="'Prepare_Fruit'"
+          [(selectedValue)]="model.prepareFruit"
+          >
+          </app-code-type-dropdownlist>
+        </div>
+      </div>
+
+      <div class="col-md">
+        <label>{{ "Prepare_Tea" | translate }} </label>
+        <div class="form-group">
+          <app-code-type-dropdownlist
+          id="prepare_tea-remote"
+          [codeType]="'Prepare_Tea'"
+          [(selectedValue)]="model.prepareTea"
+          >
+          </app-code-type-dropdownlist>
+        </div>
+      </div>
+
+      <div class="col-md">
+        <label>{{ "Prepare_Floral" | translate }} </label>
+        <div class="form-group">
+          <app-code-type-dropdownlist
+          id="prepare_floral-remote"
+          [codeType]="'Prepare_Floral'"
+          [(selectedValue)]="model.prepareFloral"
+          >
+          </app-code-type-dropdownlist>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="row" *ngIf="model.roomType === 'B'">
+      
+      <div class="col-md">
+        <label>{{ "Chanting_Type" | translate }} </label>
+        <div class="form-group">
+          <app-code-type-dropdownlist
+          id="chanting_type-remote"
+          [codeType]="'Chanting_Type'"
+          [(selectedValue)]="model.chantingType"
+          >
+          </app-code-type-dropdownlist>
+        </div>
+      </div>
+
+      <div class="col-md">
+        <label>{{ "InOut" | translate }} </label>
+        <div class="form-group">
+          <app-code-type-dropdownlist
+          id="inOut-remote"
+          [codeType]="'InOut'"
+          [(selectedValue)]="model.inOut"
+          >
+          </app-code-type-dropdownlist>
+        </div>
+      </div>
+
+      <div class="col-md">
+        <label>{{ "MageMonk" | translate }} </label>
+        <div class="form-group">
+          <input
+            name="mageMonk"
+            type="number"
+            min="0"
+            [(ngModel)]="model.mageMonk"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+    </div>
+
+    <div class="row" *ngIf="model.roomType === 'B'">
+      
+      <div class="col-md">
+        <label>{{ "HouseMonk" | translate }} </label>
+        <div class="form-group">
+          <input
+            name="houseMonk"
+            type="number"
+            min="0"
+            [(ngModel)]="model.houseMonk"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      <div class="col-md">
+        <label>{{ "Offerings" | translate }} </label>
+        <div class="form-group">
+          <app-code-type-dropdownlist
+          id="offerings-remote"
+          [codeType]="'Offerings'"
+          [(selectedValue)]="model.offerings"
+          >
+          </app-code-type-dropdownlist>
+        </div>
+      </div>
+
+      <div class="col-md">
+        <label>{{ "MageMemo" | translate }} </label>
+        <div class="form-group">
+          <input
+            maxlength="20"
+            type="text"
+            [(ngModel)]="model.mageMemo"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      
+
+    </div>
+
+    <div class="row" *ngIf="model.roomType === 'B'">
+      <div class="col-md">
+        <label>{{ "MageMoney" | translate }} </label>
+        <div class="form-group">
+          <input
+            maxlength="20"
+            type="text"
+            [(ngModel)]="model.mageMoney"
+            class="form-control"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="row" *ngIf="model.roomType === 'C'">
+      <div class="col-md d-flex align-items-center">
+        <label class="my-checkbox-label">{{ "OrderMeal" | translate }}&nbsp;</label>
+        <app-my-checkbox [(checked)]="model.orderMeal"></app-my-checkbox>
+      </div>
+    </div>
+
+    <div class="row" >
+      <div class="col-md">
+        <label>{{ "HALL_TYPE" | translate }} </label>
+        <span *ngIf="!(model.id > 0)" style="color: red">(*)</span>
+        <div class="form-group">
+          <app-code-type-dropdownlist
+          id="hall-type-remote"
+          [codeType]="'Hall_Type'"
+          [(selectedValue)]="model.hallType"
+          >
+          </app-code-type-dropdownlist>
+        </div>
+      </div>
+
+      <div class="col-md">
+        <label>{{ "BOOKING_START" | translate }} </label>
+        <div class="form-group">
+          <ejs-datetimepicker 
+            locale='vi'
+            format='yyyy-MM-dd HH:mm' 
+            id="fisrtdatetime" 
+            #ejDateTimePicker 
+            [(ngModel)]="start_time"
+            >
+          </ejs-datetimepicker>
+        </div>
+      </div>
+
+      <div class="col-md">
+        <label>{{ "BOOKING_END" | translate }} </label>
+        <div class="form-group">
+          <ejs-datetimepicker 
+          locale='vi'
+          format='yyyy-MM-dd HH:mm' 
+          id="seconddatetime" 
+          #ejDateTimePickers 
+          [(ngModel)]="end_time"
+          >
+        </ejs-datetimepicker>
+        </div>
+      </div>
+
+    </div>
+    
+   
+
+    <div class="row" >
+      
+      <div class="col-md">
+        <label>{{ "ROOM_COMMENT" | translate }} </label>
+        <div class="form-group">
+          <textarea
+            class="form-control"
+            [(ngModel)]="model.comment"
+            cols="4"
+            rows="4"
+          ></textarea>
+        </div>
+      </div>
+
+
+    </div>
+
+
+
+  </div>
+
+  <div class="modal-footer">
+    <div class="mr-auto" *ngIf="model?.id > 0">
+      <p>
+        <span class='mr-2'> <span class='my-font-weight-bold'>{{ 'Create by' | translate}}</span> : {{audit?.createBy}}</span>
+        <span><span class='my-font-weight-bold'>{{ 'Create date time' | translate}}</span> : {{audit?.createDate}}</span>
+      </p>
+      <p>
+        <span class='mr-2'><span class='my-font-weight-bold'>{{ 'Update by' | translate}}</span> : {{audit?.updateBy}}</span>
+        <span><span class='my-font-weight-bold'>{{ 'Update date time' | translate}}</span> : {{audit?.updateDate}}</span>
+      </p>
+    </div>
+    <span *ngIf="!(model.id > 0)" class="my-note mr-auto">
+      {{ 'Note: (*) is a required field' | translate }}
+    </span>
+    <button
+      type="button"
+      class="btn btn-light"
+      (click)="modal.close('Close click')"
+    >
+      {{ "CLOSE" | translate }}
+    </button>
+    <button
+      [disabled]="!model.hallGuid 
+      || !model.roomGuid 
+      || !model.workOrderGuid
+      || !model.funeralDirector
+      || !model.roomType
+      || !model.hallType
+      "
+      (click)="save()"
+      class="btn btn-primary"
+    >
+      {{ "SAVE" | translate }}
+    </button>
+  </div>
+</ng-template>

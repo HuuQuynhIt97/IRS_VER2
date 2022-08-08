@@ -1,0 +1,406 @@
+<ngx-spinner [fullScreen]="false" type="square-jelly-box" size="medium">
+  <p class="loading">Loading data...</p>
+</ngx-spinner>
+
+<div class="col-md-12" style="box-shadow: 1px 1px 20px; padding: 0">
+  <div class="card main-card">
+    <div class="card-body table-responsive p-0">
+      <ejs-grid
+        #grid
+        id="grid"
+        [dataSource]="data"
+        [allowPaging]="true"
+        [allowResizing]="true"
+        [showColumnMenu]="false"
+        [allowSorting]="true"
+        [allowExcelExport]="true"
+        [toolbar]="toolbarOptions"
+        [selectionSettings]="selectOptions"
+        [pageSettings]="pageSettings"
+        gridLines="Both"
+        [editSettings]="editSettings"
+        (toolbarClick)="toolbarClick($event)"
+        (actionBegin)="actionBegin($event)"
+        (actionComplete)="actionComplete($event)"
+        [sortSettings]="sortSettings"
+        (excelExportComplete)="excelExpComplete($event)"
+        >
+        <ng-template #odsTemplate let-data>
+          <button
+            class="e-tbar-btn e-tbtn-txt e-control e-btn e-lib"
+            type="button"
+            id="grid_odsexport"
+            tabindex="-1"
+            (click)="odsExport()"
+            style="width: auto"
+          >
+            <span class="e-btn-icon e-pdfexport e-icons e-icon-left"></span
+            ><span class="e-tbar-btn-text">{{ 'Ods Export' | translate}} </span>
+          </button>
+        </ng-template>
+        <e-columns>
+          <e-column
+            field="#"
+            [allowSearching]="false"
+            textAlign="Left"
+          headerTextAlign="Center"
+            width="80"
+            isPrimaryKey="true"
+            headerText="#"
+          >
+            <ng-template #template let-data>
+              {{ NO(data.index) }}
+            </ng-template>
+            <ng-template #editTemplate let-data> # </ng-template>
+          </e-column>
+
+          <e-column
+            field="option"
+            textAlign="Left"
+          headerTextAlign="Center"
+            width="80"
+            headerTextAlign="Center"
+            [allowSorting]="false"
+            [allowSearching]="false"
+            [allowGrouping]="false"
+            [allowFiltering]="false"
+            [allowEditing]="false"
+            headerText="{{ 'EMPLOYEE_OPTION' | translate }}"
+          >
+            <ng-template #template let-data>
+              <span (click)="delete(data.id)" class="delete-grid">
+                <i class="fa fa-trash"></i>
+              </span>
+              <span (click)="openModal(optionModal, data)" class="edit-grid">
+                <i class="fa fa-edit"></i>
+              </span>
+            </ng-template>
+          </e-column>
+
+          <e-column
+            field="id"
+[allowSearching]="false"
+            textAlign="Left"
+          headerTextAlign="Center"
+            [visible]="false"
+            isPrimaryKey="true"
+            headerText="{{ 'ID' }}"
+          >
+          </e-column>
+          <e-column
+            field="no"
+            textAlign="Left"
+          headerTextAlign="Center"
+            [width]="120"
+            headerText="{{ 'EMPLOYEE_NO' | translate }}"
+          >
+          </e-column>
+          <e-column
+            field="name"
+            textAlign="Left"
+          headerTextAlign="Center"
+            [width]="100"
+            headerText="{{ 'EMPLOYEE_NAME' | translate }}"
+          >
+          </e-column>
+          <e-column
+            field="nickName"
+            textAlign="Left"
+          headerTextAlign="Center"
+            headerTextAlign="Center"
+            headerText="{{ 'EMPLOYEE_NICKNAME' | translate }}"
+          >
+          </e-column>
+
+          <e-column
+            field="email"
+            textAlign="Left"
+          headerTextAlign="Center"
+            headerTextAlign="Center"
+            headerText="{{ 'EMPLOYEE_EMAIL' | translate }}"
+          >
+          </e-column>
+          <e-column
+            field="tel"
+            textAlign="Left"
+          headerTextAlign="Center"
+            headerTextAlign="Center"
+            headerText="{{ 'EMPLOYEE_TEL' | translate }}"
+          >
+          </e-column>
+          <e-column
+            field="mobile"
+            textAlign="Left"
+          headerTextAlign="Center"
+            headerTextAlign="Center"
+            headerText="{{ 'EMPLOYEE_MOBILE' | translate }}"
+          >
+          </e-column>
+
+          <e-column
+          field="deptName"
+          textAlign="Left"
+          headerTextAlign="Center"
+          headerTextAlign="Center"
+          headerText="{{ 'EMPLOYEE_DEPT' | translate }}"
+        >
+        </e-column>
+
+          <e-column
+            field="unitName"
+            textAlign="Left"
+          headerTextAlign="Center"
+            headerTextAlign="Center"
+            headerText="{{ 'EMPLOYEE_UNIT' | translate }}"
+          >
+          </e-column>
+
+          <e-column
+          field="sexName"
+          textAlign="Left"
+          headerTextAlign="Center"
+          headerText="{{ 'EMPLOYEE_SEX' | translate }}"
+        >
+        </e-column>
+
+
+          <e-column
+            field="level"
+            textAlign="Left"
+          headerTextAlign="Center"
+            headerTextAlign="Center"
+            headerText="{{ 'EMPLOYEE_LEVEL' | translate }}"
+          >
+          </e-column>
+
+          <e-column
+            field="comment"
+            [allowSearching]="false"
+            textAlign="Left"
+            headerTextAlign="Center"
+            headerText="{{ 'EMPLOYEE_COMMENT' | translate }}"
+          >
+          </e-column>
+
+
+
+
+        </e-columns>
+      </ejs-grid>
+    </div>
+    <!-- /.card-body -->
+  </div>
+</div>
+
+<ng-template #optionModal let-modal>
+  <div class="modal-header my-modal">
+    <h4 [ngbTooltip]="title" class="modal-title">
+      <i class="fas fa-plus"></i> {{ title | translate }}
+    </h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" id="option">
+    
+    <div class="row">
+      <div class="col-md">
+        <div class="form-group">
+          <label ngbTooltip="EMPLOYEE_NO" for="no">{{ "EMPLOYEE_NO" | translate }}</label>
+          <span *ngIf="!(model.id > 0)" style="color: red">(*)</span>
+          <span ngbTooltip="Text length" class="max-length"> {{ '( Text length <= 20 )' | translate }}</span>
+
+          <input
+            [(ngModel)]="model.no"
+            maxlength="20"
+            type="text"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      <div class="col-md">
+        <div class="form-group">
+          <label ngbTooltip="EMPLOYEE_NAME" for="name">{{ "EMPLOYEE_NAME" | translate }}</label>
+          <span *ngIf="!(model.id > 0)" style="color: red">(*)</span>
+          <span ngbTooltip="Text length" class="max-length"> {{ '( Text length <= 10 )' | translate }}</span>
+
+          <input
+            [(ngModel)]="model.name"
+            maxlength="10"
+            type="text"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      <div class="col-md">
+        <div class="form-group">
+          <label ngbTooltip="EMPLOYEE_NICKNAME" for="nickName">{{ "EMPLOYEE_NICKNAME" | translate }}</label>
+          <span *ngIf="!(model.id > 0)" style="color: red">(*)</span>
+          <span ngbTooltip="Text length" class="max-length"> {{ '( Text length <= 20 )' | translate }}</span>
+
+          <input
+            [(ngModel)]="model.nickName"
+            maxlength="20"
+            type="text"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+    </div>
+
+    <div class="row">
+      <div class="col-md">
+        <div class="form-group">
+          <label ngbTooltip="EMPLOYEE_EMAIL" for="Email">{{ "EMPLOYEE_EMAIL" | translate }}</label>
+          <span ngbTooltip="Text length" class="max-length"> ( {{"Text length"| translate }} <= 100 )</span>
+
+          <input
+            [(ngModel)]="model.email"
+            maxlength="100"
+            type="text"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      <div class="col-md">
+        <div class="form-group">
+          <label ngbTooltip="EMPLOYEE_TEL" for="Tel">{{ "EMPLOYEE_TEL" | translate }}</label>
+          <span ngbTooltip="Text length" class="max-length"> {{ '( Text length <= 20 )' | translate }}</span>
+
+          <input
+            [(ngModel)]="model.tel"
+            maxlength="20"
+            type="text"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      <div class="col-md">
+        <div class="form-group">
+          <label ngbTooltip="EMPLOYEE_MOBILE" for="Mobile">{{ "EMPLOYEE_MOBILE" | translate }}</label>
+          <span ngbTooltip="Text length" class="max-length"> {{ '( Text length <= 20 )' | translate }}</span>
+
+          <input
+            [(ngModel)]="model.mobile"
+           maxlength="20"
+            type="text"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+
+    </div>
+
+    <div class="row">
+
+      <div class="col-md">
+        <div class="form-group">
+          <label ngbTooltip="EMPLOYEE_UNIT" for="unit">{{ "EMPLOYEE_UNIT" | translate }}</label>
+          <app-code-type-dropdownlist
+          id="unit-remote"
+          [codeType]="'Account_Unit'"
+          [(selectedValue)]="model.unit"
+          >
+          </app-code-type-dropdownlist>
+        </div>
+      </div>
+
+      <div class="col-md">
+        <div class="form-group">
+          <label ngbTooltip="EMPLOYEE_DEPT" for="Dept">{{ "EMPLOYEE_DEPT" | translate }}</label>
+          <app-code-type-dropdownlist
+          id="dept-remote"
+          [codeType]="'Account_Dept'"
+          [(selectedValue)]="model.dept"
+          >
+          </app-code-type-dropdownlist>
+        </div>
+      </div>
+
+      <div class="col-md">
+        <div class="form-group">
+          <label ngbTooltip="EMPLOYEE_LEVEL" for="Level">{{ "EMPLOYEE_LEVEL" | translate }}</label>
+          <span ngbTooltip="Text length" class="max-length"> {{ '( Text length <= 20 )' | translate }}</span>
+
+          <input
+            [(ngModel)]="model.level"
+            maxlength="20"
+            type="text"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+    </div>
+
+    <div class="row">
+      <div class="col-md-4 col-12">
+        <label>{{ "EMPLOYEE_SEX" | translate }} </label>
+        <div class="form-group">
+          <app-code-type-dropdownlist
+          id="sex-remote"
+          [codeType]="'SEX'"
+          (ngModelChange)="sexChange($event)"
+          [selectedValue]="model.sex +''"
+          >
+          </app-code-type-dropdownlist>
+        </div>
+      </div>
+      <div class="col-md-8 col-12">
+        <label ngbTooltip="EMPLOYEE_COMMENT">{{ "EMPLOYEE_COMMENT" | translate }}</label>
+        <div class="form-group">
+          <textarea
+            class="form-control"
+            [(ngModel)]="model.comment"
+            cols="4"
+            rows="4"
+          ></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <div class="mr-auto" *ngIf="model?.id > 0">
+      <p>
+        <span class='mr-2'> <span class='my-font-weight-bold'>{{ 'Create by' | translate}}</span> : {{audit?.createBy}}</span>
+        <span><span class='my-font-weight-bold'>{{ 'Create date time' | translate}}</span> : {{audit?.createDate}}</span>
+      </p>
+      <p>
+        <span class='mr-2'><span class='my-font-weight-bold'>{{ 'Update by' | translate}}</span> : {{audit?.updateBy}}</span>
+        <span><span class='my-font-weight-bold'>{{ 'Update date time' | translate}}</span> : {{audit?.updateDate}}</span>
+      </p>
+    </div>
+    <span *ngIf="!(model.id > 0)" class="my-note mr-auto">
+      {{ 'Note: (*) is a required field' | translate }}
+    </span>
+    <button
+      type="button"
+      class="btn btn-light"
+      ngbTooltip="CLOSE"
+      (click)="modal.close('Close click')"
+    >
+      {{ "CLOSE" | translate }}
+    </button>
+    <button
+      type="submit"
+      [disabled]="!model.name || !model.nickName || !model.no"
+      (click)="save()"
+      ngbTooltip="SAVE"
+      class="btn btn-primary"
+    >
+      {{ "SAVE" | translate }}
+    </button>
+  </div>
+</ng-template>

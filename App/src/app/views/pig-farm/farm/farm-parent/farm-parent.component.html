@@ -1,0 +1,41 @@
+<div class="flex-container">
+  <div>
+    <span class="title">{{'FARM' | translate}}</span>
+  <app-farm [height]="height"></app-farm>
+  </div>
+<!-- end farm -->
+
+  <div>
+    <span class="title">{{'AREA' | translate}}</span>
+    <app-area [height]="height"></app-area>
+  </div>
+  <!-- end area -->
+  <div>
+
+    <nav class="nav nav-pills nav-justified p-2" >
+      <a class="nav-link my-nav" (click)="onActive('Barn')" [ngClass]="{ 'active': active == 'Barn'}">{{'BARN' | translate}}</a>
+      <a class="nav-link my-nav" (click)="onActive('Culling Tank')" [ngClass]="{ 'active': active == 'Culling Tank'}">{{'CULLING_TANK' | translate}}</a>
+    </nav>
+    <div *ngIf="active == 'Barn'">
+      <app-barn [height]="height"></app-barn>
+    </div>
+
+    <div *ngIf="active == 'Culling Tank'">
+      <app-culling-tank [height]="height" ></app-culling-tank>
+    </div>
+
+  </div>
+  <!-- end barm -->
+
+  <div>
+    <span class="title">{{'ROOM' | translate}}</span>
+      <!-- <app-room [height]="height"></app-room> -->
+  </div>
+  <!-- end room -->
+  <div>
+    <span class="title">{{'PEN' | translate}}</span>
+    <app-pen [height]="height"></app-pen>
+  </div>
+  <!-- end pen -->
+
+</div>

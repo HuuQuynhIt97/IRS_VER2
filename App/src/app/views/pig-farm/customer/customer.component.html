@@ -1,0 +1,542 @@
+<ngx-spinner [fullScreen]="false" type="square-jelly-box" size="medium">
+  <p class="loading">Loading data...</p>
+</ngx-spinner>
+
+<div class="col-md-12" style="box-shadow: 1px 1px 20px; padding: 0">
+  <div class="card main-card">
+    <div class="card-body table-responsive p-0">
+      <ejs-grid
+        #grid
+        id="grid"
+        [dataSource]="data"
+        [allowPaging]="true"
+        [allowResizing]="true"
+        [showColumnMenu]="false"
+        [allowSorting]="true"
+        [allowExcelExport]="true"
+        [toolbar]="toolbarOptions"
+        [pageSettings]="pageSettings"
+        gridLines="Both"
+        [editSettings]="editSettings"
+        (toolbarClick)="toolbarClick($event)"
+        (excelExportComplete)='excelExpComplete($event)'
+
+      >
+        <e-columns>
+          <ng-template #odsTemplate let-data>
+            <button
+              class="e-tbar-btn e-tbtn-txt e-control e-btn e-lib"
+              type="button"
+              id="grid_odsexport"
+              tabindex="-1"
+              (click)="odsExport()"
+              style="width: auto"
+            >
+              <span class="e-btn-icon e-pdfexport e-icons e-icon-left"></span
+              ><span class="e-tbar-btn-text">{{ 'Ods Export' | translate}} </span>
+            </button>
+          </ng-template>
+          <e-column
+            field="#"
+            [allowSearching]="false"
+            textAlign="Left"
+          headerTextAlign="Center"
+            width="80"
+            isPrimaryKey="true"
+            headerText="#"
+          >
+            <ng-template #template let-data>
+              {{ NO(data.index) }}
+            </ng-template>
+            <ng-template #editTemplate let-data> # </ng-template>
+          </e-column>
+
+          <e-column
+            field="option"
+            textAlign="Left"
+          headerTextAlign="Center"
+            width="80"
+            headerTextAlign="Center"
+            [allowSorting]="false"
+            [allowSearching]="false"
+            [allowGrouping]="false"
+            [allowFiltering]="false"
+            [allowEditing]="false"
+            headerText="{{ 'OPTION' | translate }}"
+          >
+            <ng-template #template let-data>
+              <span (click)="delete(data.id)" class="delete-grid">
+                <i class="fa fa-trash"></i>
+              </span>
+              <span (click)="openModal(optionModal, data)" class="edit-grid">
+                <i class="fa fa-edit"></i>
+              </span>
+            </ng-template>
+          </e-column>
+
+          <e-column
+            field="id"
+[allowSearching]="false"
+            textAlign="Left"
+          headerTextAlign="Center"
+            [visible]="false"
+            isPrimaryKey="true"
+            headerText="{{ 'ID' }}"
+          >
+          </e-column>
+          <e-column
+            field="customerNo"
+            textAlign="Left"
+          headerTextAlign="Center"
+            [width]="120"
+            headerText="{{ 'CUSTOMER_NO' | translate }}"
+          >
+          </e-column>
+          <e-column
+            field="customerName"
+            textAlign="Left"
+          headerTextAlign="Center"
+            [width]="100"
+            headerText="{{ 'CUSTOMER_NAME' | translate }}"
+          >
+          </e-column>
+          <!-- <e-column
+            field="customerSexName"
+            textAlign="Left"
+          headerTextAlign="Center"
+            headerTextAlign="Center"
+            headerText="{{ 'CUSTOMER_SEX' | translate }}"
+          >
+          </e-column>
+          <e-column
+            field="customerBirthday"
+            textAlign="Left"
+          headerTextAlign="Center"
+            type='Date'
+            format="yyyy/MM/dd"
+            headerTextAlign="Center"
+            headerText="{{ 'CUSTOMER_BIRTHDAY' | translate }}"
+          >
+          </e-column> -->
+
+          <e-column
+            field="auction"
+            textAlign="Left"
+          headerTextAlign="Center"
+            headerTextAlign="Center"
+            headerText="{{ 'Auction' | translate }}"
+          >
+          </e-column>
+
+          <e-column
+            field="customerTel"
+            textAlign="Left"
+          headerTextAlign="Center"
+            headerTextAlign="Center"
+            headerText="{{ 'CUSTOMER_TEL' | translate }}"
+          >
+          </e-column>
+
+          <e-column
+            field="customerMobile"
+            textAlign="Left"
+          headerTextAlign="Center"
+            headerTextAlign="Center"
+            headerText="{{ 'CUSTOMER_MOBILE' | translate }}"
+          >
+          </e-column>
+
+          <e-column
+            field="customerAddress"
+            textAlign="Left"
+          headerTextAlign="Center"
+            headerTextAlign="Center"
+            headerText="{{ 'CUSTOMER_ADDRESS' | translate }}"
+          >
+          </e-column>
+
+          <e-column
+            field="customerIdcard"
+            textAlign="Left"
+          headerTextAlign="Center"
+            headerTextAlign="Center"
+            headerText="{{ 'CUSTOMER_IDCARD' | translate }}"
+          >
+          </e-column>
+
+          <e-column
+          field="customerName"
+          textAlign="Left"
+          headerTextAlign="Center"
+          headerTextAlign="Center"
+          headerText="{{ 'CUSTOMER_NAME' | translate }}"
+        >
+        </e-column>
+             <e-column
+          field="customerTel"
+          textAlign="Left"
+          headerTextAlign="Center"
+          headerTextAlign="Center"
+          headerText="{{ 'CUSTOMER_TEL' | translate }}"
+        >
+        </e-column>
+
+          <e-column
+          field="customerMobile"
+          textAlign="Left"
+          headerTextAlign="Center"
+          headerTextAlign="Center"
+          headerText="{{ 'CUSTOMER_MOBILE' | translate }}"
+        >
+        </e-column>
+
+          <e-column
+          field="customerEmail"
+          textAlign="Left"
+          headerTextAlign="Center"
+          headerTextAlign="Center"
+          headerText="{{ 'CUSTOMER_EMAIL' | translate }}"
+        >
+        </e-column>
+
+        <e-column
+        field="contactEmail"
+        textAlign="Left"
+          headerTextAlign="Center"
+        headerTextAlign="Center"
+        headerText="{{ 'CUSTOMER_CONTACT_EMAIL' | translate }}"
+      >
+      </e-column>
+
+
+          <e-column
+            field="comment"
+            [allowSearching]="false"
+            textAlign="Left"
+            headerTextAlign="Center"
+            headerText="{{ 'CUSTOMER_COMMENT' | translate }}"
+          >
+          </e-column>
+
+        </e-columns>
+      </ejs-grid>
+    </div>
+    <!-- /.card-body -->
+  </div>
+</div>
+
+<ng-template #optionModal let-modal>
+  <div class="modal-header my-modal">
+    <h4 [ngbTooltip]="title" class="modal-title">
+      <i class="fas fa-plus"></i> {{ title | translate }}
+    </h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" id="option">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label ngbTooltip="CUSTOMER_NO" for="no">{{
+            "CUSTOMER_NO" | translate
+          }}</label>
+          <span *ngIf="!(model.id > 0)" style="color: red">(*)</span>
+          <span ngbTooltip="Text length" class="max-length">
+            ( {{"Text length"| translate }} <= 100 )</span
+          >
+
+          <input
+            [(ngModel)]="model.customerNo"
+            maxlength="100"
+            type="text"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="form-group">
+          <label ngbTooltip="CUSTOMER_NAME" for="name">{{
+            "CUSTOMER_NAME" | translate
+          }}</label>
+          <span *ngIf="!(model.id > 0)" style="color: red">(*)</span>
+          <span ngbTooltip="Text length" class="max-length">
+            ( {{"Text length"| translate }} <= 100 )</span
+          >
+
+          <input
+            [(ngModel)]="model.customerName"
+            maxlength="10"
+            type="text"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      <!-- <div class="col-md-4">
+        <div class="form-group">
+          <label ngbTooltip="CUSTOMER_SEX" for="customerSex">{{
+            "CUSTOMER_SEX" | translate
+          }}</label>
+          <app-code-type-dropdownlist
+          id="sex-remote"
+          [codeType]="'CUSTOMER_SEX'"
+          (ngModelChange)="sexChange($event)"
+          [selectedValue]="model.customerSex +''"
+          >
+          </app-code-type-dropdownlist>
+
+        </div>
+      </div> -->
+
+      <!-- <div class="col-md-4">
+        <div class="form-group">
+          <label ngbTooltip="CUSTOMER_BIRTHDAY" for="customerBirthday">{{
+            "CUSTOMER_BIRTHDAY" | translate
+          }}</label>
+          <ejs-datepicker locale='en-US' format='yyyy/MM/dd' [(ngModel)]="model.customerBirthday"></ejs-datepicker>
+        </div>
+      </div> -->
+
+      <div class="col-md-4">
+        <div class="form-group">
+          <label ngbTooltip="CUSTOMER_NICKNAME" for="customerNickname">{{
+            "CUSTOMER_NICKNAME" | translate
+          }}</label>
+          <app-code-type-dropdownlist
+          id="auction-remote"
+          [codeType]="'Auction'"
+          [(selectedValue)]="model.customerNickname"
+          >
+          </app-code-type-dropdownlist>
+          <!-- <span ngbTooltip="Text length" class="max-length">
+            ( {{"Text length"| translate }} <= 20 )</span
+          >
+
+          <input
+            [(ngModel)]="model.customerNickname"
+            maxlength="20"
+            type="text"
+            class="form-control"
+          /> -->
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="form-group">
+          <label ngbTooltip="CUSTOMER_TEL" for="customerTel">{{
+            "CUSTOMER_TEL" | translate
+          }}</label>
+          <span ngbTooltip="Text length" class="max-length">
+            ( {{"Text length"| translate }} <= 20 )</span
+          >
+
+          <input
+            [(ngModel)]="model.customerTel"
+            maxlength="20"
+            type="text"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="form-group">
+          <label ngbTooltip="CUSTOMER_MOBILE" for="customerMobile">{{
+            "CUSTOMER_MOBILE" | translate
+          }}</label>
+          <span ngbTooltip="Text length" class="max-length">
+            ( {{"Text length"| translate }} <= 20 )</span
+          >
+
+          <input
+            [(ngModel)]="model.customerMobile"
+            maxlength="20"
+            type="text"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="form-group">
+          <label ngbTooltip="CUSTOMER_ADDRESS" for="customerAddress">{{
+            "CUSTOMER_ADDRESS" | translate
+          }}</label>
+          <span ngbTooltip="Text length" class="max-length">
+            ( {{"Text length"| translate }} <= 100 )</span
+          >
+
+          <input
+            [(ngModel)]="model.customerAddress"
+            maxlength="100"
+            type="text"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+       <div class="col-md-4">
+        <div class="form-group">
+          <label ngbTooltip="CUSTOMER_IDCARD" for="customerIdcard">{{
+            "CUSTOMER_IDCARD" | translate
+          }}</label>
+          <span ngbTooltip="Text length" class="max-length">
+            ( {{"Text length"| translate }} <= 20 )</span
+          >
+
+          <input
+            [(ngModel)]="model.customerIdcard"
+            maxlength="20"
+            type="text"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="form-group">
+          <label ngbTooltip="CUSTOMER_EMAIL" for="customerEmail">{{
+            "CUSTOMER_EMAIL" | translate
+          }}</label>
+          <span ngbTooltip="Text length" class="max-length">
+            ( {{"Text length"| translate }} <= 100 )</span
+          >
+
+          <input
+            [(ngModel)]="model.customerEmail"
+            maxlength="100"
+            type="text"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+       <div class="col-md-4">
+        <div class="form-group">
+          <label ngbTooltip="CUSTOMER_CONTACT_NAME" for="contactName">{{
+            "CUSTOMER_CONTACT_NAME" | translate
+          }}</label>
+          <span ngbTooltip="Text length" class="max-length">
+            ( {{"Text length"| translate }} <= 20 )</span
+          >
+
+          <input
+            [(ngModel)]="model.contactName"
+            maxlength="20"
+            type="text"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+       <div class="col-md-4">
+        <div class="form-group">
+          <label ngbTooltip="CUSTOMER_CONTACT_TEL" for="contactTel">{{
+            "CUSTOMER_CONTACT_TEL" | translate
+          }}</label>
+          <span ngbTooltip="Text length" class="max-length">
+            ( {{"Text length"| translate }} <= 20 )</span
+          >
+
+          <input
+            [(ngModel)]="model.contactTel"
+            maxlength="20"
+            type="text"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+       <div class="col-md-4">
+        <div class="form-group">
+          <label ngbTooltip="CUSTOMER_CONTACT_MOBILE" for="contactMobile">{{
+            "CUSTOMER_CONTACT_MOBILE" | translate
+          }}</label>
+          <span ngbTooltip="Text length" class="max-length">
+            ( {{"Text length"| translate }} <= 20 )</span
+          >
+
+          <input
+            [(ngModel)]="model.contactMobile"
+            maxlength="20"
+            type="text"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="form-group">
+          <label ngbTooltip="CUSTOMER_CONTACT_EMAIL" for="contactEmail">{{
+            "CUSTOMER_CONTACT_EMAIL" | translate
+          }}</label>
+          <span ngbTooltip="Text length" class="max-length">
+            ( {{"Text length"| translate }} <= 100 )</span
+          >
+
+          <input
+            [(ngModel)]="model.contactEmail"
+            maxlength="100"
+            type="text"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+
+      <div class="col-md-12">
+        <label ngbTooltip="CUSTOMER_COMMENT">{{
+          "CUSTOMER_COMMENT" | translate
+        }}</label>
+        <div class="form-group">
+          <textarea
+            class="form-control"
+            [(ngModel)]="model.comment"
+            cols="4"
+            rows="4"
+          ></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <div class="mr-auto" *ngIf="model?.id > 0">
+      <p>
+        <span class='mr-2'> <span class='my-font-weight-bold'>{{ 'Create by' | translate}}</span> : {{audit?.createBy}}</span>
+        <span><span class='my-font-weight-bold'>{{ 'Create date time' | translate}}</span> : {{audit?.createDate}}</span>
+      </p>
+      <p>
+        <span class='mr-2'><span class='my-font-weight-bold'>{{ 'Update by' | translate}}</span> : {{audit?.updateBy}}</span>
+        <span><span class='my-font-weight-bold'>{{ 'Update date time' | translate}}</span> : {{audit?.updateDate}}</span>
+      </p>
+    </div>
+    <span *ngIf="!(model.id > 0)" class="my-note mr-auto">
+      {{ 'Note: (*) is a required field' | translate }}
+    </span>
+    <button
+      type="button"
+      class="btn btn-light"
+      ngbTooltip="CLOSE"
+      (click)="modal.close('Close click')"
+    >
+      {{ "CLOSE" | translate }}
+    </button>
+    <button
+      type="submit"
+      [disabled]="!model.customerName || !model.customerNo"
+      (click)="save()"
+      ngbTooltip="SAVE"
+      class="btn btn-primary"
+    >
+      {{ "SAVE" | translate }}
+    </button>
+  </div>
+</ng-template>

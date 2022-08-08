@@ -1,0 +1,50 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <ejs-grid #grid (actionBegin)="actionBegin($event)" gridLines='Both' (onDoubleClick)='onDoubleClick($event)'
+        (actionComplete)='actionComplete($event)' (rowDeselected)='rowDeselected($event)' [toolbar]='toolbarOptions'
+        [dataSource]='supplier' allowPaging='true'  allowResizing='true' 
+         [pageSettings]='pageSettings'
+        (dataBound)='dataBound()' (toolbarClick)='toolbarClick($event)' [editSettings]='editSettings'>
+        <e-columns>
+          <e-column
+            field="option"
+            [allowSorting]="false"
+            [allowSearching]="false"
+            [allowGrouping]="false"
+            [allowFiltering]="false"
+            [allowEditing]="false"
+            textAlign="Center"
+            headerTextAlign="Center"
+            width="40"
+            headerTextAlign="Center"
+            headerText="{{ 'OPTION' | translate}}"
+          >
+            <ng-template #template let-data>
+              <span (click)="delete(data.id)" class="delete-grid">
+                <i class="fa fa-trash"></i>
+              </span>
+            </ng-template>
+          </e-column>
+          <e-column field='name' headerText='Supplier Name' textAlign='Center'>
+            <ng-template #headerTemplate let-data>
+              {{'SUPPLIER_NAME' | translate}}
+            </ng-template>
+          </e-column>
+          <e-column field='process' headerText='Treatment' textAlign='Center'>
+            <ng-template #headerTemplate let-data>
+              {{'TREATMENT_NAME' | translate}}
+            </ng-template>
+            <ng-template #editTemplate let-data>
+              <ejs-dropdownlist #buildingNameDropdownlist [dataSource]='ProcessData' [value]="data.processID"
+                popupHeight='200px' popupWidth='250px' [fields]='fieldsSup' [allowFiltering]='true'
+                (change)='onChangeSupplier($event)'>
+              </ejs-dropdownlist>
+            </ng-template>
+
+          </e-column>
+        </e-columns>
+      </ejs-grid>
+    </div>
+  </div>
+</div>

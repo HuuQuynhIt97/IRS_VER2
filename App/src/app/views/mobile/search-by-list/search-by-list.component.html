@@ -1,0 +1,109 @@
+<div class="main-content" id="main-text">
+    <div class="sidebar-content">
+      <div class="row">
+        <div class="col-12 p-0">
+          <div class="heading">{{'Mobile_Search_By_List' | translate}}</div>
+        </div>
+      </div>
+  
+      <div class="row my-2">
+        <div class="col-12 d-flex justify-content-start align-items-center">
+          <div class="mr-2" style="width: 35px">{{'Hall' | translate}}</div>
+          <div style="width: 140px">
+            <ejs-dropdownlist
+                id='hallDropdown'
+                #hallDropdown
+                [dataSource]="hallData"
+                (change)="ngModelChangeHallFilter($event)"
+                [fields]="hallFields"
+                [(ngModel)]="fiterRequest.hallGuidFiter"
+                name="hallGuidFiter"
+                placeholder="{{'Select Hall' | translate}}"
+            ></ejs-dropdownlist>
+          </div>
+
+         
+  
+          <div class="mx-2" style="width: 35px">{{'Date' | translate}}</div>
+          <div style="width: 140px">
+            <ejs-datepicker
+                name="time"
+                #date
+                [locale]='dateLocale'
+                format="yyyy/MM/dd"
+                [value]='dateValue'
+                [(ngModel)]="dateValue"
+                (change)="changeTime($event)"
+            ></ejs-datepicker>
+          </div>
+          <!-- <button class="btn btn-sm btn-primary mx-2" (click)="search()">{{'Search_Normal' | translate}}</button> -->
+
+          <button type="button" (click)="refresh()" class="btn btn-sm btn-danger mx-2" > {{ translate.instant('Refresh') }} </button>
+        </div>
+      </div>
+    </div>
+</div>
+
+  <ejs-grid [dataSource]='data'
+  [enableInfiniteScrolling]="true"
+  [allowPaging]="false"
+  [pageSettings]="pageSettings"
+  [height]="700 + 'px'"
+  >
+  <e-columns>
+      <e-column field='ContactName' headerText='' >
+        <ng-template #template let-data>
+            <div class="card m-0 p-0">
+              <div class="card-header bg-primary text-white">
+                 {{data.hallName}} - {{data.roomName}}
+              </div>
+              <div
+                class="card-body p-0"
+                [style.background-color]="data.recordDate === null ? '#f5dada' : '#1576b61f' "
+              >
+
+               <div class="d-flex justify-content-start mt-2">
+
+                  <div style="width: 50%">
+                    <div class="d-flex justify-content-start">
+                    <ng-container *ngIf="data.isBooking; else elseTemplate1">
+                      <div style="width: 50%" >
+                        <div style=" word-wrap: break-word;">&nbsp;&nbsp;{{ "ROOM_NO" | translate }}: {{data.roomNo}}</div>
+                        <div style=" word-wrap: break-word;">&nbsp;&nbsp;{{ "DATE" | translate }}: {{data.time}}</div>
+                        <div style=" word-wrap: break-word;">&nbsp;&nbsp;{{ "Time" | translate }}: &nbsp;&nbsp;{{data.hallStart}} - {{data.hallEnd}}</div>
+                      </div>
+                    </ng-container>
+                    <ng-template #elseTemplate1>
+                      <span style="color: green;">
+                        {{'SEARCH_BY_LIST_NODATA' | translate}}
+                      </span>
+                    </ng-template>
+                    
+                    
+                  </div>
+                  </div>
+                  <div style="width: 50%">
+                    <ng-container *ngIf="data.isBooking; else elseTemplate">
+                      <div class="d-flex justify-content-end">
+                        <button (click)="detailRoom(data.roomID,data.bookingID)" class="btn btn-lg btn-warning ml-2"  > {{'Detail' | translate}}</button>
+                      </div>
+                    </ng-container>
+                    <ng-template #elseTemplate>
+                      <div class="d-flex justify-content-end">
+                        <button routerLink="/mobile/booking/0" class="btn btn-lg btn-success ml-2"   > {{'Booking' | translate}}</button>
+                      </div>
+                    </ng-template>
+                    
+                    
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+        </ng-template>
+      </e-column>
+
+  </e-columns>
+</ejs-grid>
+  
+  

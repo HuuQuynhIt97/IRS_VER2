@@ -1,0 +1,47 @@
+
+.card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: #fff;
+  background-clip: border-box;
+  border: 0 solid transparent;
+  border-radius: .25rem;
+  margin-bottom: 1.5rem;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 3px 4px;
+}
+.me-2 {
+  margin-right: .5rem!important;
+}
+.kv-avatar .krajee-default.file-preview-frame,
+.kv-avatar .krajee-default.file-preview-frame:hover {
+  margin: 0;
+  padding: 0;
+  border: none;
+  box-shadow: none;
+  text-align: center;
+}
+.kv-avatar {
+  display: inline-block;
+}
+.kv-avatar .file-input {
+  display: table-cell;
+  width: 213px;
+}
+.kv-reqd {
+  color: red;
+  font-family: monospace;
+  font-weight: normal;
+}
+.avatar {
+  vertical-align: middle;
+  width: 80px;
+  height: 80px;
+  border-radius: 5px;
+  background-repeat: initial;
+}
+
+label {
+  font-weight: 500;
+}

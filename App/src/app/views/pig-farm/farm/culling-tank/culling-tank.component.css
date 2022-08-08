@@ -1,0 +1,15 @@
+input, textarea {
+  box-shadow: 0.5px 0.5px 1px;
+}
+label {
+  font-weight: 700;
+}
+.e-grid .e-active {
+  background-color: #fd7e14e8 !important;
+}
+.e-input-group {
+  box-shadow: 0.5px 0.5px 1px !important;
+  padding:3px !important;
+
+}
+

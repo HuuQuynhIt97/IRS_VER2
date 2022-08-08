@@ -1,0 +1,389 @@
+
+
+<div class="col-md-12" style="box-shadow: 1px 1px 20px; padding: 0">
+
+  <ejs-toolbar  >
+    <e-items>
+      
+      <e-item id='select-1' tooltipText='Site' text='Site'>
+        <ng-template #template>
+          <form class="form-inline">
+            <div class="form-group">
+              <label for="inputPassword6">{{ translate.instant('SITE') }} </label> 
+              <span style="color: transparent;"> | </span>
+              <ejs-dropdownlist
+                id='siteDropdown'
+                #siteDropdown
+                (change)="ngModelChangeSiteFilter($event)"
+                [fields]="siteFields"
+                [(ngModel)]="fiterRequest.siteGuidFilter"
+                name="siteGuidFilter"
+                placeholder="{{'Select Site' | translate}}"
+                [dataSource]="siteData"
+              ></ejs-dropdownlist>
+            </div>
+          </form>
+          
+        </ng-template>
+      </e-item>
+
+      <e-item id='select-2' tooltipText='Hall' text='Hall'>
+        <ng-template #template>
+          <form class="form-inline">
+            <div class="form-group">
+              <label for="inputPassword6">{{ translate.instant('HALL') }} </label> 
+              <span style="color: transparent;"> | </span>
+              <ejs-dropdownlist
+                id='hallDropdown'
+                #hallDropdown
+                [fields]="hallFields"
+                (change)="ngModelChangeHallFilter($event)"
+                [(ngModel)]="fiterRequest.hallGuidFilter"
+                name="hallGuidFilter"
+                placeholder="{{'Select Hall' | translate}}"
+                [dataSource]="hallData"
+              ></ejs-dropdownlist>
+            </div>
+          </form>
+        </ng-template>
+      </e-item>
+
+      <!-- <e-item id='search'   tooltipText='search' text='search'>
+        <ng-template #template>
+          <form class="form-inline">
+            <div class="form-group">
+              <button type="button" (click)="search()" class="btn btn-primary" ><i class="fa fa-search" aria-hidden="true"></i> {{ translate.instant('Search_Normal') }} </button>
+            </div>
+          </form>
+        </ng-template>
+      </e-item> -->
+
+      <e-item id='refresh'   tooltipText='refresh' text='refresh'>
+        <ng-template #template>
+          <form class="form-inline">
+            <div class="form-group">
+              <button type="button" (click)="refresh()" class="btn btn-danger" ><i class="fa fa-retweet" aria-hidden="true"></i> {{ translate.instant('Get_all_data') }} </button>
+            </div>
+          </form>
+        </ng-template>
+      </e-item>
+      <e-item type='Separator'></e-item>
+
+      <e-item align='right'>
+        <ng-template #template>
+          <div class="e-toolbar-item e-search-wrapper e-toolbar-right" aria-disabled="false" title="Search">
+            <div class="e-input-group e-search" role="search"> <input id="toolbar_searchbar" style="width:178px" autocomplete="off"
+                [(ngModel)]="name" (change)='searchGrid($event)'  class="e-input"
+                placeholder="{{ 'Search_Normal' | translate }}">
+              <span id="toolbar_searchbutton" class="e-input-group-icon fa fa-search e-icons" tabindex="-1"
+                title="Search" aria-label="search"></span>
+            </div>
+          </div>
+        </ng-template>
+      </e-item>
+
+    </e-items>
+  </ejs-toolbar>
+  <div class="card main-card">
+    <div class="card-body table-responsive p-0">
+      <ejs-grid
+        #grid
+        id="grid"
+        [dataSource]="data"
+        [allowPaging]="true"
+        [allowResizing]="true"
+        [allowSorting]="true"
+        gridLines="Both"
+        [locale]="locale"
+        [editSettings]="editSettings"
+        [pageSettings]="pageSettings"
+        [height]="height"
+      >
+        <e-columns>
+          <e-column
+            field="option"
+            [allowSorting]="false"
+            [allowSearching]="false"
+            [allowGrouping]="false"
+            [allowFiltering]="false"
+            [allowEditing]="false"
+            textAlign="Center"
+            headerTextAlign="Center"
+            width="50"
+            headerTextAlign="Center"
+            headerText="{{ 'OPTION' | translate}}"
+          >
+            <ng-template #template let-data>
+              <!-- <span (click)="delete(data.id)" class="delete-grid">
+                <i class="fa fa-trash"></i>
+              </span> -->
+              <span (click)="openModal(optionModal, data)" class="edit-grid">
+                <i class="fa fa-edit"></i>
+              </span>
+            </ng-template>
+          </e-column>
+      
+      
+          
+          <e-column field="roomName" textAlign="Left" headerText="{{ 'ROOM_PHOTO' | translate }}" >
+            <ng-template #template let-data>
+              <img
+                style="cursor: pointer"
+                [src]="imagePathDefault(data.roomPhoto)"
+                class="avatar"
+                onError="this.src='assets/images/no-img.jpg'"
+                [alt]=""
+              />
+            </ng-template>
+          </e-column>
+          <e-column field="roomName" textAlign="Left" headerText="{{ 'ROOM_NAME' | translate }}" ></e-column>
+          <e-column field="comment" textAlign="Left" headerText="{{ 'ROOM_COMMENT' | translate }}" ></e-column>
+         
+        </e-columns>
+      </ejs-grid>
+
+    </div>
+  </div>
+</div>
+
+<ng-template #optionModal let-modal>
+  <div class="modal-header my-modal">
+    <h4 class="modal-title">
+      <i class="fas fa-plus"></i> {{ title | translate }}
+    </h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="closeModal()"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="d-flex justify-content-center" *ngIf="loading == 1">
+      <div class="spinner-border text-primary" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+     </div>
+    <div class="row">
+      <div class="col-md-4 text-center">
+        <div class="kv-avatar">
+          <div class="file-loading">
+            <input
+              id="avatar-1"
+              readonly
+              name="avatar-1"
+              (change)="onFileChangeLogo($event)"
+              type="file"
+              required
+            />
+          </div>
+        </div>
+        <div class="kv-avatar-hint">
+          <small>Select file < 5000 KB</small>
+        </div>
+      </div>
+
+      <div class="col-md-8">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label ngbTooltip="ROOM_NAME" for="name">{{ "ROOM_NAME" | translate }}</label>
+              <span  style="color: red">(*)</span>
+              <span ngbTooltip="Text length" class="max-length"> {{ '( Text length <= 20 )' | translate }}</span>
+              <input
+                maxlength="20"
+                type="text"
+                readonly
+                [(ngModel)]="model.roomName"
+                class="form-control"
+              />
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label ngbTooltip="ROOM_NO" for="no">{{ "ROOM_NO" | translate }}</label>
+              <span  style="color: red">(*)</span>
+              <span ngbTooltip="Text length" class="max-length"> {{ '( Text length <= 20 )' | translate }}</span>
+              <input
+                maxlength="20"
+                type="text"
+                readonly
+                [(ngModel)]="model.roomNo"
+                class="form-control"
+              />
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>{{ "ROOM_SIZE" | translate }} </label>
+              <span  style="color: red">(*)</span>
+              <span ngbTooltip="Text length" class="max-length"> {{ '( Text length <= 20 )' | translate }}</span>
+              <input
+              name="roomSize"
+              type="number"
+              readonly
+              min="0"
+              [(ngModel)]="model.roomSize"
+              class="form-control"
+            />
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label ngbTooltip="ROOM_DESCRIPT" for="no">{{ "ROOM_DESCRIPT" | translate }}</label>
+              <span  style="color: red">(*)</span>
+              <span ngbTooltip="Text length" class="max-length"> {{ '( Text length <= 20 )' | translate }}</span>
+              <input
+                maxlength="100"
+                type="text"
+                readonly
+                [(ngModel)]="model.roomDescript"
+                class="form-control"
+              />
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>{{ "ROOM_PRICE" | translate }} </label>
+              <span  style="color: red">(*)</span>
+              <span ngbTooltip="Text length" class="max-length"> {{ '( Text length <= 20 )' | translate }}</span>
+              <input
+              name="roomPrice"
+              type="number"
+              min="0"
+              readonly
+              [(ngModel)]="model.price"
+              class="form-control"
+            />
+            </div>
+            
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>{{ "ROOM_PRICE_MEMBER" | translate }} </label>
+              <span  style="color: red">(*)</span>
+              <span ngbTooltip="Text length" class="max-length"> {{ '( Text length <= 20 )' | translate }}</span>
+              <input
+              name="roomPriceMember"
+              type="number"
+              readonly
+              min="0"
+              [(ngModel)]="model.priceMember"
+              class="form-control"
+            />
+            </div>
+            
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>{{ "ROOM_PRICE_SPECIAL" | translate }} </label>
+              <span  style="color: red">(*)</span>
+              <span ngbTooltip="Text length" class="max-length"> {{ '( Text length <= 20 )' | translate }}</span>
+              <input
+              name="roomPriceSpecial"
+              type="number"
+              min="0"
+              readonly
+              [(ngModel)]="model.priceSpecial"
+              class="form-control"
+            />
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label ngbTooltip="ROOM_LOCATION" for="Employee">{{ "ROOM_LOCATION" | translate }}</label>
+              <span  style="color: red">(*)</span>
+              <app-code-type-dropdownlist
+                id="site-type-remote"
+                [codeType]="'Room_Location'"
+                disabled="true"
+                [(selectedValue)]="model.roomLocation"
+                >
+              </app-code-type-dropdownlist>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label ngbTooltip="SITE_TYPE" for="Employee">{{ "SITE_TYPE" | translate }}</label>
+              <span  style="color: red">(*)</span>
+              <app-code-type-dropdownlist
+                id="site-type-remote"
+                disabled="true"
+                [codeType]="'Hall_Type'"
+                [(selectedValue)]="model.type"
+                >
+              </app-code-type-dropdownlist>
+              
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <label> Room Gallery </label>
+        <div class="custom-dropzone mb-2" ngx-dropzone  [disabled]="true" [accept]="'image/*'" (change)="onSelect($event)">
+          <ngx-dropzone-label>
+            <div>
+              <h2>Upload Images</h2>
+            </div>
+          </ngx-dropzone-label>
+          <ngx-dropzone-image-preview  ngProjectAs="ngx-dropzone-preview" *ngFor="let f of listFile" [file]="f"
+            [removable]="true" (removed)="onRemove(f)" aria-disabled="true">
+          </ngx-dropzone-image-preview>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <label>{{ "ROOM_COMMENT" | translate }} </label>
+        <div class="form-group">
+          <textarea
+            class="form-control"
+            [(ngModel)]="model.comment"
+            cols="4"
+            readonly
+            rows="4"
+          ></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="mr-auto" *ngIf="model?.id > 0">
+      <p>
+        <span class='mr-2'> <span class='my-font-weight-bold'>{{ 'Create by' | translate}}</span> : {{audit?.createBy}}</span>
+        <span><span class='my-font-weight-bold'>{{ 'Create date time' | translate}}</span> : {{audit?.createDate}}</span>
+      </p>
+      <p>
+        <span class='mr-2'><span class='my-font-weight-bold'>{{ 'Update by' | translate}}</span> : {{audit?.updateBy}}</span>
+        <span><span class='my-font-weight-bold'>{{ 'Update date time' | translate}}</span> : {{audit?.updateDate}}</span>
+      </p>
+    </div>
+    <span *ngIf="!(model.id > 0)" class="my-note mr-auto">
+      {{ 'Note: (*) is a required field' | translate }}
+    </span>
+    <button
+      type="button"
+      class="btn btn-light"
+      (click)="closeModal()"
+    >
+      {{ "CLOSE" | translate }}
+    </button>
+    <!-- <button
+      [disabled]="true"
+      (click)="save()"
+      class="btn btn-primary"
+    >
+      {{ "SAVE" | translate }}
+    </button> -->
+  </div>
+</ng-template>

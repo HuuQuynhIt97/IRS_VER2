@@ -1,0 +1,111 @@
+<ejs-grid
+  #grid
+  id="grid"
+  [dataSource]="data"
+  [allowPaging]="true"
+  [allowResizing]="true"
+  [allowSorting]="true"
+  gridLines="Both"
+  [locale]="locale"
+  [editSettings]="chemicalEditSettings"
+  [toolbar]="toolbarOptions"
+  [pageSettings]='pageSettingsRecipe'
+  [allowExcelExport]="true"
+  [enableInfiniteScrolling]="true"
+  (rowSelected)="rowSelected($event)"
+  (recordClick)="recordClick($event)"
+  (actionBegin)="actionBegin($event)"
+  [selectionSettings]="selectionOptions"
+  (toolbarClick)="toolbarClick($event)"
+  (dataBound)='dataBound()'
+>
+
+  <e-columns>
+
+    <e-column
+      field="option"
+      [allowSorting]="false"
+      [allowSearching]="false"
+      [allowGrouping]="false"
+      [allowFiltering]="false"
+      [allowEditing]="false"
+      textAlign="Center"
+      headerTextAlign="Center"
+      width="50"
+      headerTextAlign="Center"
+      headerText="{{ 'OPTION' | translate}}"
+    >
+      <ng-template #template let-data>
+        <span (click)="delete(data.id)" *ngIf="groupCode === 'ADMIN'" class="delete-grid">
+          <i class="fa fa-trash"></i>
+        </span>
+      </ng-template>
+    </e-column>
+
+    <e-column
+      field="part"
+      textAlign="Left"
+      headerText="{{ 'PART_NAME' | translate }}"
+    >
+    <ng-template #editTemplate let-data>
+      <ejs-dropdownlist #partDropdownlist [dataSource]='dataPart' 
+        [fields]='ChemicalFields' [allowFiltering]='true'
+        [(ngModel)]="schedule.partGuid"
+        >
+      </ejs-dropdownlist>
+    </ng-template>
+    </e-column>
+
+    <!-- <e-column field="treatment"  textAlign="Left" headerText="{{ 'TREATMENT_NAME' | translate }}" >
+      <ng-template #editTemplate let-data>
+        <ejs-dropdownlist #treatmentDropdownlist [dataSource]='dataTreatment' 
+          [fields]='ChemicalFields' [allowFiltering]='true'
+          [(ngModel)]="schedule.treatmentGuid"
+          >
+        </ejs-dropdownlist>
+      </ng-template>
+    </e-column> -->
+
+    <!-- <e-column field="process" textAlign="Left" headerText="{{ 'PROCESS_NAME' | translate }}">
+      <ng-template #editTemplate let-data>
+        <ejs-dropdownlist #processDropdownlist [dataSource]='dataProcess' 
+          [fields]='ChemicalFields' [allowFiltering]='true'
+          [(ngModel)]="schedule.processGuid"
+          >
+        </ejs-dropdownlist>
+      </ng-template>
+    </e-column> -->
+
+    <e-column field="treatmentWay" textAlign="Left" headerText="{{ 'TREATMENT_WAY_NAME' | translate }}">
+      <ng-template #editTemplate let-data>
+        <ejs-dropdownlist #treatmentWayDropdownlist [dataSource]='dataTreatmentWay' 
+          [fields]='ChemicalFields' [allowFiltering]='true'
+          [(ngModel)]="schedule.treatmentWayGuid"
+          >
+        </ejs-dropdownlist>
+      </ng-template>
+    </e-column>
+
+    <e-column
+      field="color"
+      textAlign="Left"
+      headerText="{{ 'COLOR_NAME' | translate }}"
+    >
+    <ng-template #editTemplate let-data>
+      <ejs-dropdownlist #colorDropdownlist [dataSource]='dataColor' 
+        [fields]='ChemicalFields' [allowFiltering]='true'
+        [(ngModel)]="schedule.colorGuid"
+        >
+      </ejs-dropdownlist>
+    </ng-template>
+    </e-column>
+
+    <!-- <e-column
+      field="unit"
+      textAlign="Left"
+      headerText="{{ 'UNIT_LABEL' | translate }}"
+    >
+    </e-column> -->
+    
+  </e-columns>
+</ejs-grid>

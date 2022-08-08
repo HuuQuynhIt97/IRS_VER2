@@ -1,0 +1,122 @@
+<div class="container">
+  <div class="main-body">
+    <div class="row">
+      <div class="col-lg-4 col-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex flex-column align-items-center text-center">
+              <div class="kv-avatar">
+                <div class="file-loading">
+                    <input id="avatar-1" name="avatar-1" (change)="onFileChangeLogo($event)" type="file" required>
+                </div>
+            </div>
+            <div class="kv-avatar-hint">
+                <small>Select file < 5000 KB (jpg, png, gif)</small>
+            </div>
+            </div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                <label class="mb-0">
+                  <i class="fa fa-envelope" aria-hidden="true"></i> {{'EMPLOYEE_EMAIL' | translate}}
+                </label>
+                <span class="text-secondary">{{data.email}}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-8 col-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="row mb-3">
+              <div class="col-sm-3">
+                <label class="mb-0">{{'EMPLOYEE_NICKNAME' | translate}}</label>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                <input type="text" class="form-control" [(ngModel)]="data.nickName">
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-sm-3">
+                <label class="mb-0">{{'EMPLOYEE_EMAIL' | translate}}</label>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                <input type="email" class="form-control" [(ngModel)]="data.email">
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-sm-3">
+                <label class="mb-0">{{'EMPLOYEE_MOBILE' | translate}}</label>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                <input type="text" class="form-control" [(ngModel)]="data.mobile">
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-sm-3">
+                <label class="mb-0">{{'EMPLOYEE_CONTACT_NAME' | translate}}</label>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                <input type="text" class="form-control" [(ngModel)]="data.contactName">
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-sm-3">
+                <label class="mb-0">{{'EMPLOYEE_CONTACT_TEL' | translate}}</label>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                <input type="text" class="form-control"  [(ngModel)]="data.contactTel">
+              </div>
+            </div>
+
+
+
+            <div class="row mb-3">
+              <div class="col-sm-3">
+                <label class="mb-0">{{'EMPLOYEE_ADDRESS' | translate}}</label>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                <input type="text" class="form-control" [(ngModel)]="data.address">
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-sm-3">
+                <label class="mb-0">{{'EMPLOYEE_ADDRESS_DOMICILE' | translate}} </label>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                <input type="text" class="form-control" [(ngModel)]="data.addressDomicile">
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-sm-3">
+                <label class="mb-0">{{'PAGE_SIZE_SETTING' | translate}} </label>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                <ejs-dropdownlist
+                id="pageSizeSetting-remote"
+                [(value)]="pageSizeSetting"
+                [dataSource]="dataSource"
+                [fields]="remoteFields"
+                [query]="query"
+              ></ejs-dropdownlist>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-3"></div>
+              <div class="col-sm-9 text-secondary">
+                <input type="button" (click)='storeProfile()' class="btn btn-primary px-4" value="{{'SAVE'|translate}}">
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

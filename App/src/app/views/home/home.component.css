@@ -1,0 +1,30 @@
+.btn-mobile-login {
+  font-size: 1rem !important;
+    font-weight: bold !important;
+}
+.btn-mobile-login:hover {
+  color: #000000;
+  opacity: .9;
+  transition: all .5;
+}
+
+.header_brand {
+  width: 96px;
+  height: 37px;
+  /* background: url("../../../assets/images/brand_ch_h.svg") no-repeat center; */
+  background-size: cover;
+}
+
+ /* mobile width < 740px */
+ @media only screen and (max-width: 46.1875rem) {
+  main.main.d-flex.align-items-center {
+    height: 40vh !important;
+}
+}
+/* tablet width >= 740px and width < 1024px */
+@media only screen and (min-width: 46.1875rem) and (max-width: 63.9375rem) {
+  main.main.d-flex.align-items-center {
+    height: 40vh !important;
+}
+
+}

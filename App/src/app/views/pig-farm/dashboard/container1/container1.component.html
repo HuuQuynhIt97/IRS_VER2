@@ -1,0 +1,121 @@
+<div class="row mt-2">
+  <div class="col-12">
+      <h3>各場進度</h3>
+  </div>
+  <div class="col" *ngFor="let item of dashboadData; let j = index">
+      <div class="card">
+          <div class="card-body">
+              <ejs-chart style='display:block;' [legendSettings]="legendSettings" [chartArea]='chartArea' [width]='width' align='center' [id]="'chartcontainer1' + j" [primaryXAxis]='primaryXAxis'
+              [primaryYAxis]='primaryYAxis' [title]='item.title' [tooltip]='tooltip' (load)='load($event)'>
+              <e-series-collection>
+                  <e-series *ngFor="let chart of item.data; let i = index" [dataSource]='chart.dataSource' [fill]="chart.fill" type='Column' xName='x' yName='y' name='' width=2 [marker]='marker'> </e-series>
+              </e-series-collection>
+          </ejs-chart>
+          </div>
+        </div>
+  </div>
+
+</div>
+<div class="row mt-2">
+<div class="col-12 flex-container" >
+  <div><h3>豬隻現況統計</h3></div>  
+  <div>年月</div>
+  <div>
+    <ejs-datepicker format="yyyy/MM" [(value)]="yearMonth" depth="Year" start="Year" [enableMask]="true" style="width:120px"></ejs-datepicker>
+  </div>
+ 
+</div>
+<div class="col-12">
+  <div class="card">
+    <div class="card-body">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th class="text-center" scope="col">站點</th>
+            <th class="text-center" scope="col">目前頭數</th>
+            <th class="text-center" scope="col">月齡</th>
+            <th class="text-center" scope="col">達成率</th>
+            <th class="text-center" scope="col">疫苗接種數</th>
+            <th class="text-center" scope="col">疫苗接種目標</th>
+            <th class="text-center" scope="col">達成率</th>
+            <th class="text-center" scope="col">熟成頭數</th>
+            <th class="text-center" scope="col">熟成目標</th>
+            <th class="text-center" scope="col">達成率</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of data2">
+            <td class="text-center">{{item.a}}</td>
+            <td class="text-center" [class.color4]="item.b == 0 || item.b == null">{{item.b}}</td>
+            <td class="text-center" [class.color4]="item.c == 0 || item.c == null">{{item.c}}</td>
+            <td class="text-center" 
+            [class.color1]="item.d == 50 || item.d == 60 || item.d == 70 || item.d == 14 || item.d == 20 || item.d == 24 || item.d == 16" 
+            [class.color2]="item.d == 90 || item.d == 95|| item.d == 62"
+            [class.color3]="item.d == 40 || item.d == 80"
+            [class.color4]="item.d == 0 || item.d == null"
+            >{{item.d}}%</td>
+            <td class="text-center" [class.color4]="item.e == 0 || item.e == null">{{item.e}}</td>
+            <td class="text-center" [class.color4]="item.f == 0 || item.f == null">{{item.f}}</td>
+            <td class="text-center"
+            [class.color1]="item.g == 50 || item.g == 60 || item.g == 70 || item.g == 14 || item.g == 20 || item.g == 24 || item.g == 16" 
+            [class.color2]="item.g == 90 || item.g == 95|| item.g == 62"
+            [class.color3]="item.g == 40 || item.g == 80"
+            [class.color4]="item.g == 0 || item.g == null"
+            >{{item.g}} <span *ngIf="item.g > 0">%</span></td>
+            <td class="text-center" [class.color4]="item.h == 0 || item.h == null">{{item.h}}</td>
+            <td class="text-center" [class.color4]="item.j == 0 || item.j == null">{{item.j}}</td>
+            <td class="text-center"
+            [class.color1]="item.k == 50 || item.k == 60 || item.k == 70 || item.k == 14 || item.k == 20 || item.k == 24 || item.k == 16" 
+            [class.color2]="item.k == 90 || item.k == 95|| item.k == 62"
+            [class.color3]="item.k == 40 || item.k == 80"
+            [class.color4]="item.k == 0 || item.k == null"
+            >{{item.k}}%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="row mt-2">
+<div class="col-12">
+  <h3>工作摘要 (Desktop)</h3>
+</div>
+<div class="col-12">
+  <div class="card">
+    <div class="card-body">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th class="text-center" scope="col">站點</th>
+            <th class="text-center" scope="col">目前頭數</th>
+            <th class="text-center" scope="col">月齡</th>
+            <th class="text-center" scope="col">達成率</th>
+            <th class="text-center" scope="col">疫苗接種數</th>
+            <th class="text-center" scope="col">疫苗接種目標</th>
+            <th class="text-center" scope="col">達成率</th>
+            <th class="text-center" scope="col">熟成頭數</th>
+            <th class="text-center" scope="col">熟成目標</th>
+            <th class="text-center" scope="col">達成率</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of data3">
+            <td class="text-center">{{item.a}}</td>
+            <td class="text-left">{{item.b}}</td>
+            <td class="text-center">{{item.c}}</td>
+            <td class="text-center" [class.my-color]="item.d !== ''">{{item.d}}</td>
+            <td class="text-center" [class.my-color]="item.e !== ''">{{item.e}}</td>
+            <td class="text-center" [class.my-color]="item.f !== ''">{{item.f}}</td>
+            <td class="text-center" [class.my-color]="item.g !== ''">{{item.g}}</td>
+            <td class="text-center" [class.my-color]="item.h !== ''">{{item.h}}</td>
+            <td class="text-center" [class.my-color]="item.j !== ''">{{item.j}}</td>
+            <td class="text-center" [class.my-color]="item.k !== ''">{{item.k}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</div>

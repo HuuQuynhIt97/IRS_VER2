@@ -1,0 +1,314 @@
+<ejs-grid
+  #grid
+  id="grid"
+  [dataSource]="data"
+  [allowPaging]="true"
+  [allowResizing]="true"
+  [allowSorting]="true"
+  gridLines="Both"
+  [locale]="locale"
+  [pageSettings]="pageSettings"
+  [editSettings]="editSettings"
+  [toolbar]="toolbarOptions"
+  [allowExcelExport]="true"
+  (rowSelected)="rowSelected($event)"
+  (recordClick)="recordClick($event)"
+  [selectionSettings]="selectionOptions"
+  (toolbarClick)="toolbarClick($event)"
+  (dataBound)='dataBound()'
+>
+  <e-columns>
+    <e-column
+      field="option"
+      [allowSorting]="false"
+      [allowSearching]="false"
+      [allowGrouping]="false"
+      [allowFiltering]="false"
+      [allowEditing]="false"
+      textAlign="Center"
+      headerTextAlign="Center"
+      width="70"
+      headerTextAlign="Center"
+      headerText="{{ 'OPTION' | translate}}"
+    >
+      <ng-template #template let-data>
+        <span (click)="delete(data.id)" class="delete-grid">
+          <i class="fa fa-trash"></i>
+        </span>
+        <span (click)="openModal(optionModal, data)" class="edit-grid">
+          <i class="fa fa-edit"></i>
+        </span>
+      </ng-template>
+    </e-column>
+
+    
+  <e-column
+  field="name"
+  textAlign="Left"
+  headerText="{{ 'INK_NAME' | translate }}"
+>
+</e-column>
+  <e-column
+    field="supplier"
+    textAlign="Left"
+    headerText="{{ 'INK_SUPPLIER' | translate }}"
+  >
+  </e-column>
+
+  <e-column
+    field="materialNO"
+    textAlign="Left"
+    headerText="{{ 'INK_MATERIALNO' | translate }}"
+  >
+  </e-column>
+
+  <e-column
+    field="code"
+    textAlign="Left"
+    headerText="{{ 'INK_CODE' | translate }}"
+  >
+  </e-column>
+
+  <e-column
+    field="process"
+    textAlign="Center"
+    headerText="{{ 'INK_TREATMENT' | translate }}"
+    >
+    <ng-template #template let-data>
+      <span [style.background]="data.color" style="font-size: small; color: whitesmoke;" class="badge badge-pill">{{data.process}}</span>
+    </ng-template>
+  </e-column>
+
+  <e-column
+    field="voc"
+    width="50"
+    textAlign="Center"
+    headerText="{{ 'INK_VOC' | translate }}"
+    >
+  </e-column>
+
+  <e-column
+    field="unit"
+    textAlign="Center"
+    width="50"
+    headerText="{{ 'INK_UNIT' | translate }}"
+    >
+  </e-column>
+
+  <e-column
+    field="daysToExpiration"
+    textAlign="Center"
+    headerText="{{ 'INK_DAY_TO_EXPIRATION' | translate }}"
+    >
+  </e-column>
+    
+  </e-columns>
+</ejs-grid>
+
+<ng-template #optionModal let-modal>
+  <div class="modal-header my-modal">
+    <h4 class="modal-title">
+      <i class="fas fa-plus"></i> {{ title | translate }}
+    </h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="row">
+
+          <div class="col-md-4">
+            <label>{{ "INK_NAME_LOCAL" | translate }} </label>
+            <span class="max-length"> ( {{"Text length"| translate }} <= 100 )</span>
+            <span *ngIf="!(model.id > 0)" style="color: red">(*)</span>
+            <div class="form-group">
+              <input
+              maxlength="100"
+                type="text"
+                [(ngModel)]="model.name"
+                class="form-control"
+              />
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label>{{ "INK_NAME_EN" | translate }} </label>
+            <span class="max-length"> ( {{"Text length"| translate }} <= 100 )</span>
+            <span *ngIf="!(model.id > 0)" style="color: red">(*)</span>
+            <div class="form-group">
+              <input
+              maxlength="100"
+                type="text"
+                [(ngModel)]="model.nameEn"
+                class="form-control"
+              />
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label>{{ "INK_NAME_CODE" | translate }} </label>
+            <span class="max-length"> ( {{"Text length"| translate }} <= 100 )</span>
+            <span *ngIf="!(model.id > 0)" style="color: red">(*)</span>
+            <div class="form-group">
+              <input
+              maxlength="100"
+                type="text"
+                [(ngModel)]="model.code"
+                class="form-control"
+              />
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label>{{ "INK_NAME_VOC" | translate }} </label>
+            <span class="max-length"> ( {{"Text length"| translate }} <= 100 )</span>
+            <span *ngIf="!(model.id > 0)" style="color: red">(*)</span>
+            <div class="form-group">
+              <input
+              maxlength="100"
+                type="number"
+                [(ngModel)]="model.voc"
+                class="form-control"
+              />
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label>{{ "INK_NAME_MATERIALNO" | translate }} </label>
+            <span class="max-length"> ( {{"Text length"| translate }} <= 100 )</span>
+            <span *ngIf="!(model.id > 0)" style="color: red">(*)</span>
+            <div class="form-group">
+              <input
+              maxlength="100"
+                type="text"
+                [(ngModel)]="model.materialNO"
+                class="form-control"
+              />
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label>{{ "INK_NAME_UNIT" | translate }} </label>
+            <span class="max-length"> ( {{"Text length"| translate }} <= 100 )</span>
+            
+            <div class="form-group">
+              <input
+              maxlength="100"
+                type="number"
+                [(ngModel)]="model.unit"
+                class="form-control"
+              />
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label>{{ "INK_NAME_DAY_TO_EXPIRATION" | translate }} </label>
+            <span class="max-length"> ( {{"Text length"| translate }} <= 100 )</span>
+            <div class="form-group">
+              <input
+              maxlength="100"
+                type="number"
+                [(ngModel)]="model.daysToExpiration"
+                class="form-control"
+              />
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label>{{ "INK_TREATMENT" | translate }} </label>
+            <span *ngIf="!(model.id > 0)" style="color: red">(*)</span>
+            <div class="form-group">
+              <ejs-dropdownlist
+                id='treatmentDropdownlist'
+                [dataSource]='ProcessData'
+                [fields]='fieldsProcess'
+                [allowFiltering]='true'
+                [value]="model.processID"
+                [(ngModel)]="model.processID"
+                (change)='onChangeProcess($event)'
+                [placeholder]="'Select Process' | translate">
+              </ejs-dropdownlist>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label>{{ "CHEMICAL_SUPPLIER" | translate }} </label>
+            <span *ngIf="!(model.id > 0)" style="color: red">(*)</span>
+            <span class="max-length"> ( {{"Text length"| translate }} <= 200 )</span>
+            <div class="form-group">
+              <ejs-dropdownlist
+                id='supDropdownlist'
+                [dataSource]='supplier'
+                [fields]='fieldsGlue'
+                [allowFiltering]='true'
+                [value]="model.supplierID"
+                [(ngModel)]="model.supplierID"
+                (change)='onChangeSup($event)'
+                [placeholder]="'Select Supplier name' | translate">
+              </ejs-dropdownlist>
+              <!-- <input
+                maxlength="200"
+                type="text"
+                name="supplier"
+                [(ngModel)]="model.supplierID"
+                class="form-control"
+              /> -->
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- <div class="row">
+      <div class="col-md">
+        <label>{{ "COMMENT" | translate }} </label>
+        <div class="form-group">
+          <textarea
+            class="form-control"
+            [(ngModel)]="model.comment"
+            cols="4"
+            rows="4"
+          ></textarea>
+        </div>
+      </div>
+    </div> -->
+  </div>
+  <div class="modal-footer">
+    <div class="mr-auto" *ngIf="model?.id > 0">
+      <p>
+        <span class='mr-2'> <span class='my-font-weight-bold'>{{ 'Create by' | translate}}</span> : {{audit?.createBy}}</span>
+        <span><span class='my-font-weight-bold'>{{ 'Create date time' | translate}}</span> : {{audit?.createDate}}</span>
+      </p>
+      <p>
+        <span class='mr-2'><span class='my-font-weight-bold'>{{ 'Update by' | translate}}</span> : {{audit?.updateBy}}</span>
+        <span><span class='my-font-weight-bold'>{{ 'Update date time' | translate}}</span> : {{audit?.updateDate}}</span>
+      </p>
+    </div>
+    <span *ngIf="!(model.id > 0)" class="my-note mr-auto">
+      {{ 'Note: (*) is a required field' | translate }}
+    </span>
+    <button
+      type="button"
+      class="btn btn-light"
+      (click)="modal.close('Close click')"
+    >
+      {{ "CLOSE" | translate }}
+    </button>
+    <button
+      [disabled]="!model.name || !model.supplierID || !model.materialNO"
+      (click)="save()"
+      class="btn btn-primary"
+    >
+      {{ "SAVE" | translate }}
+    </button>
+  </div>
+</ng-template>

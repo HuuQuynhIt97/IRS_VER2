@@ -1,0 +1,103 @@
+<div class="main-content" id="main-text">
+    <div class="sidebar-content">
+      <div class="row">
+        <div class="col-12 p-0">
+          <div class="heading">{{'Mobile_Hall_DETAIL' | translate}}</div>
+        </div>
+      </div>
+  
+      <div class="row my-2">
+        <div class="col-12 d-flex justify-content-start align-items-center">
+          <div class="mr-2" style="width: 35px">{{'Hall' | translate}}</div>
+          <div style="width: 140px">
+            <ejs-dropdownlist
+                id='hallDropdown'
+                #hallDropdown
+                (change)="ngModelChangeHallFilter($event)"
+                [fields]="hallFields"
+                [(ngModel)]="fiterRequest.hallGuidFiter"
+                name="hallGuidFiter"
+                placeholder="{{'Select Hall' | translate}}"
+                [dataSource]="hallData"
+            ></ejs-dropdownlist>
+          </div>
+  
+          <div class="mx-2" style="width: 35px">{{'Room' | translate}}</div>
+          <div style="width: 140px">
+            <ejs-dropdownlist
+                id='roomDropdown'
+                #roomDropdown
+                (change)="ngModelChangeRoomFilter($event)"
+                [fields]="roomFields"
+                [(ngModel)]="fiterRequest.roomGuidFiter"
+                name="roomGuidFiter"
+                placeholder="{{'Select Room' | translate}}"
+                [dataSource]="roomData"
+            ></ejs-dropdownlist>
+          </div>
+          <!-- <button class="btn btn-sm btn-primary mx-2" (click)="search()">{{'Search_Normal' | translate}}</button> -->
+
+          <button type="button" (click)="refresh()" class="btn btn-danger btn-sm mx-2" > {{ translate.instant('Refresh') }} </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div *ngIf="model.id === 0"  class="cart">
+    <div class="card-header">
+      <div  class="row">
+        <div class="col-md-4">
+
+        </div>
+        <div class="col-md-4" style="text-align: center;">
+          <span  style="color: red;font-weight: bold ;font-size: 18px;">
+            {{'No data' | translate}}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+<div *ngIf="model.id !== 0 " class="card m-0 p-0">
+  <div class="card-header bg-primary text-white">
+     {{model.hallNo}} - {{model.hallName}}
+  </div>
+  <div
+    class="card-body p-0"
+    [style.background-color]="'#1576b61f'"
+  >
+
+  <div class="gallery-wrapper" style="align-items: center;">
+      <ngx-gallery [options]="galleryOptions" [images]="galleryImages" class="ngx-gallery"></ngx-gallery>
+  </div>
+
+ 
+
+   <div  class="d-flex justify-content-start mt-2">
+
+      <div style="width: 50%">
+        <div class="d-flex">
+        <div >
+          <div >&nbsp;&nbsp;{{ "ROOM_TYPE" | translate }}: {{model.type}}</div>
+          <div >&nbsp;&nbsp;{{ "ROOM_NO" | translate }}: {{model.roomNo}}</div>
+          <div >&nbsp;&nbsp;{{ "ROOM_NAME" | translate }}: {{model.roomName}}</div>
+          <div >&nbsp;&nbsp;{{ "ROOM_SIZE" | translate }}: &nbsp;&nbsp;{{model.roomSize}} </div>
+          <div >&nbsp;&nbsp;{{ "ROOM_DESCRIPT" | translate }}: &nbsp;&nbsp;{{model.roomDescript}} </div>
+          <div >&nbsp;&nbsp;{{ "ROOM_PRICE" | translate }}: &nbsp;&nbsp;{{model.price}} </div>
+          <div >&nbsp;&nbsp;{{ "ROOM_PRICE_MEMBER" | translate }}: &nbsp;&nbsp;{{model.priceMember}} </div>
+          <div >&nbsp;&nbsp;{{ "ROOM_PRICE_SPECIAL" | translate }}: &nbsp;&nbsp;{{model.priceSpecial}} </div>
+          <div >&nbsp;&nbsp;{{ "ROOM_LOCALTION" | translate }}: &nbsp;&nbsp;{{model.roomLocation}} </div>
+          
+        </div>
+      </div>
+      </div>
+      <div style="width: 50%">
+        
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-center">
+        <button class="btn btn-lg btn-warning ml-2" (click)="detailBooking()"  > {{'Detail' | translate}}</button>
+    </div>
+    
+  </div>
+</div>

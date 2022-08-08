@@ -1,0 +1,143 @@
+
+<div class="col-md-12" style="box-shadow: 1px 1px 20px; padding: 0">
+  <div class="card main-card">
+    <div class="card-body table-responsive p-0">
+      <ejs-grid
+      #grid
+      id="grid"
+      [dataSource]="data"
+      [allowPaging]="true"
+      [allowResizing]="true"
+      [allowSorting]="true"
+      gridLines="Both"
+      [locale]="locale"
+      (actionBegin)="actionBegin($event)"
+      (actionComplete)="actionComplete($event)"
+      [editSettings]="editSettings"
+      [toolbar]="toolbarOptions"
+      [allowExcelExport]="true"
+      [pageSettings]="pageSettings"
+      (recordDoubleClick)="onDoubleClick($event)"
+      (rowSelected)="rowSelected($event)"
+      (toolbarClick)="toolbarClick($event)"
+      (headerCellInfo)='headerCellInfo($event)'
+      (excelExportComplete)="excelExpComplete($event)"
+      >
+      <ng-template #odsTemplate let-data>
+        <button
+          class="e-tbar-btn e-tbtn-txt e-control e-btn e-lib"
+          type="button"
+          id="grid_odsexport"
+          tabindex="-1"
+          (click)="odsExport()"
+          style="width: auto"
+        >
+          <span class="e-btn-icon e-pdfexport e-icons e-icon-left"></span
+          ><span class="e-tbar-btn-text">{{ 'Ods Export' | translate}} </span>
+        </button>
+      </ng-template>
+      <ng-template #parentTemplate let-data>
+        <ejs-dropdownlist id='toolbar_dropdown'
+              [allowFiltering]="true"
+              [fields]="fields"
+              [dataSource]="codeTypeData"
+              [(ngModel)]="codeTypeItem"
+              (change)="onChange($event)"
+              [placeholder]="'Choose a code type' | translate"
+              style="width: 200px;"
+              (filtering)='onFiltering2($event)'
+            >
+            <ng-template #itemTemplate let-data>
+              <div *ngIf="data.id === 'All'">
+                {{data.name | translate}}
+              </div>
+              <div *ngIf="data.id !== 'All'">
+                {{data.name }}
+              </div>
+          </ng-template>
+          </ejs-dropdownlist>
+</ng-template>
+      <e-columns>
+        <e-column
+          field="option"
+          textAlign="Left"
+          headerTextAlign="Center"
+          width="80"
+          headerTextAlign="Center"
+          [allowSorting]="false"
+          [allowSearching]="false"
+          [allowGrouping]="false"
+          [allowFiltering]="false"
+          [allowEditing]="false"
+          headerText="{{ 'OPTION' | translate }}"
+        >
+          <ng-template #template let-data>
+            <span (click)="delete(data.id)" class="delete-grid">
+              <i class="fa fa-trash"></i>
+            </span>
+          </ng-template>
+        </e-column>
+        <e-column
+        field="codeType1"
+        textAlign="Left"
+          headerTextAlign="Center"
+        [validationRules]='commonRules'
+        headerText="{{ 'CODE_TYPE' | translate }}"
+      >
+      </e-column>
+        <e-column
+        field="codeNo"
+        textAlign="Left"
+          headerTextAlign="Center"
+        [validationRules]='commonRules'
+        headerText="{{ 'CODE_TYPE_NO' | translate }}"
+      >
+      </e-column>
+
+        <e-column
+          field="codeName"
+          textAlign="Left"
+          headerTextAlign="Center"
+          [validationRules]='requireNameRules'
+          headerText="{{ 'CODE_TYPE_NAME' | translate }}"
+        >
+        </e-column>
+        <e-column
+          field="codeNameEn"
+          textAlign="Left"
+          headerTextAlign="Center"
+          [validationRules]='nameRules'
+          headerText="{{ 'CODE_TYPE_NAMEEN' | translate }}"
+        >
+        </e-column>
+        <e-column
+          field="codeNameVn"
+          textAlign="Left"
+          headerTextAlign="Center"
+          [validationRules]='nameRules'
+          headerText="{{ 'CODE_TYPE_NAMEVN' | translate }}"
+        >
+        </e-column>
+        <e-column
+        field="codeNameCn"
+        textAlign="Left"
+          headerTextAlign="Center"
+        [validationRules]='nameRules'
+        headerText="{{ 'CODE_TYPE_NAMECN' | translate }}"
+      >
+      </e-column>
+
+        <e-column
+          field="comment"
+          [allowSearching]="false"
+          textAlign="Left"
+          headerTextAlign="Center"
+          headerText="{{ 'CODE_TYPE_COMMENT' | translate }}"
+        >
+        </e-column>
+      </e-columns>
+      </ejs-grid>
+
+    </div>
+  </div>
+</div>

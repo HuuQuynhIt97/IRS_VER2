@@ -1,0 +1,20 @@
+input, textarea {
+  box-shadow: 0.5px 0.5px 1px!important;
+}
+label {
+  font-weight: 700;
+  font-size: 1rem;
+}
+.e-input-group {
+  box-shadow: 0.5px 0.5px 1px !important;
+  padding:3px !important;
+
+}
+.e-input {
+  box-shadow: none!important;
+}
+#toolbar_dropdown > .e-input-group,
+#toolbar_dropdown2 > .e-input-group {
+  box-shadow: none !important;
+  padding:0px !important;
+}

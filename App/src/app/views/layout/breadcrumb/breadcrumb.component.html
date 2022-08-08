@@ -1,0 +1,18 @@
+
+<div class="content-head flex-wrap" *ngIf="breadcrumbs.length > 0">
+  <div class="justify-content-between">
+     <h2 class="content-title my-title">
+        {{breadcrumbs[0]?.label | translate}} {{ menuItem?.name ? ' / ' + menuItem?.name : ''}}
+    </h2>
+
+      <nav aria-label="breadcrumb">
+          <ol class="breadcrumb" *ngIf="breadcrumbs.length > 1">
+              <li class="breadcrumb-item" *ngFor="let breadcrumb of breadcrumbs; let i=index" >
+                <a (click)="gotoRouter(breadcrumb)" [ngClass]="{'disable': breadcrumb.disable}">
+                  {{ breadcrumb?.label | translate }}
+                </a>
+              </li>
+          </ol>
+      </nav>
+  </div>
+</div>

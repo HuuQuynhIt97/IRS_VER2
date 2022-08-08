@@ -1,0 +1,41 @@
+<div class="col-md-12" style="box-shadow: 1px 1px 20px; padding: 0;">
+  <div class="card">
+    <!-- <div class="card-header">
+      <h3 class="card-title"><i class="fas fa-users"></i> User List
+      </h3>
+    </div> -->
+    <!-- /.card-header -->
+    <div class="card-body table-responsive p-0">
+      <ejs-grid #grid
+        id='grid'
+        [dataSource]="data"
+        [allowPaging]='true'
+        [allowResizing]='true'
+        [showColumnMenu]='true'
+        gridLines='Both'
+        [locale]='locale'
+        (actionBegin)="actionBegin($event)"
+        (actionComplete)="actionComplete($event)"
+        [editSettings]='editSettings'
+        [pageSettings]='pageSettings'
+        [toolbar]='toolbarOptions'
+        [allowExcelExport]='true'
+        (recordDoubleClick)='onDoubleClick($event)'
+        (toolbarClick)='toolbarClick($event)'
+      >
+        <e-columns>
+          <e-column field="#" textAlign='Center' width="10%" isPrimaryKey="true" headerText="#">
+            <ng-template #template let-data>
+              {{NO(data.index)}}
+            </ng-template>
+            <ng-template #editTemplate let-data>
+              #
+            </ng-template>
+          </e-column>
+          <e-column field="name" textAlign='Center' headerText="{{ 'Name'}}"> </e-column>
+        </e-columns>
+      </ejs-grid>
+    </div>
+    <!-- /.card-body -->
+  </div>
+</div>

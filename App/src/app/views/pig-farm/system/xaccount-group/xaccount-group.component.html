@@ -1,0 +1,209 @@
+<div class="col-md-12" style="box-shadow: 1px 1px 20px; padding: 0">
+  <div class="card main-card">
+    <!-- <div class="card-header">
+      <h3 class="card-title"><i class="fas fa-users"></i> User List
+      </h3>
+    </div> -->
+    <!-- /.card-header -->
+    <div class="card-body table-responsive p-0">
+      <ejs-grid
+        #grid
+        id="grid"
+        [dataSource]="data"
+        [allowPaging]="true"
+        [allowResizing]="true"
+        gridLines="Both"
+        [locale]="locale"
+        (actionBegin)="actionBegin($event)"
+        (actionComplete)="actionComplete($event)"
+        [editSettings]="editSettings"
+        [pageSettings]="pageSettings"
+        [toolbar]="toolbarOptions"
+        [allowExcelExport]="true"
+        (recordDoubleClick)="onDoubleClick($event)"
+        (toolbarClick)="toolbarClick($event)"
+        (excelExportComplete)="excelExpComplete($event)"
+        >
+        <ng-template #odsTemplate let-data>
+          <button
+            class="e-tbar-btn e-tbtn-txt e-control e-btn e-lib"
+            type="button"
+            id="grid_odsexport"
+            tabindex="-1"
+            (click)="odsExport()"
+            style="width: auto"
+          >
+            <span class="e-btn-icon e-pdfexport e-icons e-icon-left"></span
+            ><span class="e-tbar-btn-text">{{ 'Ods Export' | translate}} </span>
+          </button>
+        </ng-template>
+        <e-columns>
+          <e-column
+            field="#"
+            [allowSearching]="false"
+            textAlign="Left"
+          headerTextAlign="Center"
+            width="10%"
+            isPrimaryKey="true"
+            headerText="#"
+          >
+            <ng-template #template let-data>
+              {{ NO(data.index) }}
+            </ng-template>
+            <ng-template #editTemplate let-data> # </ng-template>
+          </e-column>
+
+          <e-column
+            field="option"
+            textAlign="Left"
+          headerTextAlign="Center"
+            width="10%"
+            headerTextAlign="Center"
+            [allowSorting]="false"
+            [allowSearching]="false"
+            [allowGrouping]="false"
+            [allowFiltering]="false"
+            [allowEditing]="false"
+            headerText="{{ 'OPTION' | translate }}"
+          >
+            <ng-template #template let-data>
+              <span (click)="delete(data.id)" class="delete-grid">
+                <i class="fa fa-trash"></i>
+              </span>
+              <span (click)="openModal(optionModal, data)" class="edit-grid">
+                <i class="fa fa-edit"></i>
+              </span>
+            </ng-template>
+          </e-column>
+
+          <e-column
+            field="groupNo"
+            textAlign="Left"
+          headerTextAlign="Center"
+            headerText="{{ 'ACCOUNT_GROUP_NO' | translate }}"
+          >
+          </e-column>
+          <e-column
+            field="groupName"
+            textAlign="Left"
+          headerTextAlign="Center"
+            headerText="{{ 'ACCOUNT_GROUP_NAME' | translate }}"
+          >
+          </e-column>
+        </e-columns>
+      </ejs-grid>
+    </div>
+    <!-- /.card-body -->
+  </div>
+</div>
+
+<ng-template #optionModal let-modal>
+  <div class="modal-header my-modal">
+    <h4 class="modal-title">
+      <i class="fas fa-plus"></i> {{ title | translate }}
+    </h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+          <label ngbTooltip="ACCOUNT_GROUP_NO" for="groupNO">{{
+            "ACCOUNT_GROUP_NO" | translate
+          }}</label>
+          <span *ngIf="!(model.id > 0)" style="color: red">(*)</span>
+          <span ngbTooltip="( Text length <= 200 )" class="max-length">
+            ( {{ "Text length" | translate }} <= 200 )</span
+          >
+          <input
+            [(ngModel)]="model.groupNo"
+            maxlength="200"
+            type="text"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      <div class="col-md-12">
+        <div class="form-group">
+          <label ngbTooltip="ACCOUNT_GROUP_NAME" for="groupName">{{
+            "ACCOUNT_GROUP_NAME" | translate
+          }}</label>
+          <span *ngIf="!(model.id > 0)" style="color: red">(*)</span>
+          <span ngbTooltip="Text length" class="max-length">
+            ( {{ "Text length" | translate }} <= 100 )</span
+          >
+          <input
+            [(ngModel)]="model.groupName"
+            maxlength="100"
+            type="text"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      <div class="col-md-12">
+        <div class="d-flex justify-content-center" *ngIf="loading == 1">
+         <div class="spinner-border text-primary" role="status">
+           <span class="sr-only">Loading...</span>
+         </div>
+        </div>
+         <div class="form-group" *ngIf="loading == 0">
+           <label ngbTooltip="CHOOSE PERMISSIONS" for="permission">{{ "CHOOSE PERMISSIONS" | translate }}</label>
+           <ejs-multiselect
+             id="permission"
+             [showDropDownIcon]="true"
+             [(ngModel)]="permissions"
+             (ngModelChange)="onChangePermission()"
+             [dataSource]="permissionData"
+             placeholder="{{ 'CHOOSE PERMISSIONS' | translate }}"
+             [fields]="fields"
+             (filtering)="onFiltering($event)"
+             [mode]="'Box'"
+           >
+           </ejs-multiselect>
+         </div>
+       </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="mr-auto" *ngIf="model?.id > 0">
+      <p>
+        <span class='mr-2'> <span class='my-font-weight-bold'>{{ 'Create by' | translate}}</span> : {{audit?.createBy}}</span>
+        <span><span class='my-font-weight-bold'>{{ 'Create date time' | translate}}</span> : {{audit?.createDate}}</span>
+      </p>
+      <p>
+        <span class='mr-2'><span class='my-font-weight-bold'>{{ 'Update by' | translate}}</span> : {{audit?.updateBy}}</span>
+        <span><span class='my-font-weight-bold'>{{ 'Update date time' | translate}}</span> : {{audit?.updateDate}}</span>
+      </p>
+    </div>
+    <span *ngIf="!(model.id > 0)" class="my-note mr-auto">
+      {{ 'Note: (*) is a required field' | translate }}
+    </span>
+
+    <button
+      ngbTooltip="CLOSE"
+      type="button"
+      class="btn btn-light"
+      (click)="modal.close('Close click')"
+    >
+      {{ "CLOSE" | translate }}
+    </button>
+    <button
+      ngbTooltip="SAVE"
+      type="submit"
+      [disabled]="!model.groupNo || !model.groupName"
+      (click)="save()"
+      class="btn btn-primary"
+    >
+      {{ "SAVE" | translate }}
+    </button>
+  </div>
+</ng-template>

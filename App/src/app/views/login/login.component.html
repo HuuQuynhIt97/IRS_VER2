@@ -1,0 +1,29 @@
+<div class="flex">
+  <div [style.background-image]="'url(' + sysConf.LoginBGImage + ')'"
+  class="item">
+
+      <form  class="login_box"  (ngSubmit)="login()" #form="ngForm">
+          <!-- <img [src]="sysConf.LoginLogo" alt="logo" style="padding-bottom: 10px;" /> -->
+          <!-- <h3 style="color:#5D3422">{{'New Generation Ranch System' | translate}}</h3> -->
+          <h3 [style.color]="sysConf.LoginFontColor + '!important'" >{{sysConf.	SystemName}}</h3>
+          <div  class="account">
+            <label > {{'Username' | translate}} </label>
+            <input type="text"  [(ngModel)]="username"
+            name="username"  /><span></span>
+          </div>
+          <div  class="account">
+            <label > {{'Password' | translate}} </label>
+            <input type="password" name='password' [(ngModel)]="password" />
+          </div>
+
+          <input type="checkbox" id="remember" name="remember" (change)="onChangeRemember($event)" [(ngModel)]="remember" />
+          
+          <label > {{'Remember account' | translate}} </label>
+          <input type="hidden" value="xxx" />
+          <button class="btn-login" id='submit' [disabled]="!username || !password" [class.disabled]="!username || !password">
+            <span *ngIf="loading == 1" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            {{'Login' | translate}}
+          </button>
+      </form>
+  </div>
+</div>

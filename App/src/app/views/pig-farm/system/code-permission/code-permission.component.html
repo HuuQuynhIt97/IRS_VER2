@@ -1,0 +1,258 @@
+<div class="col-md-12" style="box-shadow: 1px 1px 20px; padding: 0">
+  <div class="card main-card">
+    <div class="card-body table-responsive p-0">
+      <ejs-grid
+        #grid
+        id="grid"
+        [dataSource]="data"
+        [allowPaging]="true"
+        [allowResizing]="true"
+        [allowSorting]="true"
+        gridLines="Both"
+        [locale]="locale"
+        (actionBegin)="actionBegin($event)"
+        (actionComplete)="actionComplete($event)"
+        [editSettings]="editSettings"
+        [pageSettings]="pageSettings"
+        [toolbar]="toolbarOptions"
+        [allowExcelExport]="true"
+        (recordDoubleClick)="onDoubleClick($event)"
+        (toolbarClick)="toolbarClick($event)"
+        (headerCellInfo)='headerCellInfo($event)'
+        (excelExportComplete)="excelExpComplete($event)"
+        >
+        <ng-template #odsTemplate let-data>
+          <button
+            class="e-tbar-btn e-tbtn-txt e-control e-btn e-lib"
+            type="button"
+            id="grid_odsexport"
+            tabindex="-1"
+            (click)="odsExport()"
+            style="width: auto"
+          >
+            <span class="e-btn-icon e-pdfexport e-icons e-icon-left"></span
+            ><span class="e-tbar-btn-text">{{ 'Ods Export' | translate}} </span>
+          </button>
+        </ng-template>
+        <e-columns>
+          <e-column
+            field="option"
+            textAlign="Left"
+          headerTextAlign="Center"
+            width="80"
+            headerTextAlign="Center"
+            [allowSorting]="false"
+            [allowSearching]="false"
+            [allowGrouping]="false"
+            [allowFiltering]="false"
+            [allowEditing]="false"
+            headerText="{{ 'OPTION' | translate }}"
+          >
+            <ng-template #template let-data>
+              <span (click)="delete(data.id)" class="delete-grid">
+                <i class="fa fa-trash"></i>
+              </span>
+              <span (click)="openModal(optionModal, data)" class="edit-grid">
+                <i class="fa fa-edit"></i>
+              </span>
+            </ng-template>
+          </e-column>
+
+          <e-column
+            field="codeType"
+            textAlign="Left"
+          headerTextAlign="Center"
+            headerText="{{ 'CODE_PERMISSION_TYPE' | translate }}"
+          >
+          </e-column>
+          <e-column field="codeName" textAlign="Left" headerTextAlign="Center" headerText="{{ 'CODE_PERMISSION_NAMETW' | translate }}">
+          </e-column>
+
+          <e-column field="codeNameCn" textAlign="Left"  headerTextAlign="Center" headerText="{{ 'CODE_PERMISSION_NAMECN' | translate }}">
+         
+          </e-column>
+
+          <e-column field="codeNameEn" textAlign="Left" headerTextAlign="Center" headerText="{{ 'CODE_PERMISSION_NAMEEN' | translate }}"></e-column>
+          <e-column field="codeNameVn" textAlign="Left" headerTextAlign="Center" headerText="{{ 'CODE_PERMISSION_NAMEVN' | translate }}"></e-column>
+
+          <e-column
+          field="sort"
+          textAlign="Left"
+          headerTextAlign="Center"
+          headerText="{{ 'CODE_PERMISSION_SORT' | translate }}"
+        >
+        </e-column>
+
+          <e-column
+            field="comment"
+            [allowSearching]="false"
+            [allowSorting]="false"
+            textAlign="Left"
+          headerTextAlign="Center"
+            headerText="{{ 'CODE_PERMISSION_COMMENT' | translate }}"
+          >
+          </e-column>
+        </e-columns>
+      </ejs-grid>
+    </div>
+  </div>
+</div>
+
+<ng-template #optionModal let-modal>
+    <div class="modal-header my-modal">
+      <h4 [ngbTooltip]="title" class="modal-title">
+        <i class="fas fa-plus"></i> {{ title | translate }}
+      </h4>
+      <button
+        type="button"
+        class="close"
+        aria-label="Close"
+        (click)="modal.dismiss('Cross click')"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-md-6 col-12">
+          <div class="form-group">
+            <label ngbTooltip="CODE_PERMISSION_TYPE" for="codeType">{{ "CODE_PERMISSION_TYPE" | translate }}</label>
+            <span ngbTooltip="Text length" class="max-length"> {{ '( Text length <= 20 )' | translate }}</span>
+            <input
+              [(ngModel)]="model.codeType"
+              maxlength="20"
+              type="text"
+              class="form-control"
+            />
+          </div>
+        </div>
+
+        <div class="col-md-6 col-12">
+          <div class="form-group">
+            <label ngbTooltip="CODE_PERMISSION_NO" for="codeNo">{{ "CODE_PERMISSION_NO" | translate }}</label>
+            <span *ngIf="!(model.id > 0)" style="color: red">(*)</span>
+            <span ngbTooltip="Text length" class="max-length"> {{ '( Text length <= 20 )' | translate }}</span>
+            <input
+              [(ngModel)]="model.codeNo"
+              maxlength="20"
+              type="text"
+              class="form-control"
+            />
+          </div>
+        </div>
+
+
+        <div class="col-md-6 col-12">
+          <div class="form-group">
+            <label ngbTooltip="CODE_PERMISSION_NAME" for="menuName">{{ "CODE_PERMISSION_NAME" | translate }}</label>
+            <span *ngIf="!(model.id > 0)" style="color: red">(*)</span>
+            <span ngbTooltip="( Text length <= 200 )" class="max-length"> ( {{"Text length"| translate }} <= 200 )</span>
+            <input
+              [(ngModel)]="model.codeName"
+              maxlength="200"
+              type="text"
+              class="form-control"
+            />
+          </div>
+        </div>
+
+        <div class="col-md-6 col-12">
+          <div class="form-group">
+            <label ngbTooltip="CODE_PERMISSION_NAMECN" for="codeNameCn">{{ "CODE_PERMISSION_NAMECN" | translate }}</label>
+            <span ngbTooltip="( Text length <= 200 )" class="max-length"> ( {{"Text length"| translate }} <= 200 )</span>
+            <input
+              [(ngModel)]="model.codeNameCn"
+              maxlength="200"
+              type="text"
+              class="form-control"
+            />
+          </div>
+        </div>
+
+        <div class="col-md-6 col-12">
+          <div class="form-group">
+            <label ngbTooltip="CODE_PERMISSION_NAMEEN" for="menuNameEn">{{ "CODE_PERMISSION_NAMEEN" | translate }}</label>
+            <span ngbTooltip="( Text length <= 200 )" class="max-length"> ( {{"Text length"| translate }} <= 200 )</span>
+            <input
+              [(ngModel)]="model.codeNameEn"
+              maxlength="200"
+              type="text"
+              class="form-control"
+            />
+          </div>
+        </div>
+
+        <div class="col-md-6 col-12">
+          <div class="form-group">
+            <label ngbTooltip="CODE_PERMISSION_NAMEVN" for="menuNameVn">{{ "CODE_PERMISSION_NAMEVN" | translate }}</label>
+            <span ngbTooltip="( Text length <= 200 )" class="max-length"> ( {{"Text length"| translate }} <= 200 )</span>
+            <input
+              [(ngModel)]="model.codeNameVn"
+              maxlength="200"
+              type="text"
+              class="form-control"
+            />
+          </div>
+        </div>
+
+        <div class="col-md-6 col-12">
+          <div class="form-group">
+            <label ngbTooltip="CODE_PERMISSION_SORT" for="sort">{{ "CODE_PERMISSION_SORT" | translate }}</label>
+            <input
+              [(ngModel)]="model.sort"
+              min="0"
+              max="10000"
+              type="number"
+              class="form-control"
+            />
+          </div>
+        </div>
+
+        <div class="col-md-6 col-12">
+          <div class="form-group">
+            <label ngbTooltip="CODE_PERMISSION_COMMENT" for="comment">{{ "CODE_PERMISSION_COMMENT" | translate }}</label>
+            <textarea
+              [(ngModel)]="model.comment"
+              name="comment"
+              type="text"
+              class="form-control"
+              rows="4"
+              cols="4"
+            ></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="mr-auto" *ngIf="model?.id > 0">
+        <p>
+          <span class='mr-2'> <span class='my-font-weight-bold'>{{ 'Create by' | translate}}</span> : {{audit?.createBy}}</span>
+          <span><span class='my-font-weight-bold'>{{ 'Create date time' | translate}}</span> : {{audit?.createDate}}</span>
+        </p>
+        <p>
+          <span class='mr-2'><span class='my-font-weight-bold'>{{ 'Update by' | translate}}</span> : {{audit?.updateBy}}</span>
+          <span><span class='my-font-weight-bold'>{{ 'Update date time' | translate}}</span> : {{audit?.updateDate}}</span>
+        </p>
+      </div>
+      <span *ngIf="!(model.id > 0)" class="my-note mr-auto">
+        {{ 'Note: (*) is a required field' | translate }}
+      </span>
+
+      <button
+        type="button"
+        class="btn btn-light"
+        ngbTooltip="CLOSE"
+        (click)="modal.close('Close click')"
+      >
+        {{ "CLOSE" | translate }}
+      </button>
+      <button
+        [disabled]="!model.codeName"
+        (click)="save()"
+        ngbTooltip="SAVE"
+        class="btn btn-primary"
+      >
+        {{ "SAVE" | translate }}
+      </button>
+    </div>
+</ng-template>

@@ -1,0 +1,155 @@
+<!-- <div class="main-content" id="main-text">
+  <div class="sidebar-content">
+    <div class="row">
+      <div class="col-12 p-0">
+        <div class="heading">{{'Mobile_Search_By_Calendar' | translate}}</div>
+      </div>
+    </div>
+
+    <div class="row my-2">
+      <div class="col-12 d-flex justify-content-start align-items-center">
+        <div class="mr-2" style="width: 35px">{{'Mobile_Hall' | translate}}</div>
+        <div style="width: 140px">
+          <ejs-dropdownlist
+            id='hallDropdown'
+            #hallDropdown
+            (valueChange)="ngModelChangeHallFilter($event)"
+            [fields]="hallFields"
+            [(ngModel)]="fiterRequest.hallGuidFiter"
+            name="hallGuidFiter"
+            placeholder="Select Hall"
+            [dataSource]="hallData"
+          ></ejs-dropdownlist>
+        </div>
+
+        <div class="mx-2" style="width: 35px">{{'Mobile_Room' | translate}}</div>
+        <div style="width: 140px">
+          <ejs-dropdownlist
+            id='roomDropdown'
+            #roomDropdown
+            [fields]="roomFields"
+            [(ngModel)]="fiterRequest.roomGuidFiter"
+            name="roomGuidFiter"
+            placeholder="Select Room"
+            [dataSource]="roomData"
+          ></ejs-dropdownlist>
+        </div>
+
+        <div class="mx-2" style="width: 35px">{{'Mobile_Date' | translate}}</div>
+        <div style="width: 140px">
+          <ejs-datepicker
+            name="time"
+            #date
+            format="yyyy/MM/dd"
+            [value]='dateValue'
+            [(ngModel)]="dateValue"
+            (change)="changeTime($event)"
+          ></ejs-datepicker>
+        </div>
+        <button class="btn btn-sm btn-primary mx-2" (click)="loadData()">{{'Mobile_Search' | translate}}</button>
+        <button class="btn btn-sm btn-primary mx-2" (click)="loadData()">{{'Mobile_Refresh' | translate}}</button>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<div class="main-content" id="main-text">
+  <div class="sidebar-content">
+    <div class="row">
+      <div class="col-12 p-0">
+        <div class="heading">{{'Mobile_Search_By_Calendar' | translate}}</div>
+      </div>
+    </div>
+    <div class="row my-2">
+      <div class="col-12 d-flex justify-content-start align-items-center">
+        <div class="mr-2" style="width: 35px">{{'SITE' | translate}}</div>
+        <div style="width: 140px">
+          <ejs-dropdownlist
+            id='siteDropdown'
+            #siteDropdown
+            (change)="ngModelChangeSiteFilter($event)"
+            [fields]="siteFields"
+            popupWidth="150px"
+            [(ngModel)]="fiterRequest.siteGuidFilter"
+            name="siteGuidFilter"
+            placeholder="{{'Select Site' | translate}}"
+            [dataSource]="siteData"
+          ></ejs-dropdownlist>
+        </div>
+        <div class="mr-2" style="width: 35px">{{'Hall' | translate}}</div>
+        <div style="width: 140px">
+          <ejs-dropdownlist
+              id='hallDropdown'
+              #hallDropdown
+              
+              (change)="ngModelChangeHallFilter($event)"
+              [fields]="hallFields"
+              popupWidth="100px"
+              [(ngModel)]="fiterRequest.hallGuidFiter"
+              name="hallGuidFiter"
+              placeholder="{{'Select Hall' | translate}}"
+              [dataSource]="hallData"
+          ></ejs-dropdownlist>
+        </div>
+        <div class="mx-2" style="width: 35px">{{'Date' | translate}}</div>
+        <div style="width: 140px">
+          <ejs-datepicker
+              #date
+              [locale]='dateLocale'
+              format="yyyy/MM/dd"
+              [value]='dateValue'
+              [(ngModel)]="dateValue"
+              (change)="changeTime($event)"
+          ></ejs-datepicker>
+        </div>
+        <!-- <button class="btn btn-sm btn-primary mx-2" (click)="search()">{{'Search_Normal' | translate}}</button> -->
+
+        <button type="button" (click)="refresh()" class="btn btn-sm btn-danger mx-2" > {{ translate.instant('Refresh') }} </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="card main-card">
+  <ejs-grid
+    #grid
+    id="grid"
+    [dataSource]="data"
+    [allowPaging]="false"
+    [allowResizing]="true"
+    [allowSorting]="true"
+    gridLines="Both"
+    [locale]="locale"
+    [editSettings]="editSettings"
+    [allowExcelExport]="true"
+    [enableInfiniteScrolling]="true"
+    (rowSelected)="rowSelected($event)"
+    [selectionSettings]="selectionOptions"
+  >
+    <e-columns>
+      <e-column field="roomName" textAlign="Center" headerText="{{ 'ROOM' | translate }}" > </e-column>
+      <e-column field="hallTime" textAlign="Center"  headerText="{{ 'TIME' | translate }}" > </e-column>
+      <e-column field="roomDescript" textAlign="Center" headerText="{{ 'ROOM_DESCRIPT' | translate }}" > </e-column>
+      <e-column textAlign="Center"  > 
+        <ng-template #template let-data>
+          <ng-container *ngIf="data.isBooking; else elseTemplate">
+            <button (click)="detailRoom(data.roomID,data.bookingID)" type="button" class="btn btn-xs btn-warning">
+              <i  class="fa fa-plus"></i> {{'DETAIL' | translate}}
+            </button>
+          </ng-container>
+          <ng-template #elseTemplate>
+            <button routerLink="/mobile/booking/0" type="button" class="btn btn-xs btn-success">
+              <i  class="fa fa-plus"></i> {{'BOOKING' | translate}}
+            </button>
+          </ng-template>
+          
+          
+        </ng-template>
+        
+      </e-column>
+      
+      
+    </e-columns>
+  </ejs-grid>
+</div>
+
+

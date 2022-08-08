@@ -1,0 +1,337 @@
+<div class="col-md-12" style="box-shadow: 1px 1px 20px; padding: 0">
+  <div class="card main-card">
+    <!-- <div class="card-header">
+      <h3 class="card-title"><i class="fas fa-users"></i> User List
+      </h3>
+    </div> -->
+    <!-- /.card-header -->
+    <div class="card-body table-responsive p-0">
+      <ejs-grid
+        #grid
+        id="grid"
+        [dataSource]="data"
+        [allowPaging]="true"
+        [allowResizing]="true"
+        [allowSorting]="true"
+        gridLines="Both"
+        [locale]="locale"
+        (actionBegin)="actionBegin($event)"
+        (actionComplete)="actionComplete($event)"
+        [editSettings]="editSettings"
+        [pageSettings]="pageSettings"
+        [toolbar]="toolbarOptions"
+        [allowExcelExport]="true"
+        (recordDoubleClick)="onDoubleClick($event)"
+        (toolbarClick)="toolbarClick($event)"
+        (headerCellInfo)='headerCellInfo($event)'
+        (excelExportComplete)="excelExpComplete($event)"
+        >
+        <ng-template #odsTemplate let-data>
+          <button
+            class="e-tbar-btn e-tbtn-txt e-control e-btn e-lib"
+            type="button"
+            id="grid_odsexport"
+            tabindex="-1"
+            (click)="odsExport()"
+            style="width: auto"
+          >
+            <span class="e-btn-icon e-pdfexport e-icons e-icon-left"></span
+            ><span class="e-tbar-btn-text">{{ 'Ods Export' | translate}} </span>
+          </button>
+        </ng-template>
+      <ng-template #pageTemplate let-data>
+        <ejs-dropdownlist id='toolbar_dropdown'
+              [allowFiltering]="true"
+              [dataSource]="pageData"
+              [(ngModel)]="slpage"
+              (ngModelChange)="onChangePage($event)"
+              [placeholder]="'Choose a page' | translate"
+              style="width: 200px;"
+              (filtering)='onFiltering($event)'
+            >
+            <ng-template #itemTemplate let-data>
+              <div *ngIf="data === 'All'">
+                {{data | translate}}
+              </div>
+              <div *ngIf="data !== 'All'">
+                {{data }}
+              </div>
+          </ng-template>
+          </ejs-dropdownlist>
+      </ng-template>
+
+      <ng-template #typeTemplate let-data>
+        <ejs-dropdownlist id='toolbar_dropdown2'
+              [allowFiltering]="true"
+              [dataSource]="typeData"
+              [(ngModel)]="sltype"
+              (ngModelChange)="onChangeType($event)"
+              [placeholder]="'Choose a type' | translate"
+              style="width: 200px;"
+              (filtering)='onFiltering2($event)'
+            >
+            <ng-template #itemTemplate let-data>
+              <div *ngIf="data === 'All'">
+                {{data | translate}}
+              </div>
+              <div *ngIf="data !== 'All'">
+                {{data }}
+              </div>
+          </ng-template>
+          </ejs-dropdownlist>
+      </ng-template>
+
+        <e-columns>
+          <e-column
+            field="option"
+            textAlign="Left"
+          headerTextAlign="Center"
+            width="80"
+            headerTextAlign="Center"
+            [allowSorting]="false"
+            [allowSearching]="false"
+            [allowGrouping]="false"
+            [allowFiltering]="false"
+            [allowEditing]="false"
+            headerText="{{ 'OPTION' | translate }}"
+          >
+            <ng-template #template let-data>
+              <span (click)="delete(data.id)" class="delete-grid">
+                <i class="fa fa-trash"></i>
+              </span>
+              <span (click)="openModal(optionModal, data)" class="edit-grid">
+                <i class="fa fa-edit"></i>
+              </span>
+            </ng-template>
+          </e-column>
+
+          <e-column
+            field="slpage"
+            textAlign="Left"
+          headerTextAlign="Center"
+            headerText="{{ 'SYSTEM_LANGUAGE_PAGE' | translate }}"
+          >
+          </e-column>
+          <e-column
+            field="sltype"
+            textAlign="Left"
+          headerTextAlign="Center"
+            headerText="{{ 'SYSTEM_LANGUAGE_TYPE' | translate }}"
+          >
+          </e-column>
+          <e-column
+            field="slkey"
+            textAlign="Left"
+            headerText="{{ 'SYSTEM_LANGUAGE_KEY' | translate }}"
+          >
+          </e-column>
+          <e-column
+            field="sltw"
+            textAlign="Left"
+          headerTextAlign="Center"
+            headerText="{{ 'SYSTEM_LANGUAGE_TW' | translate }}"
+          >
+          </e-column>
+          <e-column
+            field="slcn"
+            textAlign="Left"
+          headerTextAlign="Center"
+            headerText="{{ 'SYSTEM_LANGUAGE_CN' | translate }}"
+          >
+          </e-column>
+          <e-column
+            field="slen"
+            textAlign="Left"
+          headerTextAlign="Center"
+            headerText="{{ 'SYSTEM_LANGUAGE_EN' | translate }}"
+          >
+          </e-column>
+          <e-column
+            field="slvn"
+            textAlign="Left"
+          headerTextAlign="Center"
+            headerText="{{ 'SYSTEM_LANGUAGE_VN' | translate }}"
+          >
+          </e-column>
+          <e-column
+            field="comment"
+            textAlign="Left"
+          headerTextAlign="Center"
+            [allowSearching]="false"
+            [allowSorting]="false"
+            headerText="{{ 'SYSTEM_LANGUAGE_COMMENT' | translate }}"
+          >
+          </e-column>
+        </e-columns>
+      </ejs-grid>
+    </div>
+    <!-- /.card-body -->
+  </div>
+</div>
+
+
+<ng-template #optionModal let-modal>
+    <div class="modal-header my-modal">
+      <h4 class="modal-title" [ngbTooltip]="title"> <i class="fas fa-plus"></i> {{ title | translate }} </h4>
+
+      <button
+        type="button"
+        class="close"
+        aria-label="Close"
+        (click)="modal.dismiss('Cross click')"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-md-3 col-12">
+          <div class="form-group">
+            <label ngbTooltip="SYSTEM_LANGUAGE_PAGE" for="Page">{{ "SYSTEM_LANGUAGE_PAGE" | translate }}</label>
+            <span ngbTooltip="( Text length <= 50 )" class="max-length"> ( {{"Text length"| translate }} <= 50 )</span>
+            <input
+              [(ngModel)]="model.slpage"
+              maxlength="50"
+              type="text"
+              class="form-control"
+            />
+          </div>
+        </div>
+        <div class="col-md-3 col-12">
+          <div class="form-group">
+
+
+            <label ngbTooltip="SYSTEM_LANGUAGE_TYPE" for="Type">{{ "SYSTEM_LANGUAGE_TYPE" | translate }}</label>
+
+            <span ngbTooltip="( Text length <= 50 )" class="max-length"> ( {{"Text length"| translate }} <= 50 )</span>
+            <input
+              [(ngModel)]="model.sltype"
+              maxlength="50"
+              type="text"
+              class="form-control"
+            />
+          </div>
+        </div>
+
+        <div class="col-md-6 col-12">
+          <div class="form-group">
+
+            <label ngbTooltip="SYSTEM_LANGUAGE_KEY" for="Name">{{ "SYSTEM_LANGUAGE_KEY" | translate }}</label>
+
+            <span *ngIf="!(model.id > 0)" style="color: red">(*)</span>
+            <span ngbTooltip="Text length" class="max-length"> ( {{"Text length"| translate }} <= 50 )</span>
+
+            <input
+              [(ngModel)]="model.slkey"
+              maxlength="50"
+              type="text"
+              class="form-control"
+            />
+          </div>
+        </div>
+
+      </div>
+      <div class="row">
+
+
+        <div class="col-md-6 col-12">
+          <div class="form-group">
+
+            <label ngbTooltip="SYSTEM_LANGUAGE_EN" for="EN">{{ "SYSTEM_LANGUAGE_EN" | translate }}</label>
+            <span ngbTooltip="Text length" class="max-length"> ( {{"Text length"| translate }} <= 500 )</span>
+            <input
+              [(ngModel)]="model.slen"
+              maxlength="500"
+              type="text"
+              class="form-control"
+            />
+          </div>
+        </div>
+        <div class="col-md-6 col-12">
+          <div class="form-group">
+
+            <label ngbTooltip="SYSTEM_LANGUAGE_TW" for="TW">{{ "SYSTEM_LANGUAGE_TW" | translate }}</label>
+            <span ngbTooltip="Text length" class="max-length"> ( {{"Text length"| translate }} <= 500 )</span>
+
+            <input
+              [(ngModel)]="model.sltw"
+              maxlength="500"
+              type="text"
+              class="form-control"
+            />
+          </div>
+        </div>
+        <div class="col-md-6 col-12">
+          <div class="form-group">
+            <label ngbTooltip="SYSTEM_LANGUAGE_CN" for="CN">{{ "SYSTEM_LANGUAGE_CN" | translate }}</label>
+            <span ngbTooltip="Text length" class="max-length"> ( {{"Text length"| translate }} <= 500 )</span>
+            <input
+              [(ngModel)]="model.slcn"
+              maxlength="500"
+              type="text"
+              class="form-control"
+            />
+          </div>
+        </div>
+        <div class="col-md-6 col-12">
+          <div class="form-group">
+            <label ngbTooltip="SYSTEM_LANGUAGE_VN" for="VN">{{ "SYSTEM_LANGUAGE_VN" | translate }}</label>
+            <span ngbTooltip="Text length" class="max-length"> ( {{"Text length"| translate }} <= 500 )</span>
+
+            <input
+              [(ngModel)]="model.slvn"
+              maxlength="500"
+              type="text"
+              class="form-control"
+            />
+          </div>
+        </div>
+
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+
+            <label ngbTooltip="SYSTEM_LANGUAGE_COMMENT" for="comment">{{ "SYSTEM_LANGUAGE_COMMENT" | translate }}</label>
+            <textarea
+              [(ngModel)]="model.comment"
+              name="comment"
+              type="text"
+              class="form-control"
+              rows="4"
+              cols="4"
+            ></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="mr-auto" *ngIf="model?.id > 0">
+        <p>
+          <span class='mr-2'> <span class='my-font-weight-bold'>{{ 'Create by' | translate}}</span> : {{audit?.createBy}}</span>
+          <span><span class='my-font-weight-bold'>{{ 'Create date time' | translate}}</span> : {{audit?.createDate}}</span>
+        </p>
+        <p>
+          <span class='mr-2'><span class='my-font-weight-bold'>{{ 'Update by' | translate}}</span> : {{audit?.updateBy}}</span>
+          <span><span class='my-font-weight-bold'>{{ 'Update date time' | translate}}</span> : {{audit?.updateDate}}</span>
+        </p>
+      </div>
+      <span *ngIf="!(model.id > 0)" class="my-note mr-auto">
+        {{ 'Note: (*) is a required field' | translate }}
+      </span>
+
+      <button
+        type="button"
+        class="btn btn-light"
+        ngbTooltip="CLOSE"
+        (click)="modal.close('Close click')"
+      >
+        {{ "CLOSE" | translate }}
+      </button>
+      <button ngbTooltip="SAVE" [disabled]="!model.slkey" (click)="save()" class="btn btn-primary">
+        {{ "SAVE" | translate }}
+      </button>
+    </div>
+
+</ng-template>
+

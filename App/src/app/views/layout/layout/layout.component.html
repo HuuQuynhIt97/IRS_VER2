@@ -1,0 +1,109 @@
+<div class="backend-container">
+  <div class="wrap sidebar-mini"></div>
+  <div class="menu-collapse active"></div>
+  <app-header></app-header>
+  <main>
+    <aside class="sidebar slimScroll" [style.background-color]="sysConf.SystemMenuBGColor + '!important'">
+      <ul class="sidemenu side-mini active">
+        <ngx-spinner bdColor="rgba(255,255,255,0.62)" size="default" color="#007bff" type="la-ball-clip-rotate"
+          [fullScreen]="false">
+          <div class="la-ball-clip-rotate">
+            <div></div>
+          </div>
+        </ngx-spinner>
+        <ng-container *ngFor="let item of menus">
+          <li *ngIf="item.hasChildren">
+            <a class="toggle">
+              <i [class]="item.icon"></i><span>
+                <font [style.font-size]="sysConf.SystemMenuFontSize"  [style.color]="sysConf.SystemMenuFontColor" style="vertical-align: inherit;">
+                  <font style="vertical-align: inherit;"> {{ item.name }}</font>
+                </font>
+              </span>
+              <span *ngIf="item.hasChildren" class="sidemenu-arrow pull-right"><i class="fas fa-angle-left"></i></span>
+            </a>
+            <ul class="treeview-menu" *ngIf="item.hasChildren">
+              <ng-container *ngFor="let subItem of item.children">
+                <li>
+                  <a class="toggle" (click)="navigate(subItem)" [class.active]="isActive(subItem)"><i [class]="subItem.icon"></i><span>
+                      <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">{{ subItem.name}}</font>
+                      </font>
+                    </span>
+                    <span *ngIf="subItem.hasChildren" class="sidemenu-arrow pull-right"><i class="fas fa-angle-left"></i></span>
+                  </a>
+
+                  <ul class="treeview-menu">
+
+                    <ng-container *ngFor="let subItem2 of subItem.children">
+                      <li>
+                        <a class="toggle" (click)="navigate(subItem2)" [class.active]="isActive(subItem2)"><i
+                            [class]="subItem2.icon"></i><span>
+                            <font style="vertical-align: inherit;">
+                              <font style="vertical-align: inherit;">{{ subItem2.name}}</font>
+                            </font>
+                          </span></a>
+                        <span *ngIf="subItem2.hasChildren" class="sidemenu-arrow pull-right"><i class="fas fa-angle-left"></i></span>
+
+                      </li>
+                    </ng-container>
+
+                  </ul>
+                </li>
+              </ng-container>
+
+            </ul>
+
+          </li>
+
+          <li *ngIf="!item.hasChildren" (click)='route(item)' routerLinkActive="active">
+            <a class="toggle">
+              <i [class]="item.icon"></i><span>
+                <font style="vertical-align: inherit;">
+                  <font style="vertical-align: inherit;"> {{ item.name }}</font>
+                </font>
+              </span>
+            </a>
+
+          </li>
+        </ng-container>
+
+
+
+      </ul>
+    </aside>
+
+    <div class="lockpage" [style.background-color]="sysConf.SystemBGColor + '!important'">
+      <div class="content-wrap">
+        <app-breadcrumb></app-breadcrumb>
+        <div class="page">
+          <router-outlet></router-outlet>
+        </div>
+      </div>
+      <div class="overlay">
+        <div class="position-relative text-center">
+          <div class="position-fixed loading-msg">
+            <div class="d-flex justify-content-center align-self-center">
+              <div>
+                <div class="pt-1" style="fill: red; height: 30px; width: 30px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                    <path opacity=".25"
+                      d="M16 0 A16 16 0 0 0 16 32 A16 16 0 0 0 16 0 M16 4 A12 12 0 0 1 16 28 A12 12 0 0 1 16 4"></path>
+                    <path d="M16 0 A16 16 0 0 1 32 16 L28 16 A12 12 0 0 0 16 4z">
+                      <animateTransform attributeName="transform" type="rotate" from="0 16 16" to="360 16 16" dur="0.8s"
+                        repeatCount="indefinite"></animateTransform>
+                    </path>
+                  </svg>
+                </div>
+              </div>
+              <div class="text ml-2">
+                <font style="vertical-align: inherit;">
+                  <font style="vertical-align: inherit;">Processing...</font>
+                </font>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

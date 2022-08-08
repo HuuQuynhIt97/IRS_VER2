@@ -1,0 +1,10 @@
+.disable {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+a {
+  cursor: pointer;
+}
+.my-title {
+  font-weight: 600 !important;
+}

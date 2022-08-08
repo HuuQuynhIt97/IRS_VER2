@@ -1,0 +1,35 @@
+<div class="main-content" id="main-text">
+
+    <div class="sidebar-content">
+      <div class="flex-container-bio mt-3 mr-mobile">
+        <div routerLink="/mobile/booking-calendar-screen">{{ 'Search by Calendar' | translate }}</div>
+      </div>
+  
+      <div class="line"></div>
+      <div class="flex-container-bio">
+        <div routerLink="/mobile/search-by-list">{{ 'Search by List' | translate }}</div>
+      </div>
+  
+      <div class="line"></div>
+      <div class="flex-container-bio">
+        <div routerLink="/mobile/hall-detail/0/0">{{ 'Hall Detail' | translate }}</div>
+      </div>
+  
+      <div class="line"></div>
+      <div class="flex-container-bio">
+        <div routerLink="/mobile/booking/0">{{ 'Booking' | translate }}</div>
+      </div>
+
+      <div class="line"></div>
+      <div class="flex-container-bio">
+        <div routerLink="/mobile/booking-history">{{ 'Booking history' | translate }}</div>
+      </div>
+
+      <div class="line"></div>
+      <div class="flex-container-bio-desktop">
+        <div (click)="backDesktop()">{{ 'Desktop' | translate }}</div>
+      </div>
+
+    </div>
+  </div>
+  

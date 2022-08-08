@@ -1,0 +1,68 @@
+<ejs-grid
+  #grid
+  id="grid"
+  [dataSource]="data"
+  [allowPaging]="true"
+  [allowResizing]="true"
+  [allowSorting]="true"
+  gridLines="Both"
+  [locale]="locale"
+  [editSettings]="chemicalEditSettings"
+  [toolbar]="toolbarOptions"
+  [pageSettings]='pageSettingsRecipe'
+  [allowExcelExport]="true"
+  [enableInfiniteScrolling]="true"
+  (rowSelected)="rowSelected($event)"
+  (recordClick)="recordClick($event)"
+  (actionBegin)="actionBegin($event)"
+  [selectionSettings]="selectionOptions"
+  (toolbarClick)="toolbarClick($event)"
+  (dataBound)='dataBound()'
+>
+
+  <e-columns>
+    <e-column
+      field="option"
+      [allowSorting]="false"
+      [allowSearching]="false"
+      [allowGrouping]="false"
+      [allowFiltering]="false"
+      [allowEditing]="false"
+      textAlign="Center"
+      headerTextAlign="Center"
+      width="50"
+      headerTextAlign="Center"
+      headerText="{{ 'OPTION' | translate}}"
+    >
+      <ng-template #template let-data>
+        <span (click)="delete(data.id)" *ngIf="groupCode === 'ADMIN'" class="delete-grid">
+          <i class="fa fa-trash"></i>
+        </span>
+      </ng-template>
+    </e-column>
+
+    <e-column
+      field="name"
+      textAlign="Left"
+      headerText="{{ 'GLUE_NAME' | translate }}"
+    >
+    <ng-template #editTemplate let-data>
+      <ejs-dropdownlist #chemicalDropdownlist [dataSource]='dataGlue' 
+        [fields]='ChemicalFields' [allowFiltering]='true'
+        [(ngModel)]="shoeGlue.glueGuid"
+        >
+      </ejs-dropdownlist>
+    </ng-template>
+    </e-column>
+
+    <e-column
+      field="unit"
+      textAlign="Left"
+      headerText="{{ 'UNIT_LABEL' | translate }}"
+    >
+    
+    </e-column>
+
+    
+  </e-columns>
+</ejs-grid>

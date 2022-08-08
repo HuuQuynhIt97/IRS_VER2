@@ -1,0 +1,81 @@
+<ejs-grid
+  #grid
+  id="grid"
+  [dataSource]="data"
+  [allowPaging]="true"
+  [allowResizing]="true"
+  [allowSorting]="true"
+  gridLines="Both"
+  [locale]="locale"
+  (actionBegin)="actionBegin($event)"
+  (actionComplete)="actionComplete($event)"
+  [editSettings]="editSettings"
+  [toolbar]="toolbarOptions"
+  [selectedRowIndex]="0"
+  [allowExcelExport]="true"
+  [pageSettings]="pageSettings"
+  (recordDoubleClick)="onDoubleClick($event)"
+  (rowSelected)="rowSelected($event)"
+  (toolbarClick)="toolbarClick($event)"
+  (headerCellInfo)="headerCellInfo($event)"
+>
+<ng-template #parentTemplate let-data>
+
+  <ejs-dropdownlist id='toolbar_dropdown'
+        [allowFiltering]="true"
+        [fields]="fields"
+        [dataSource]="farmData"
+        [(value)]="farmGuid"
+        (change)="onChange($event)"
+        [placeholder]="'Choose a farm' | translate"
+        style="width: 200px;"
+        (filtering)='onFiltering2($event)'
+      >
+    </ejs-dropdownlist>
+</ng-template>
+  <e-columns>
+    <e-column
+      field="option"
+      textAlign="Left"
+      headerTextAlign="Center"
+      width="80"
+      headerTextAlign="Center"
+      [allowSorting]="false"
+      [allowSearching]="false"
+      [allowGrouping]="false"
+      [allowFiltering]="false"
+      [allowEditing]="false"
+      headerText="{{ 'OPTION' | translate }}"
+    >
+      <ng-template #template let-data>
+        <span (click)="delete(data.id)" class="delete-grid">
+          <i class="fa fa-trash"></i>
+        </span>
+      </ng-template>
+    </e-column>
+
+    <e-column
+      width="80"
+      field="dashBoardNo"
+      textAlign="Left"
+      headerTextAlign="Center"
+      headerText="{{ 'NO' | translate }}"
+    >
+    </e-column>
+    <e-column
+      field="dashBoardName"
+      textAlign="Left"
+      headerTextAlign="Center"
+      headerText="{{ 'NAME' | translate }}"
+    >
+    </e-column>
+    <e-column
+    field="sortId"
+    width="80"
+    textAlign="Left"
+    headerTextAlign="Center"
+    headerText="{{ 'SORT' | translate }}"
+  >
+  </e-column>
+  </e-columns>
+</ejs-grid>

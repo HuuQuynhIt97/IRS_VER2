@@ -1,0 +1,20 @@
+<ejs-dropdownlist
+  [id]="id"
+  [(ngModel)]="selectedValue"
+  (filtering)="onFiltering($event)"
+  (change)="onChange($event)"
+  (ngModelChange)="onNgModelChange($event)"
+  [allowFiltering]="true"
+  [disabled]="disabled"
+  [placeholder]="placeholder"
+  #codeTypeRemote
+  [dataSource]="data"
+  [fields]="remoteFields"
+  [query]="query"
+  (open)="onOpen($event)"
+  (actionComplete)="actionComplete($event)"
+  (blur)='onblur($event)'
+
+>
+
+</ejs-dropdownlist>

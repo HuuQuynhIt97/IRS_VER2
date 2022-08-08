@@ -1,0 +1,213 @@
+<ejs-grid
+  #grid
+  id="grid"
+  [dataSource]="data"
+  [allowPaging]="false"
+  [allowResizing]="true"
+  [allowSorting]="true"
+  gridLines="Both"
+  [locale]="locale"
+  [editSettings]="editSettings"
+  [pageSettings]="pageSettings"
+  [toolbar]="toolbarOptions"
+  [allowExcelExport]="true"
+  [enableInfiniteScrolling]="true"
+  [selectionSettings]="selectionOptions"
+  (toolbarClick)="toolbarClick($event)"
+  (dataBound)='dataBound()'
+
+  [height]="height"
+>
+  <e-columns>
+    <e-column
+      field="option"
+      [allowSorting]="false"
+      [allowSearching]="false"
+      [allowGrouping]="false"
+      [allowFiltering]="false"
+      [allowEditing]="false"
+      textAlign="Left"
+          headerTextAlign="Center"
+      width="80"
+      headerTextAlign="Center"
+      headerText="{{ 'OPTION' | translate}}"
+    >
+      <ng-template #template let-data>
+        <span (click)="delete(data.id)" class="delete-grid">
+          <i class="fa fa-trash"></i>
+        </span>
+        <span (click)="openModal(optionModal, data)" class="edit-grid">
+          <i class="fa fa-edit"></i>
+        </span>
+      </ng-template>
+    </e-column>
+
+
+    <e-column
+    field="cullingTankNo"
+    textAlign="Left"
+    headerText="{{ 'CULLING_TANK_NO' | translate }}"
+  >
+  </e-column>
+  <e-column
+  field="cullingTankName"
+  textAlign="Left"
+  headerText="{{ 'CULLING_TANK_NAME' | translate }}"
+>
+</e-column>
+    <!-- <e-column field="id"
+[allowSearching]="false" textAlign='Center' [isPrimaryKey]="true" [visible]="true" headerText="ID"> </e-column> -->
+  </e-columns>
+</ejs-grid>
+
+<ng-template #optionModal let-modal>
+  <div class="modal-header my-modal">
+    <h4 class="modal-title">
+      <i class="fas fa-plus"></i> {{ title | translate }}
+    </h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+        <div class="row">
+          <div class="col-md-4 col-12">
+            <label>{{ "CULLING_TANK_NO" | translate }} </label>
+            <div class="form-group">
+              <input
+              maxlength="100"
+                type="text"
+                [(ngModel)]="model.cullingTankNo"
+                class="form-control"
+              />
+            </div>
+          </div>
+          <div class="col-md-4 col-12">
+            <label>{{ "CULLING_TANK_NAME" | translate }} </label>
+            <span *ngIf="!(model.id > 0)" style="color: red">(*)</span>
+            <div class="form-group">
+              <input
+              maxlength="200"
+                type="text"
+                [(ngModel)]="model.cullingTankName"
+                class="form-control"
+              />
+            </div>
+          </div>
+
+          <div class="col-md-4 col-12">
+            <label>{{ "Culling_Type" | translate }} </label>
+            <div class="form-group">
+              <app-code-type-dropdownlist
+              id="culling-type-remote"
+              [codeType]="'Culling_Type'"
+              [(selectedValue)]="model.type"
+              >
+              </app-code-type-dropdownlist>
+            </div>
+          </div>
+
+          <div class="col-md-4 col-12">
+            <label>{{ "CULLING_TANK_PRINCIPLE" | translate }}</label>
+            <span class="max-length"> ( {{"Text length"| translate }} <= 200 )</span>
+            <div class="form-group">
+              <input
+              maxlength="200"
+                type="text"
+                [(ngModel)]="model.cullingTankPrincipal"
+                class="form-control"
+              />
+            </div>
+          </div>
+          <div class="col-md-4 col-12">
+            <label>{{ "CULLING_TANK_LENGTH" | translate }} </label>
+            <div class="form-group">
+              <input
+                name="cullingTankLength"
+                type="number"
+                min="0"
+                [(ngModel)]="model.cullingTankLength"
+                class="form-control"
+              />
+            </div>
+          </div>
+
+          <div class="col-md-4 col-12">
+            <label>{{ "CULLING_TANK_WIDTH" | translate }} </label>
+            <div class="form-group">
+              <input
+                name="cullingTankWidth"
+                type="number"
+                min="0"
+                [(ngModel)]="model.cullingTankWidth"
+                class="form-control"
+              />
+            </div>
+          </div>
+
+          <!-- <div class="col-md-4 col-12-3">
+            <div class="form-group">
+              <label for="startDate">{{
+                "CULLING_TANK_STARTDATE" | translate
+              }}</label>
+              <ejs-datepicker locale='en-US' format='yyyy/MM/dd' [(ngModel)]="model.startDate"></ejs-datepicker>
+            </div>
+          </div>
+          <div class="col-md-4 col-12-3">
+            <div class="form-group">
+              <label for="endDate">{{ "CULLING_TANK_ENDDATE" | translate }}</label>
+              <ejs-datepicker locale='en-US' format='yyyy/MM/dd' [(ngModel)]="model.endDate"></ejs-datepicker>
+            </div>
+          </div> -->
+
+      </div>
+
+    <div class="row">
+      <div class="col-md-12 col-12">
+        <label>{{ "CULLING_TANK_COMMENT" | translate }} </label>
+        <div class="form-group">
+          <textarea
+            class="form-control"
+            [(ngModel)]="model.comment"
+            cols="4"
+            rows="4"
+          ></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="mr-auto" *ngIf="model?.id > 0">
+      <p>
+        <span class='mr-2'> <span class='my-font-weight-bold'>{{ 'Create by' | translate}}</span> : {{audit?.createBy}}</span>
+        <span><span class='my-font-weight-bold'>{{ 'Create date time' | translate}}</span> : {{audit?.createDate}}</span>
+      </p>
+      <p>
+        <span class='mr-2'><span class='my-font-weight-bold'>{{ 'Update by' | translate}}</span> : {{audit?.updateBy}}</span>
+        <span><span class='my-font-weight-bold'>{{ 'Update date time' | translate}}</span> : {{audit?.updateDate}}</span>
+      </p>
+    </div>
+    <span *ngIf="!(model.id > 0)" class="my-note mr-auto">
+      {{ 'Note: (*) is a required field' | translate }}
+    </span>
+    <button
+      type="button"
+      class="btn btn-light"
+      (click)="modal.close('Close click')"
+    >
+      {{ "CLOSE" | translate }}
+    </button>
+    <button
+      [disabled]="!model.cullingTankName"
+      (click)="save()"
+      class="btn btn-primary"
+    >
+      {{ "SAVE" | translate }}
+    </button>
+  </div>
+</ng-template>
