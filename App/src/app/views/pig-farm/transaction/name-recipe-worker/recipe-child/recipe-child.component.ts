@@ -218,8 +218,7 @@ export class RecipeChildComponent extends BaseComponent implements OnInit, OnDes
         args.cancel = true;
         return;
       }
-      console.log(this.schedule);
-      // this.create();
+      this.create();
     }
 
     if (args.requestType === 'save' && args.action === 'edit') {
@@ -233,7 +232,7 @@ export class RecipeChildComponent extends BaseComponent implements OnInit, OnDes
   }
   
   recordClick(args: any) {
-    this.service.changeHall(args.rowData);
+    // this.service.changeHall(args.rowData);
     // this.serviceBarn.changeBarn({} as any);
    }
  dataBound() {

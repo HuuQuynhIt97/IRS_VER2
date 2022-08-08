@@ -22,6 +22,7 @@ namespace IRS.Services
         Task<object> LoadData(DataManager data, string farmGuid);
         Task<object> GetAudit(object id);
         Task<object> LoadDataBySite(string siteID);
+        Task<object> OutOfStock(string inInkGuid);
         Task<object> ScanQRCode(string qrCode);
 
     }
@@ -87,6 +88,7 @@ namespace IRS.Services
                 item.Code = ink.Code;
                 item.Name = ink.Name;
                 item.Deliver = "0";
+                item.OutOfStock = "Y";
                 item.Unit = ink.Unit.ToString();
                 item.Guid = Guid.NewGuid().ToString("N") + DateTime.Now.ToString("ssff").ToUpper();
                 _repo.Add(item);
@@ -166,9 +168,10 @@ namespace IRS.Services
                                  Code = y.Code,
                                  CreateDate = x.CreateDate,
                                  Unit = x.Unit,
+                                 OutOfStock = x.OutOfStock,
                                  Supplier = z.Name,
                                  Deliver = x.Deliver
-                              }).ToList();
+                              }).Where(x => x.CreateDate.Value.Date == Start.Date && x.CreateDate.Value.Year == Start.Year).ToList();
 
             return datasource;
 
@@ -177,7 +180,7 @@ namespace IRS.Services
         public override async Task<OperationResult> DeleteAsync(object id)
         {
             var item = _repo.FindByID(id);
-            //item.CancelFlag = "Y";
+            item.Status = 0;
             _repo.Update(item);
             try
             {
@@ -300,6 +303,34 @@ namespace IRS.Services
         public async Task<object> ScanQRCode(string qrCode)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<object> OutOfStock(string inInkGuid)
+        {
+            try
+            {
+                var checkKey = await _repo.FindAll(x => x.Guid == inInkGuid).AsNoTracking().FirstOrDefaultAsync();
+                if (checkKey != null)
+                {
+                    checkKey.OutOfStock = "N";
+
+                }
+                var item = _mapper.Map<InInk>(checkKey);
+                _repo.Update(item);
+                await _unitOfWork.SaveChangeAsync();
+                operationResult = new OperationResult
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Message = MessageReponse.UpdateSuccess,
+                    Success = true,
+                    Data = checkKey
+                };
+            }
+            catch (Exception ex)
+            {
+                operationResult = ex.GetMessageError();
+            }
+            return operationResult;
         }
     }
 }

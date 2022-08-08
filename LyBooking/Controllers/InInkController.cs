@@ -35,6 +35,12 @@ namespace IRS.Controllers
         }
 
         [HttpPost]
+        public async Task<ActionResult> OutOfStock(string inInkGuid)
+        {
+            return Ok(await _service.OutOfStock(inInkGuid));
+        }
+
+        [HttpPost]
         public async Task<ActionResult> AddAsync([FromBody] InInkDto model)
         {
             return StatusCodeResult(await _service.AddAsync(model));

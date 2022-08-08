@@ -22,17 +22,22 @@ namespace IRS.Services
         Task<object> LoadData(DataManager data, string farmGuid);
         Task<object> GetAudit(object id);
         Task<object> LoadDataBySite(string siteID);
+        Task<object> OutOfStock(string inChemicalGuid);
 
     }
     public class InChemicalService : ServiceBase<InChemical, InChemicalDto>, IInChemicalService
     {
         private readonly IRepositoryBase<InChemical> _repo;
+        private readonly IRepositoryBase<Chemical2> _repoChemical;
+        private readonly IRepositoryBase<Supplier> _repoSupplier;
         private readonly IRepositoryBase<XAccount> _repoXAccount;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly MapperConfiguration _configMapper;
         public InChemicalService(
             IRepositoryBase<InChemical> repo,
+            IRepositoryBase<Chemical2> repoChemical,
+            IRepositoryBase<Supplier> repoSupplier,
             IRepositoryBase<XAccount> repoXAccount,
             IUnitOfWork unitOfWork,
             IMapper mapper,
@@ -41,6 +46,8 @@ namespace IRS.Services
             : base(repo, unitOfWork, mapper, configMapper)
         {
             _repo = repo;
+            _repoChemical = repoChemical;
+            _repoSupplier = repoSupplier;
             _repoXAccount = repoXAccount;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -69,7 +76,19 @@ namespace IRS.Services
             {
                 //var check = await IsExistKey(model.Name);
                 //if (!check.Success) return check;
+
+                var chemical = _repoChemical.FindAll(x => x.Code.Equals(model.QrCode)).FirstOrDefault();
+                var sup_name = _repoSupplier.FindAll(x => x.Id == chemical.SupplierID).FirstOrDefault();
+
                 var item = _mapper.Map<InChemical>(model);
+                item.ChemicalGuid = chemical.Guid;
+                item.Status = 1;
+                item.SupplierGuid = sup_name.Guid;
+                item.Code = chemical.Code;
+                item.Name = chemical.Name;
+                item.Deliver = "0";
+                item.OutOfStock = "Y";
+                item.Unit = chemical.Unit.ToString();
                 item.Guid = Guid.NewGuid().ToString("N") + DateTime.Now.ToString("ssff").ToUpper();
                 _repo.Add(item);
                 await _unitOfWork.SaveChangeAsync();
@@ -92,16 +111,6 @@ namespace IRS.Services
         {
             try
             {
-                //var checkKey = await _repo.FindAll(x => x.Id == model.ID).AsNoTracking().FirstOrDefaultAsync();
-                //if (checkKey != null )
-                //{
-                //    if (checkKey.Name != model.Name)
-                //    {
-                //        var check = await IsExistKey(model.Name);
-                //        if (!check.Success) return check;
-                //    }
-                    
-                //}
                 var item = _mapper.Map<InChemical>(model);
                 _repo.Update(item);
                 await _unitOfWork.SaveChangeAsync();
@@ -122,35 +131,44 @@ namespace IRS.Services
 
         public override async Task<List<InChemicalDto>> GetAllAsync()
         {
-            throw new NotImplementedException();
-            //return await _repo.FindAll(x => x.IsShow).Include(x => x.Supplier).Include(x => x.Process).Select(x => new InkDto
-            //{
-            //    ID = x.Id,
-            //    Code = x.Code,
-            //    Name = x.Name,
-            //    NameEn = x.NameEn,
-            //    CreatedDate = x.CreatedDate,
-            //    MaterialNO = x.MaterialNo,
-            //    VOC = x.Voc,
-            //    Unit = x.Unit,
-            //    Color = x.Process.Color,
-            //    Supplier = x.Supplier.Name,
-            //    Process = x.Process.Name,
-            //    DaysToExpiration = x.DaysToExpiration,
-            //    SupplierID = x.SupplierId,
-            //    ProcessID = x.ProcessId,
-            //    Percentage = x.Percentage,
-            //    CreatedBy = x.CreatedBy,
-            //    Guid = x.Guid,
-            //    ModifiedDate = x.ModifiedDate
-            //}).OrderByDescending(x => x.ID).ToListAsync();
+            var Start = DateTime.Now;
+            var End = DateTime.Now;
+            var inChemical = await _repo.FindAll(x => x.Status == 1).ToListAsync();
+            var supplier = await _repoSupplier.FindAll(x => x.IsShow == true).ToListAsync();
+            var chemical = await _repoChemical.FindAll(x => x.isShow).ToListAsync();
+            var datasource = (from x in inChemical
+                              join y in chemical on x.ChemicalGuid equals y.Guid
+                              join z in supplier on x.SupplierGuid equals z.Guid
+                              select new InChemicalDto
+                              {
+                                  Id = x.Id,
+                                  Guid = x.Guid,
+                                  ChemicalGuid = x.ChemicalGuid,
+                                  SupplierGuid = x.SupplierGuid,
+                                  Name = y.Name,
+                                  Percentage = x.Percentage,
+                                  Status = x.Status,
+                                  CreateBy = x.CreateBy,
+                                  UpdateBy = x.UpdateBy,
+                                  UpdateDate = x.UpdateDate,
+                                  DeleteBy = x.DeleteBy,
+                                  DeleteDate = x.DeleteDate,
+                                  Code = y.Code,
+                                  CreateDate = x.CreateDate,
+                                  Unit = x.Unit,
+                                  OutOfStock = x.OutOfStock,
+                                  Supplier = z.Name,
+                                  Deliver = x.Deliver
+                              }).Where(x => x.CreateDate.Value.Date == Start.Date && x.CreateDate.Value.Year == Start.Year).ToList();
+
+            return datasource;
 
         }
 
         public override async Task<OperationResult> DeleteAsync(object id)
         {
             var item = _repo.FindByID(id);
-            //item.CancelFlag = "Y";
+            item.Status = 0;
             _repo.Update(item);
             try
             {
@@ -268,6 +286,34 @@ namespace IRS.Services
             var data = await query.ToListAsync();
             return data;
             //throw new NotImplementedException();
+        }
+
+        public async Task<object> OutOfStock(string inChemicalGuid)
+        {
+            try
+            {
+                var checkKey = await _repo.FindAll(x => x.Guid == inChemicalGuid).AsNoTracking().FirstOrDefaultAsync();
+                if (checkKey != null)
+                {
+                    checkKey.OutOfStock = "N";
+
+                }
+                var item = _mapper.Map<InChemical>(checkKey);
+                _repo.Update(item);
+                await _unitOfWork.SaveChangeAsync();
+                operationResult = new OperationResult
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Message = MessageReponse.UpdateSuccess,
+                    Success = true,
+                    Data = checkKey
+                };
+            }
+            catch (Exception ex)
+            {
+                operationResult = ex.GetMessageError();
+            }
+            return operationResult;
         }
     }
 }

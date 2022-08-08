@@ -38,13 +38,15 @@ export class AutofocusQrcodeDirective implements AfterViewInit, OnInit, OnDestro
   ngOnDestroy() {
     this.subscription.forEach(item => item.unsubscribe());
   }
-  @HostListener('document:keydown.enter', ['$event'])
-  onKeydownHandler(event: KeyboardEvent) {
-    event.preventDefault();
-    this.host.nativeElement.value = this.host.nativeElement.value + '    ';
-  }
+  // @HostListener('document:keydown.enter', ['$event'])
+  // onKeydownHandler(event: KeyboardEvent) {
+  //   console.log('onKeydownHandler',event);
+  //   event.preventDefault();
+  //   this.host.nativeElement.value = this.host.nativeElement.value + '    ';
+  // }
   @HostListener('document:keydown.tab', ['$event'])
   onKeydownTabHandler(event: KeyboardEvent) {
+    console.log('onKeydownTabHandler',event);
     event.preventDefault();
     this.host.nativeElement.value = this.host.nativeElement.value + '    ';
   }

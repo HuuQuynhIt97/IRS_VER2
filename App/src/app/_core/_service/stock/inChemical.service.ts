@@ -23,4 +23,8 @@ export class InChemicalService extends CURDService<InChemical> {
     return this.http.get<any>(`${this.base}InChemical/LoadData`, {});
   }
 
+  outOfStock(inChemicalGuid) {
+    return this.http.post<any>(`${this.base}InChemical/OutOfStock?inChemicalGuid=${inChemicalGuid}`, {});
+  }
+
 }

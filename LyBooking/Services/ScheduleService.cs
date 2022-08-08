@@ -185,8 +185,8 @@ namespace IRS.Services
                               join t in treatmentWay on x.TreatmentWayGuid equals t.Guid
                               join p in part on x.PartGuid equals p.Guid
                               join c in color on x.ColorGuid equals c.Guid
-                              join tt in color on x.TreatmentGuid equals tt.Guid
-                              join pp in color on x.ProcessGuid equals pp.Guid
+                              join tt in treatment on x.TreatmentGuid equals tt.Guid
+                              join pp in process on x.ProcessGuid equals pp.Guid
                               select new
                               {
                                   x.Id,

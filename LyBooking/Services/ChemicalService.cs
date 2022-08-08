@@ -74,10 +74,27 @@ namespace IRS.Services
 
         public override async Task<List<Chemical2Dto>> GetAllAsync()
         {
-            var query = _repo.FindAll(x => x.isShow == true).ProjectTo<Chemical2Dto>(_configMapper);
-
-            var data = await query.ToListAsync();
-            return data;
+            return await _repo.FindAll(x => x.isShow).Include(x => x.Supplier).Include(x => x.Processes).Select(x => new Chemical2Dto
+            {
+                ID = x.ID,
+                Code = x.Code,
+                Name = x.Name,
+                NameEn = x.NameEn,
+                CreatedDate = x.CreatedDate,
+                MaterialNO = x.MaterialNO,
+                VOC = x.VOC,
+                Unit = x.Unit,
+                Color = x.Processes.Color,
+                Supplier = x.Supplier.Name,
+                Process = x.Processes.Name,
+                DaysToExpiration = x.DaysToExpiration,
+                SupplierID = x.SupplierID,
+                ProcessID = x.ProcessID,
+                Percentage = x.Percentage,
+                CreatedBy = x.CreatedBy,
+                Guid = x.Guid,
+                ModifiedDate = x.ModifiedDate
+            }).OrderByDescending(x => x.ID).ToListAsync();
 
         }
 
@@ -107,25 +124,28 @@ namespace IRS.Services
 
         public async Task<object> LoadData(DataManager data, string farmGuid)
         {
-            var datasource = _repo.FindAll(x => x.isShow == true).Include(x => x.Supplier).Include(x => x.Processes)
-            .OrderByDescending(x=> x.ID)
-            .Select(x => new Chemical2Dto {
+            var datasource = _repo.FindAll(x => x.isShow).Include(x => x.Supplier).Include(x => x.Processes)
+            .OrderByDescending(x => x.ID)
+            .Select(x => new Chemical2Dto
+            {
                 ID = x.ID,
                 Code = x.Code,
                 Name = x.Name,
                 NameEn = x.NameEn,
-                Color = x.Processes.Color,
                 CreatedDate = x.CreatedDate,
                 MaterialNO = x.MaterialNO,
                 VOC = x.VOC,
                 Unit = x.Unit,
+                Color = x.Processes.Color,
                 Supplier = x.Supplier.Name,
                 Process = x.Processes.Name,
                 DaysToExpiration = x.DaysToExpiration,
-                Modify = x.Modify,
-                Guid = x.Guid,
                 SupplierID = x.SupplierID,
-                ProcessID = x.ProcessID
+                ProcessID = x.ProcessID,
+                Percentage = x.Percentage,
+                CreatedBy = x.CreatedBy,
+                Guid = x.Guid,
+                ModifiedDate = x.ModifiedDate
             });
             var count = await datasource.CountAsync();
             if (data.Where != null) // for filtering

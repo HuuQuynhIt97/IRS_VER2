@@ -114,7 +114,7 @@
 
             <e-column field='deliver' textAlign='Center' headerText='Unit (Kg)' width='130'>
               <ng-template #headerTemplate>
-                {{'DELIVER' | translate}}
+                {{'DELIVERY' | translate}}
               </ng-template>
               <ng-template #template let-data>
                 {{data.deliver}} Kg
@@ -126,7 +126,7 @@
                 {{'STATUS_LABEL' | translate}}
               </ng-template>
               <ng-template #template let-data>
-                <ng-container *ngIf="data.status === true; else elseTemplate">
+                <ng-container *ngIf="data.outOfStock === 'N'; else elseTemplate">
                   <span class="badge badge-secondary">Out of Stock</span>
                 </ng-container>
                 <ng-template #elseTemplate>
@@ -136,7 +136,7 @@
               </ng-template>
 
               <ng-template #editTemplate let-data>
-                <ng-container *ngIf="data.status === true; else elseTemplate">
+                <ng-container *ngIf="data.outOfStock === 'N'; else elseTemplate">
                   <span class="badge badge-secondary">Out of Stock</span>
                 </ng-container>
                 <ng-template #elseTemplate>
@@ -151,8 +151,8 @@
                 {{'OPTION' | translate}}
               </ng-template>
               <ng-template #template let-data>
-                <div class="btn-group">
-                  <button type="button"  class="btn btn-xs btn-success"><i class="fa fa-check"></i></button>
+                <div class="btn-group" *ngIf="data.outOfStock === 'Y'">
+                  <button type="button" (click)="finishOutOfStock(data)" class="btn btn-xs btn-success"><i class="fa fa-check"></i></button>
                 </div>
                 <span style="color: transparent;"> | </span>
                 <div class="btn-group">

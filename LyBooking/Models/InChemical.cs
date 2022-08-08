@@ -22,6 +22,7 @@ namespace IRS.Models
         public string Unit { get; set; }
         public string Percentage { get; set; }
         public string Deliver { get; set; }
+        public string OutOfStock { get; set; }
         public string SupplierGuid { get; set; }
     }
 }

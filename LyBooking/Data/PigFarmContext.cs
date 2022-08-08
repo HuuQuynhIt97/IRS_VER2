@@ -156,6 +156,8 @@ namespace IRS.Data
                     .HasMaxLength(20)
                     .HasColumnName("PERCENTAGE");
 
+
+
                 entity.Property(e => e.Status)
                     .HasColumnType("numeric(18, 0)")
                     .HasColumnName("STATUS");
@@ -171,6 +173,10 @@ namespace IRS.Data
                 entity.Property(e => e.Deliver)
                     .HasMaxLength(50)
                     .HasColumnName("DELIVER");
+
+                entity.Property(e => e.OutOfStock)
+                    .HasMaxLength(10)
+                    .HasColumnName("OUTOFSTOCK");
 
                 entity.Property(e => e.UpdateBy)
                     .HasColumnType("numeric(18, 0)")
@@ -240,6 +246,10 @@ namespace IRS.Data
                 entity.Property(e => e.Deliver)
                     .HasMaxLength(50)
                     .HasColumnName("DELIVER");
+
+                entity.Property(e => e.OutOfStock)
+                    .HasMaxLength(10)
+                    .HasColumnName("OUTOFSTOCK");
 
                 entity.Property(e => e.UpdateBy)
                     .HasColumnType("numeric(18, 0)")

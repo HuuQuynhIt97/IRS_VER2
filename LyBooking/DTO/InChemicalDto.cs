@@ -21,7 +21,10 @@ namespace IRS.DTO
         public string Guid { get; set; }
         public string Unit { get; set; }
         public string Percentage { get; set; }
+        public string OutOfStock { get; set; }
         public string Deliver { get; set; }
+        public string QrCode { get; set; }
         public string SupplierGuid { get; set; }
+        public string Supplier { get; set; }
     }
 }

@@ -1,3 +1,5 @@
+import { ChemicalPrintQrcodeComponent } from './chemical/chemical-print-qrcode/chemical-print-qrcode.component';
+import { PrintQrcodeComponent } from './Ink/print-qrcode/print-qrcode.component';
 import { ProcessComponent } from './process/process.component';
 import { PartComponent } from './part/part.component';
 import { ColorComponent } from './color/color.component';
@@ -113,6 +115,28 @@ const routes: Routes = [
           functionCode: 'Ink'
         },
         canActivate: [AuthGuard]
+      },
+
+      {
+        path: 'Ink/print-qrcode/:id/:code/:name',
+        component: PrintQrcodeComponent,
+        data: {
+          title: 'Print QRcode',
+          module: 'setting',
+          breadcrumb: 'Print QRcode',
+        },
+        // canActivate: [AuthGuard]
+      },
+
+      {
+        path: 'Chemicals/print-qrcode/:id/:code/:name',
+        component: ChemicalPrintQrcodeComponent,
+        data: {
+          title: 'Print QRcode',
+          module: 'setting',
+          breadcrumb: 'Print QRcode',
+        },
+        // canActivate: [AuthGuard]
       },
 
       {

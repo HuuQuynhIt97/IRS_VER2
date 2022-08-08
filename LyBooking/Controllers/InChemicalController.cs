@@ -16,7 +16,11 @@ namespace IRS.Controllers
             _service = service;
         }
 
-
+        [HttpPost]
+        public async Task<ActionResult> OutOfStock(string inChemicalGuid)
+        {
+            return Ok(await _service.OutOfStock(inChemicalGuid));
+        }
 
         [HttpGet]
         public async Task<ActionResult> GetAllAsync()

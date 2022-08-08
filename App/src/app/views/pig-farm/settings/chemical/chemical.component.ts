@@ -65,7 +65,6 @@ export class ChemicalComponent extends BaseComponent implements OnInit, OnDestro
   constructor(
     private service: ChemicalService,
     private serviceHall: HallService,
-    private serviceInk: InkService,
     private serviceChemical: ChemicalService,
     private serviceSupplier: SupplierService,
     private serviceProcess: ProcessService,

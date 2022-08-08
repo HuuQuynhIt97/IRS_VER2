@@ -1,3 +1,4 @@
+import { InInk } from './../../../../_core/_model/stock/inInk';
 import { TranslateService } from '@ngx-translate/core';
 import { InkService } from './../../../../_core/_service/setting/ink.service';
 import { InInkService } from './../../../../_core/_service/stock/inInk.service';
@@ -15,7 +16,6 @@ import { InkScanner } from 'src/app/_core/_model/stock/inkScanner';
 import { AlertifyService } from 'src/app/_core/_service/alertify.service';
 import { AuthService } from 'src/app/_core/_service/auth.service';
 import { Ink } from 'src/app/_core/_model/setting/ink';
-import { InInk } from 'src/app/_core/_model/stock/inInk';
 import { BaseComponent } from 'src/app/_core/_component/base.component';
 
 @Component({
@@ -99,13 +99,38 @@ export class InInkComponent extends BaseComponent implements OnInit, OnDestroy {
     this.getAllInk();
     this.checkQRCode();
   }
+
+  finishOutOfStock(data: InInk) {
+    this.alertify.confirm4(
+      this.alert.yes_message,
+      this.alert.no_message,
+      this.alert.updateTitle,
+      this.alert.updateMessage,
+      () => {
+        this.service.outOfStock(data.guid).subscribe(
+          (res) => {
+            if (res.success === true) {
+              this.alertify.success(this.alert.updated_ok_msg);
+              this.getInk();
+            } else {
+              this.alertify.warning(this.alert.system_error_msg);
+            }
+          },
+          (error) => {
+            this.alertify.warning(this.alert.system_error_msg);
+          }
+        );
+      }, () => {
+        this.alertify.error(this.alert.cancelMessage);
+        this.getInk();
+      }
+    );
+    console.log(data);
+  }
   actionBegin(args) {
 
     if (args.requestType === "beginEdit" ) {
       this.model = {...args.rowData};
-
-      console.log(this.model);
-      
     }
     if (args.requestType === "save" ) {
       if (args.action === "edit") {
@@ -247,12 +272,13 @@ export class InInkComponent extends BaseComponent implements OnInit, OnDestroy {
         const dateAndBatch = /(\d+)-(\w+)-/g;
         const validFormat = res.QRCode.match(dateAndBatch);
         const qrcode = res.QRCode.replace(validFormat[0], '');
-        const levels = [1, 0];
-        const building = JSON.parse(localStorage.getItem('building'));
-        let buildingName = building.name;
-        if (levels.includes(building.level)) {
-          buildingName = 'E';
-        }
+        // const levels = [1, 0];
+        // const building = JSON.parse(localStorage.getItem('building'));
+        // let buildingName = building.name;
+        // if (levels.includes(building.level)) {
+        //   buildingName = 'E';
+        // }
+        console.log(qrcode);
         const ink = this.findIngredientCode(qrcode);
         if (this.checkCode === true) {
           this.model.qrCode = ink.code
@@ -285,7 +311,6 @@ export class InInkComponent extends BaseComponent implements OnInit, OnDestroy {
   getInk() {
     this.service.getAll().subscribe((res: any) => {
       this.data = res;
-      console.log(res);
       // this.ConvertClass(res);
     });
   }
@@ -350,13 +375,29 @@ export class InInkComponent extends BaseComponent implements OnInit, OnDestroy {
   }
 
   // xoa Ingredient Receiving
-  delete(item) {
-    // this.ingredientService.deleteIngredientInfo(item.id, item.code, item.qty, item.batch).subscribe(() => {
-    //   this.alertify.success('Delete Success!');
-    //   this.getAllIngredientInfoByBuilding()
-    //   // this.getIngredientInfo();
-    //   // this.getIngredientInfoOutput();
-    // });
+  delete(item: InInk) {
+    this.alertify.confirm4(
+      this.alert.yes_message,
+      this.alert.no_message,
+      this.alert.deleteTitle,
+      this.alert.deleteMessage,
+      () => {
+        this.service.delete(item.id).subscribe(
+          (res) => {
+            if (res.success === true) {
+              this.alertify.success(this.alert.deleted_ok_msg);
+              this.getInk();
+            } else {
+              this.alertify.warning(this.alert.system_error_msg);
+            }
+          },
+          (err) => this.alertify.warning(this.alert.system_error_msg)
+        );
+      }, () => {
+        this.alertify.error(this.alert.cancelMessage);
+
+      }
+    );
   }
 
   // luu du lieu sau khi scan Qrcode vao IngredientReport

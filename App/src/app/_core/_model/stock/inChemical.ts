@@ -15,4 +15,6 @@ export interface InChemical {
   status: number | null;
   guid: string;
   qrCode: string;
+  outOfStock: string;
+  deliver: string;
 }

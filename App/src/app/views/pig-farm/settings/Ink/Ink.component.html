@@ -18,6 +18,7 @@
   (dataBound)='dataBound()'
 >
   <e-columns>
+
     <e-column
       field="option"
       [allowSorting]="false"
@@ -40,67 +41,80 @@
         </span>
       </ng-template>
     </e-column>
-
     
-  <e-column
-  field="name"
-  textAlign="Left"
-  headerText="{{ 'INK_NAME' | translate }}"
->
-</e-column>
-  <e-column
-    field="supplier"
-    textAlign="Left"
-    headerText="{{ 'INK_SUPPLIER' | translate }}"
-  >
-  </e-column>
-
-  <e-column
-    field="materialNO"
-    textAlign="Left"
-    headerText="{{ 'INK_MATERIALNO' | translate }}"
-  >
-  </e-column>
-
-  <e-column
-    field="code"
-    textAlign="Left"
-    headerText="{{ 'INK_CODE' | translate }}"
-  >
-  </e-column>
-
-  <e-column
-    field="process"
-    textAlign="Center"
-    headerText="{{ 'INK_TREATMENT' | translate }}"
+    <e-column
+      field="name"
+      textAlign="Left"
+      headerText="{{ 'INK_NAME' | translate }}"
     >
-    <ng-template #template let-data>
-      <span [style.background]="data.color" style="font-size: small; color: whitesmoke;" class="badge badge-pill">{{data.process}}</span>
-    </ng-template>
-  </e-column>
+    </e-column>
 
-  <e-column
-    field="voc"
-    width="50"
-    textAlign="Center"
-    headerText="{{ 'INK_VOC' | translate }}"
+    <e-column
+      field="supplier"
+      textAlign="Left"
+      headerText="{{ 'INK_SUPPLIER' | translate }}"
     >
-  </e-column>
+    </e-column>
 
-  <e-column
-    field="unit"
-    textAlign="Center"
-    width="50"
-    headerText="{{ 'INK_UNIT' | translate }}"
+    <e-column
+      field="materialNO"
+      textAlign="Left"
+      headerText="{{ 'INK_MATERIALNO' | translate }}"
     >
-  </e-column>
+    </e-column>
 
-  <e-column
-    field="daysToExpiration"
-    textAlign="Center"
-    headerText="{{ 'INK_DAY_TO_EXPIRATION' | translate }}"
+    <e-column
+      field="code"
+      textAlign="Left"
+      headerText="{{ 'INK_CODE' | translate }}"
     >
-  </e-column>
+    </e-column>
+
+    <e-column
+      field="process"
+      textAlign="Center"
+      headerText="{{ 'INK_TREATMENT' | translate }}"
+      >
+      <ng-template #template let-data>
+        <span [style.background]="data.color" style="font-size: small; color: whitesmoke;" class="badge badge-pill">{{data.process}}</span>
+      </ng-template>
+    </e-column>
+
+    <e-column
+      field="voc"
+      width="50"
+      textAlign="Center"
+      headerText="{{ 'INK_VOC' | translate }}"
+      >
+    </e-column>
+
+    <e-column
+      field="unit"
+      textAlign="Center"
+      width="50"
+      headerText="{{ 'INK_UNIT' | translate }}"
+      >
+    </e-column>
+
+    <e-column
+      field="daysToExpiration"
+      textAlign="Center"
+      headerText="{{ 'INK_DAY_TO_EXPIRATION' | translate }}"
+      >
+    </e-column>
+
+    <e-column
+      field="qrcode"
+      textAlign="Center"
+      headerText="{{ 'QR_CODE' | translate }}"
+      >
+      <ng-template let-data #template >
+        <div class="btn-group" data-toggle="tooltip" data-placement="top" title="Print QRCode">
+          <a routerLink="print-qrcode/{{data.id}}/{{data.code}}/{{data.name}}"
+            class="btn btn-xs btn-success mr-2"><i class="fa fa-qrcode" aria-hidden="true"></i></a>
+        </div>
+      </ng-template>
+    </e-column>
     
   </e-columns>
 </ejs-grid>

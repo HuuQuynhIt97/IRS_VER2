@@ -22,5 +22,8 @@ export class InInkService extends CURDService<InInk> {
   loadData() {
     return this.http.get<any>(`${this.base}InInk/LoadData`, {});
   }
+  outOfStock(inInkGuid) {
+    return this.http.post<any>(`${this.base}InInk/OutOfStock?inInkGuid=${inInkGuid}`, {});
+  }
 
 }

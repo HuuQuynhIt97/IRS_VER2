@@ -15,5 +15,6 @@ export interface InInk {
   status: number | null;
   guid: string;
   qrCode: string;
+  outOfStock: string;
   deliver: string;
 }

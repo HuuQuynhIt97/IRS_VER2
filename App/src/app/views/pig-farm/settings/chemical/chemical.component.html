@@ -105,18 +105,31 @@
     <ng-template #template let-data>{{data.daysToExpiration}} days</ng-template>
   </e-column>
 
-    <e-column
-      field="daysToExpiration"
+  <e-column
+    field="daysToExpiration"
+    textAlign="Center"
+    headerText="{{ 'CHEMICAL_MODIFY' | translate }}"
+    >
+    <ng-template #template let-data>
+      <ng-container *ngIf="data.modify == true; else elseTemplate">
+        <span style="font-size: small;" class="badge badge-pill badge-success">Yes</span>
+      </ng-container>
+      <ng-template #elseTemplate>
+        <span style="font-size: small;" class="badge badge-pill badge-danger">No</span>
+      </ng-template>
+    </ng-template>
+  </e-column>
+
+  <e-column
+      field="qrcode"
       textAlign="Center"
-      headerText="{{ 'CHEMICAL_MODIFY' | translate }}"
+      headerText="{{ 'QR_CODE' | translate }}"
       >
-      <ng-template #template let-data>
-        <ng-container *ngIf="data.modify == true; else elseTemplate">
-          <span style="font-size: small;" class="badge badge-pill badge-success">Yes</span>
-        </ng-container>
-        <ng-template #elseTemplate>
-          <span style="font-size: small;" class="badge badge-pill badge-danger">No</span>
-        </ng-template>
+      <ng-template let-data #template >
+        <div class="btn-group" data-toggle="tooltip" data-placement="top" title="Print QRCode">
+          <a routerLink="print-qrcode/{{data.id}}/{{data.code}}/{{data.name}}"
+            class="btn btn-xs btn-success mr-2"><i class="fa fa-qrcode" aria-hidden="true"></i></a>
+        </div>
       </ng-template>
     </e-column>
     

@@ -1,3 +1,4 @@
+import { ChemicalPrintQrcodeComponent } from './chemical/chemical-print-qrcode/chemical-print-qrcode.component';
 import { ProcessComponent } from './process/process.component';
 import { PartComponent } from './part/part.component';
 import { ColorChemicalComponent } from './color/color-chemical/color-chemical.component';
@@ -26,6 +27,8 @@ import { GlueChildComponent } from './glue-chemical/glue-child/glue-child.compon
 import { ChemicalChildComponent } from './glue-chemical/chemical-child/chemical-child.component';
 import { ShoeChildComponent } from './shoe-glue/shoe-child/shoe-child.component';
 import { ShoeGlueChildComponent } from './shoe-glue/shoe-glue-child/shoe-glue-child.component';
+import { PrintQrcodeComponent } from './Ink/print-qrcode/print-qrcode.component';
+import { QRCodeGeneratorAllModule } from '@syncfusion/ej2-angular-barcode-generator';
 
 
 @NgModule({
@@ -49,10 +52,13 @@ import { ShoeGlueChildComponent } from './shoe-glue/shoe-glue-child/shoe-glue-ch
     ColorInkComponent,
     ColorChemicalComponent,
     ProcessComponent,
-    PartComponent
+    PartComponent,
+    PrintQrcodeComponent,
+    ChemicalPrintQrcodeComponent
   ],
   imports: [
     CommonModule,
+    QRCodeGeneratorAllModule,
     FormsModule,
     CoreDirectivesModule,
     SettingsRoutingModule,

@@ -24,6 +24,7 @@ namespace IRS.DTO
         public string QrCode { get; set; }
         public string SupplierGuid { get; set; }
         public string Supplier { get; set; }
+        public string OutOfStock { get; set; }
         public string Deliver { get; set; }
     }
 }

@@ -1,3 +1,180 @@
-<p>
-  in-chemical works!
-</p>
+<div class="card">
+  <div class="card-body">
+    <!-- <div class="row mb-2">
+      <div class="col-md-12 d-flex justify-content-center align-items-center">
+        <div class="font-weight-bold px-3">{{'Start Time' | translate}}:</div>
+        <ejs-datepicker class="pr-3" [value]='startDate' (change)='startDateOnchange($event)'
+          [(ngModel)]='startDate'></ejs-datepicker>
+        <div class="font-weight-bold pr-3">{{'End Time' | translate}}:</div>
+        <ejs-datepicker class="pr-3" [value]='endDate' (change)='endDateOnchange($event)' [(ngModel)]='endDate'>
+        </ejs-datepicker>
+
+        <div class="font-weight-bold pr-3">{{'Building' | translate}}:</div>
+        <ejs-dropdownlist #ddlelement [dataSource]='buildings' [fields]='fieldsBuildings' [allowFiltering]='true'
+          [value]='buildingID' (filtering)='onFilteringBuilding($event)' (change)='onChangeBuilding($event)'
+          placeholder="{{'Select a building' | translate}}">
+        </ejs-dropdownlist>
+
+        <div style="color: transparent;" class="font-weight-bold pr-3">|</div>
+        <button class="btn btn-sm btn-secondary" (click)='onClickDefault()'>
+          <i class="fa fa-times"></i>
+        </button>
+
+      </div>
+    </div> -->
+    <div class="row">
+      <div class="col-md-12">
+        <form class="w3-container w3-card-4  w3-text-black ">
+          <h2 style="text-align: center;" class="w3-center">Scan QR Code</h2>
+
+          <div class="w3-row w3-section">
+            <div class="w3-col" style="width:100px;float: left;">
+              <img src="../../../../assets/img/gif/1981.gif" height="40px" width="80%" alt="">
+
+            </div>
+            <div class="w3-rest">
+              <input [ngClass]="test"  id="qrcode" name="qrcode" autofocusQrcode [ngModel]="qrcodeChange"
+                (ngModelChange)='onNgModelChangeScanQRCode($event)' type="text">
+            </div>
+          </div>
+
+          <h2 style="text-align: center;color: transparent;" class="w3-center">Scan QR Code</h2>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-12">
+
+        <ejs-grid #ingredientinfoGrid  [dataSource]='data'
+          [allowExcelExport]='true' [allowSorting]='true'  allowResizing='true' allowFiltering='true' [filterSettings]='filterSettings'
+          [toolbar]='toolbarOptions' showColumnMenu='true' [pageSettings]='pageSettings' (dataBound)='dataBound()'
+          [editSettings]='editSettings' (actionBegin)="actionBegin($event)" 
+
+          allowPaging="true" gridLines='Both' (toolbarClick)='toolbarClick($event)'>
+          <e-columns>
+        
+            <e-column field='createDate' textAlign='Center' headerText='Time' width='150'>
+              <ng-template #headerTemplate>
+                {{'TIME_LABEL' | translate}}
+              </ng-template>
+              <ng-template #template let-data>
+                {{data.createDate | date:'yyyy-MM-dd , hh:mm:ss a'}}
+              </ng-template>
+
+              <ng-template #editTemplate let-data>
+                {{data.createDate | date:'yyyy-MM-dd , hh:mm:ss a'}}
+              </ng-template>
+
+            </e-column>
+
+            <e-column field='supplier' textAlign='Center' headerText='Supplier' width='120'>
+              <ng-template #headerTemplate>
+                {{'SUPPLIER' | translate}}
+              </ng-template>
+              <ng-template #editTemplate let-data>
+                {{data.supplier}}
+              </ng-template>
+            </e-column>
+
+            <e-column field='code' textAlign='Center' headerText='Material#' width='120'>
+              <ng-template #headerTemplate>
+                {{'CODE' | translate}}
+              </ng-template>
+              <ng-template #editTemplate let-data>
+                {{data.code}}
+              </ng-template>
+            </e-column>
+
+            <e-column field='name' textAlign='Center' headerText='Ink' width='100'> 
+              <ng-template #headerTemplate>
+                {{'CHEMICAL_NAME' | translate}}
+              </ng-template>
+
+              <ng-template #editTemplate let-data>
+                {{data.name}}
+              </ng-template>
+            </e-column>
+
+
+            <e-column field='unit' textAlign='Center' headerText='Unit (Kg)' width='130'>
+              <ng-template #headerTemplate>
+                {{'UNIT' | translate}}
+              </ng-template>
+              <ng-template #template let-data>
+                {{data.unit}} Kg
+              </ng-template>
+
+              <ng-template #editTemplate let-data>
+                {{data.unit}} Kg
+              </ng-template>
+            </e-column>
+
+            <e-column field='deliver' textAlign='Center' headerText='Unit (Kg)' width='130'>
+              <ng-template #headerTemplate>
+                {{'DELIVERY' | translate}}
+              </ng-template>
+              <ng-template #template let-data>
+                {{data.deliver}} Kg
+              </ng-template>
+            </e-column>
+
+            <e-column field='status' textAlign='Center' headerText='Status' width='100'>
+              <ng-template #headerTemplate>
+                {{'STATUS_LABEL' | translate}}
+              </ng-template>
+              <ng-template #template let-data>
+                <ng-container *ngIf="data.outOfStock === 'N'; else elseTemplate">
+                  <span class="badge badge-secondary">Out of Stock</span>
+                </ng-container>
+                <ng-template #elseTemplate>
+                  <span class="badge badge-success">Stored</span>
+                </ng-template>
+
+              </ng-template>
+
+              <ng-template #editTemplate let-data>
+                <ng-container *ngIf="data.outOfStock === 'N'; else elseTemplate">
+                  <span class="badge badge-secondary">Out of Stock</span>
+                </ng-container>
+                <ng-template #elseTemplate>
+                  <span class="badge badge-success">Stored</span>
+                </ng-template>
+              </ng-template>
+
+            </e-column>
+
+            <e-column field='Option' textAlign='Center' headerText='Option' width='90'>
+              <ng-template #headerTemplate>
+                {{'OPTION' | translate}}
+              </ng-template>
+              <ng-template #template let-data>
+                <div class="btn-group" *ngIf="data.outOfStock === 'Y'">
+                  <button type="button" (click)="finishOutOfStock(data)" class="btn btn-xs btn-success"><i class="fa fa-check"></i></button>
+                </div>
+                <span style="color: transparent;"> | </span>
+                <div class="btn-group">
+                  <button type="button" (click)='delete(data)' class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
+                </div>
+              </ng-template>
+
+              <ng-template #editTemplate let-data>
+                <div class="btn-group">
+                  <button type="button"  class="btn btn-xs btn-success"><i class="fa fa-check"></i></button>
+                </div>
+                <span style="color: transparent;"> | </span>
+                <div class="btn-group">
+                  <button type="button" (click)='delete(data)' class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
+                </div>
+              </ng-template>
+
+            </e-column>
+          </e-columns>
+        </ejs-grid>
+
+      </div>
+    </div>
+  </div>
+</div>
