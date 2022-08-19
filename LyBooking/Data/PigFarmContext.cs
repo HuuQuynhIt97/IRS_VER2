@@ -259,6 +259,7 @@ namespace IRS.Data
                     .HasColumnType("datetime")
                     .HasColumnName("UPDATE_DATE");
             });
+
             modelBuilder.Entity<Process2>(entity =>
             {
                 entity.ToTable("Process2");
@@ -718,6 +719,8 @@ namespace IRS.Data
                 entity.Property(e => e.ColorGuid)
                     .HasMaxLength(50)
                     .HasColumnName("COLOR_GUID");
+
+                entity.Property(e => e.Consumption).HasColumnName("CONSUMPTION");
 
                 entity.Property(e => e.ShoesGuid)
                     .HasMaxLength(50)

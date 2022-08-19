@@ -13,6 +13,7 @@ export interface Schedule {
     deleteDate: string | null;
     deleteBy: number | null;
     status: number | null;
+    consumption: number | null;
     guid: string;
 }
 

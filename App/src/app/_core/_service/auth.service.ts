@@ -58,14 +58,18 @@ export class AuthService implements OnDestroy {
       .pipe(
         map(res => {
           const applicationUser = res.data as ApplicationUser;
-          this.cookieService.set("refreshToken", applicationUser.refreshToken,  {
-            expires: 1000 * 60 * 365,
-            domain: environment.domain,
-            secure: true,
-            sameSite:'Strict'
-        })
-          this.setLocalStorage(applicationUser);
-          return applicationUser;
+          if(applicationUser !== null) {
+            this.cookieService.set("refreshToken", applicationUser.refreshToken,  {
+              expires: 1000 * 60 * 365,
+              domain: environment.domain,
+              secure: true,
+              sameSite:'Strict'
+            })
+            this.setLocalStorage(applicationUser);
+            return applicationUser;
+          }else {
+            return res;
+          }
         })
       );
   }

@@ -77,7 +77,11 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     this.loading = 1;
     try {
-      const data = await this.authentication();
+      const data = await this.authentication() as any;
+      if(data.data === null) {
+        this.alertifyService.warning(this.trans.instant(data.message), true);
+        this.loading = 0;
+      }
       const currentLang = localStorage.getItem('lang');
       if (currentLang) {
         localStorage.setItem('lang', currentLang);
@@ -114,12 +118,12 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
     } catch (error) {
-     if (error.indexOf('error') == -1) {
-       this.alertifyService.warning(this.trans.instant(error), true);
-     } else {
-      this.alertifyService.warning(this.trans.instant('Server error!'), true);
+    //  if (error.indexOf('error') == -1) {
+    //    this.alertifyService.warning(this.trans.instant(error), true);
+    //  } else {
+    //   this.alertifyService.warning(this.trans.instant('Server error!'), true);
 
-     }
+    //  }
       this.loading = 0;
     }
   }

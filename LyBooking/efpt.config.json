@@ -14,11 +14,7 @@
    "SelectedToBeGenerated": 0,
    "Tables": [
       {
-         "Name": "[dbo].[InChemical]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[InInk]",
+         "Name": "[dbo].[Schedules]",
          "ObjectType": 0
       }
    ],

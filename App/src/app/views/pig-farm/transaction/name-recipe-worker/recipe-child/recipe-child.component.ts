@@ -96,6 +96,7 @@ export class RecipeChildComponent extends BaseComponent implements OnInit, OnDes
   change(args: any) {
     // this.pageSettings.currentPage=args.value;
   }
+
   ngOnInit() {
     // this.Permission(this.route);
     this.groupCode = JSON.parse(localStorage.getItem('user')).groupCode || "";
@@ -218,11 +219,12 @@ export class RecipeChildComponent extends BaseComponent implements OnInit, OnDes
         args.cancel = true;
         return;
       }
+      this.schedule.consumption = args.data.consumption
       this.create();
     }
 
     if (args.requestType === 'save' && args.action === 'edit') {
-      // this.shoeGlue.unit = args.data.unit
+      this.schedule.consumption = args.data.consumption
       this.update();
     }
 
@@ -234,11 +236,12 @@ export class RecipeChildComponent extends BaseComponent implements OnInit, OnDes
   recordClick(args: any) {
     // this.service.changeHall(args.rowData);
     // this.serviceBarn.changeBarn({} as any);
-   }
- dataBound() {
-  this.grid.selectRow(this.rowIndex);
-  // this.grid.autoFitColumns();
-}
+  }
+
+  dataBound() {
+    this.grid.selectRow(this.rowIndex);
+    // this.grid.autoFitColumns();
+  }
 
   toolbarClick(args) {
     switch (args.item.id) {

@@ -193,6 +193,7 @@ namespace IRS.Services
                                   x.Guid,
                                   x.ShoesGuid,
                                   x.PartGuid,
+                                  x.Consumption,
                                   x.ColorGuid,
                                   x.TreatmentGuid,
                                   x.ProcessGuid,
