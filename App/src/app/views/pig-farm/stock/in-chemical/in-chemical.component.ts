@@ -200,7 +200,7 @@ export class InChemicalComponent extends BaseComponent implements OnInit, OnDest
   onFilteringBuilding: EmitType<FilteringEventArgs> = (
     e: FilteringEventArgs
   ) => {
-    let query: Query = new Query();
+    let query: Query = new Query(); 
     // frame the query based on search string with filter type.
     query =
       e.text !== '' ? query.where('name', 'contains', e.text, true) : query;
