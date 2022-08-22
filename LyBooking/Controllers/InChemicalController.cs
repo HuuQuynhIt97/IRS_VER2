@@ -63,6 +63,7 @@ namespace IRS.Controllers
         {
             return Ok(await _service.GetWithPaginationsAsync(paramater));
         }
+
         [HttpPost]
         public async Task<ActionResult> LoadData([FromBody] DataManager request, [FromQuery] string colorGuid)
         {
@@ -70,6 +71,7 @@ namespace IRS.Controllers
             var data = await _service.LoadData(request, colorGuid);
             return Ok(data);
         }
+
         [HttpGet]
         public async Task<ActionResult> GetAudit(decimal id)
         {

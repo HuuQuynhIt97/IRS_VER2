@@ -128,7 +128,12 @@ export class ColorInkComponent extends BaseComponent implements OnInit, OnDestro
   }
   loadDataColor() {
     this.serviceInk.getAll().subscribe((res: any) => {
-      this.dataInk = res
+      this.dataInk = res.map(item => {
+        return {
+          name: item.name + '(' + item.code + ')' + ' - ' + item.process,
+          guid: item.guid
+        }
+      })
     })
   }
   typeChange(value) {
@@ -197,11 +202,11 @@ export class ColorInkComponent extends BaseComponent implements OnInit, OnDestro
   recordClick(args: any) {
     this.service.changeHall(args.rowData);
     // this.serviceBarn.changeBarn({} as any);
-   }
- dataBound() {
-  // this.grid.selectRow(this.rowIndex);
-  // this.grid.autoFitColumns();
-}
+  }
+  dataBound() {
+    // this.grid.selectRow(this.rowIndex);
+    this.grid.autoFitColumns();
+  }
 
   toolbarClick(args) {
     switch (args.item.id) {
@@ -230,7 +235,6 @@ export class ColorInkComponent extends BaseComponent implements OnInit, OnDestro
     this.service.getAudit(id).subscribe(data => {
       this.audit = data;
     });
-
   }
   
   delete(id) {

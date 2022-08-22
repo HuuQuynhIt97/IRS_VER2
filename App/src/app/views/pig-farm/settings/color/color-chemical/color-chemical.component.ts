@@ -66,8 +66,6 @@ export class ColorChemicalComponent extends BaseComponent implements OnInit, OnD
   constructor(
     private service: ChemicalColorService,
     private serviceChemical: ChemicalService,
-    private serviceGlue: GlueService,
-    private serviceShoe: ShoeService,
     private serviceColor: ColorService,
     private serviceShoeGlue: ShoeGlueService,
     public modalService: NgbModal,
@@ -130,7 +128,13 @@ export class ColorChemicalComponent extends BaseComponent implements OnInit, OnD
   }
   loadDataChemical() {
     this.serviceChemical.getAll().subscribe((res: any) => {
-      this.dataChemicals = res
+      // this.dataChemicals = res
+      this.dataChemicals = res.map(item => {
+        return {
+          name: item.name + '(' + item.code + ')' + ' - ' + item.process,
+          guid: item.guid
+        }
+      })
     })
   }
   typeChange(value) {
@@ -201,7 +205,7 @@ export class ColorChemicalComponent extends BaseComponent implements OnInit, OnD
    }
   dataBound() {
     // this.grid.selectRow(this.rowIndex);
-    // this.grid.autoFitColumns();
+    this.grid.autoFitColumns();
   }
 
   toolbarClick(args) {

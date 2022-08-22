@@ -46,7 +46,8 @@ export class ColorParentComponent extends BaseComponent implements OnInit, OnDes
   title: any;
   public dateValue: Date = new Date();
   @ViewChild('optionModal') templateRef: TemplateRef<any>;
-  toolbarOptions = ['Add', 'Search'];
+  @ViewChild('importModal') templateRefImportModal: TemplateRef<any>;
+  toolbarOptions = ['Add', 'Search','Import Excel'];
   selectionOptions = { checkboxMode: 'ResetOnRowClick'};
   groupCode: any;
   rowIndex: number;
@@ -123,8 +124,27 @@ export class ColorParentComponent extends BaseComponent implements OnInit, OnDes
     this.grid.selectRow(this.rowIndex);
     // this.grid.autoFitColumns();
   }
-
+  fileProgress(event) {
+    this.file = event.target.files[0];
+  }
+  uploadFile() {
+    if (this.file === null) {
+      this.alertify.error('Please choose file upload ! ');
+      return;
+    }
+    this.alertify.confirm2('Warning! <br>!', 'uploading this !', () => {
+      this.service
+      .import(this.file)
+      .subscribe((res: any) => {
+        this.loadData();
+        this.modalReference.close();
+        this.alertify.success(MessageConstants.CREATED_OK_MSG);
+      });
+    }, () => {
+    });
+  }
   toolbarClick(args) {
+    console.log(args.item.id);
     switch (args.item.id) {
       case 'grid_excelexport':
         this.grid.excelExport({ hierarchyExportMode: 'All' });
@@ -133,6 +153,10 @@ export class ColorParentComponent extends BaseComponent implements OnInit, OnDes
         args.cancel = true;
         this.model = {} as any;
         this.openModal(this.templateRef);
+        break;
+      case 'grid_Import Excel':
+        args.cancel = true;
+        this.openImportModal(this.templateRefImportModal);
         break;
       default:
         break;
@@ -275,6 +299,10 @@ export class ColorParentComponent extends BaseComponent implements OnInit, OnDes
       // this.model.endDate = new Date(2099,11,31);
       this.title = 'COLOR_ADD_MODAL';
     }
+    this.modalReference = this.modalService.open(template, {size: 'xl',backdrop: 'static'});
+  }
+
+  async openImportModal(template) {
     this.modalReference = this.modalService.open(template, {size: 'xl',backdrop: 'static'});
   }
 

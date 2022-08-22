@@ -22,17 +22,28 @@ namespace IRS.Services
         Task<object> LoadData(DataManager data, string colorGuid);
         Task<object> GetAudit(object id);
         Task<object> LoadDataBySite(string siteID);
+        Task ImportExcel(List<ColorUploadDto> dto);
 
     }
     public class ColorService : ServiceBase<Color, ColorDto>, IColorService
     {
         private readonly IRepositoryBase<Color> _repo;
+        private readonly IRepositoryBase<Supplier> _repoSupplier;
+        private readonly IRepositoryBase<Ink> _repoInk;
+        private readonly IRepositoryBase<Chemical2> _repoChemical;
+        private readonly IRepositoryBase<InkColor> _repoInkColor;
+        private readonly IRepositoryBase<ChemicalColor> _repoChemicalColor;
         private readonly IRepositoryBase<XAccount> _repoXAccount;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly MapperConfiguration _configMapper;
         public ColorService(
             IRepositoryBase<Color> repo,
+            IRepositoryBase<Supplier> repoSupplier,
+            IRepositoryBase<Ink> repoInk,
+            IRepositoryBase<Chemical2> repoChemical,
+            IRepositoryBase<InkColor> repoInkColor,
+            IRepositoryBase<ChemicalColor> repoChemicalColor,
             IRepositoryBase<XAccount> repoXAccount,
             IUnitOfWork unitOfWork,
             IMapper mapper,
@@ -41,6 +52,11 @@ namespace IRS.Services
             : base(repo, unitOfWork, mapper, configMapper)
         {
             _repo = repo;
+            _repoSupplier = repoSupplier;
+            _repoInk = repoInk;
+            _repoChemical = repoChemical;
+            _repoInkColor = repoInkColor;
+            _repoChemicalColor = repoChemicalColor;
             _repoXAccount = repoXAccount;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -231,6 +247,112 @@ namespace IRS.Services
 
             var data = await query.ToListAsync();
             return data;
+            //throw new NotImplementedException();
+        }
+
+        public async Task ImportExcel(List<ColorUploadDto> res)
+        {
+            var result = res.DistinctBy(x => new { 
+                x.Name , 
+                x.ChemicalID,
+                x.InkID
+            }).GroupBy(x => x.Name)
+               .Select(x => new
+               {
+
+                   Name = x.First().Name,
+                   GlueID = x.First().GlueID,
+                   Ink = x.Select(y => new {
+                       y.InkID,
+                       y.Percentage
+                   }),
+                   Chemical = x.Select(y => new {
+                       y.ChemicalID,
+                       y.Percentage
+                   }),
+                   Percentage = x.First().Percentage,
+               });
+            try
+            {
+                foreach (var item in result)
+                {
+                    //add color truoc
+                    var color_add = new Color();
+                    color_add.Name = item.Name;
+                    var item_color = _mapper.Map<Color>(color_add);
+                    item_color.Status = 1;
+                    item_color.Guid = Guid.NewGuid().ToString("N") + DateTime.Now.ToString("ssff").ToUpper();
+                    _repo.Add(item_color);
+                    await _unitOfWork.SaveChangeAsync();
+
+                    //add tiep Ink_color - Chemical_color
+
+                    foreach (var item_ink in item.Ink)
+                    {
+                        if (item_ink.InkID > 0 )
+                        {
+                            //tim inkGuid
+                            var inkGuid = _repoInk.FindAll(x => x.Id == item_ink.InkID && x.IsShow).FirstOrDefault() != null 
+                                ? _repoInk.FindAll(x => x.Id == item_ink.InkID && x.IsShow).FirstOrDefault().Guid 
+                                : null;
+                            if (inkGuid != null)
+                            {
+                                var supplierID = _repoInk.FindAll(x => x.Guid == inkGuid).FirstOrDefault().SupplierId;
+                                var supplierGUID = _repoSupplier.FindByID(supplierID).Guid;
+
+                                //add ink_color
+                                var Inkcolor_add = new InkColor();
+                                Inkcolor_add.ColorGuid = item_color.Guid;
+                                Inkcolor_add.InkGuid = inkGuid;
+                                Inkcolor_add.Percentage = item_ink.Percentage;
+                                Inkcolor_add.Status = 1;
+                                Inkcolor_add.SupplierGuid = supplierGUID;
+                                Inkcolor_add.Guid = Guid.NewGuid().ToString("N") + DateTime.Now.ToString("ssff").ToUpper();
+                                var item_inkColor = _mapper.Map<InkColor>(Inkcolor_add);
+                                _repoInkColor.Add(item_inkColor);
+
+                                await _unitOfWork.SaveChangeAsync();
+                            }
+                        }
+                    }
+
+                    foreach (var item_chemical in item.Chemical)
+                    {
+                        if (item_chemical.ChemicalID > 0 && item_chemical.ChemicalID >= 1188)
+                        {
+                            //tim inkGuid
+                            var chemicalGuid = _repoChemical.FindAll(x => x.ID == item_chemical.ChemicalID && x.isShow).FirstOrDefault() != null 
+                                ? _repoChemical.FindAll(x => x.ID == item_chemical.ChemicalID && x.isShow).FirstOrDefault().Guid 
+                                : null;
+                            if (chemicalGuid != null)
+                            {
+                                var supplierID = _repoChemical.FindAll(x => x.Guid == chemicalGuid).FirstOrDefault().SupplierID;
+                                var supplierGUID = _repoSupplier.FindByID(supplierID).Guid;
+
+                                //add ink_color
+                                var Chemicalcolor_add = new ChemicalColor();
+                                Chemicalcolor_add.ColorGuid = item_color.Guid;
+                                Chemicalcolor_add.ChemicalGuid = chemicalGuid;
+                                Chemicalcolor_add.Status = 1;
+                                Chemicalcolor_add.Percentage = item_chemical.Percentage;
+                                Chemicalcolor_add.SupplierGuid = supplierGUID;
+                                Chemicalcolor_add.Guid = Guid.NewGuid().ToString("N") + DateTime.Now.ToString("ssff").ToUpper();
+                                var item_chemicalColor = _mapper.Map<ChemicalColor>(Chemicalcolor_add);
+                                _repoChemicalColor.Add(item_chemicalColor);
+
+                                await _unitOfWork.SaveChangeAsync();
+                            }
+                        }
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+            
             //throw new NotImplementedException();
         }
     }

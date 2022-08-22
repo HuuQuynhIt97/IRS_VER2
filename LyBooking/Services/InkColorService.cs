@@ -28,6 +28,7 @@ namespace IRS.Services
     {
         private readonly IRepositoryBase<InkColor> _repo;
         private readonly IRepositoryBase<Ink> _repoInk;
+        private readonly IRepositoryBase<Process> _repoProcess;
         private readonly IRepositoryBase<Supplier> _repoSupplier;
         private readonly IRepositoryBase<XAccount> _repoXAccount;
         private readonly IUnitOfWork _unitOfWork;
@@ -35,6 +36,7 @@ namespace IRS.Services
         private readonly MapperConfiguration _configMapper;
         public InkColorService(
             IRepositoryBase<InkColor> repo,
+            IRepositoryBase<Process> repoProcess,
             IRepositoryBase<Supplier> repoSupplier,
             IRepositoryBase<Ink> repoInk,
             IRepositoryBase<XAccount> repoXAccount,
@@ -45,6 +47,7 @@ namespace IRS.Services
             : base(repo, unitOfWork, mapper, configMapper)
         {
             _repo = repo;
+            _repoProcess = repoProcess;
             _repoSupplier = repoSupplier;
             _repoInk = repoInk;
             _repoXAccount = repoXAccount;
@@ -178,8 +181,10 @@ namespace IRS.Services
             var inkColor = await _repo.FindAll(x => x.Status == 1 && x.ColorGuid == colorGuid)
             .OrderByDescending(x => x.Id).ToListAsync();
             var ink = await _repoInk.FindAll(x => x.IsShow).ToListAsync();
+            var process = await _repoProcess.FindAll().ToListAsync();
             var datasource = (from x in inkColor
                               join y in ink on x.InkGuid equals y.Guid
+                              join z in process on y.ProcessId equals z.ID
                               select new
                               {
                                   x.Id,
@@ -188,8 +193,10 @@ namespace IRS.Services
                                   x.ColorGuid,
                                   x.Percentage,
                                   x.Unit,
-                                  y.Name
-                              }).ToList();
+                                  y.Code,
+                                  Name = y.Name + "(" + z.Name + ")",
+                                  Process = z.Name
+                              }).OrderBy(o => o.Id).ToList();
 
             return datasource;
         }

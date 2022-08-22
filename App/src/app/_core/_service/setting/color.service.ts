@@ -21,4 +21,10 @@ export class ColorService extends CURDService<Color> {
     this.colorSource.next(color)
   }
 
+  import(file) {
+    const formData = new FormData();
+    formData.append('UploadedFile', file);
+    return this.http.post(this.base + 'Color/Import', formData);
+  }
+
 }

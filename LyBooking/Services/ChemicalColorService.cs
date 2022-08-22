@@ -28,6 +28,7 @@ namespace IRS.Services
     {
         private readonly IRepositoryBase<ChemicalColor> _repo;
         private readonly IRepositoryBase<Supplier> _repoSupplier;
+        private readonly IRepositoryBase<Process> _repoProcess;
         private readonly IRepositoryBase<Chemical2> _repoChemical;
         private readonly IRepositoryBase<XAccount> _repoXAccount;
         private readonly IUnitOfWork _unitOfWork;
@@ -35,6 +36,7 @@ namespace IRS.Services
         private readonly MapperConfiguration _configMapper;
         public ChemicalColorService(
             IRepositoryBase<ChemicalColor> repo,
+            IRepositoryBase<Process> repoProcess,
             IRepositoryBase<Supplier> repoSupplier,
             IRepositoryBase<Chemical2> repoChemical,
             IRepositoryBase<XAccount> repoXAccount,
@@ -45,6 +47,7 @@ namespace IRS.Services
             : base(repo, unitOfWork, mapper, configMapper)
         {
             _repo = repo;
+            _repoProcess = repoProcess;
             _repoSupplier = repoSupplier;
             _repoChemical = repoChemical;
             _repoXAccount = repoXAccount;
@@ -177,8 +180,10 @@ namespace IRS.Services
         {
             var chemicalColor = await _repo.FindAll(x => x.Status == 1 && x.ColorGuid == colorGuid).OrderByDescending(x => x.Id).ToListAsync();
             var chemical = await _repoChemical.FindAll(x => x.isShow).ToListAsync();
+            var process = await _repoProcess.FindAll().ToListAsync();
             var datasource = (from x in chemicalColor
                               join y in chemical on x.ChemicalGuid equals y.Guid
+                              join z in process on y.ProcessID equals z.ID
                               select new
                               {
                                   x.Id,
@@ -187,7 +192,9 @@ namespace IRS.Services
                                   x.ColorGuid,
                                   x.Percentage,
                                   x.Unit,
-                                  y.Name
+                                  y.Code,
+                                  Name = y.Name + "(" + z.Name + ")",
+                                  Process = z.Name
                               }).ToList();
 
             return datasource;
