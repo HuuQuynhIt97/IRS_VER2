@@ -17,5 +17,7 @@ namespace IRS.Models
         public DateTime? DeleteDate { get; set; }
         public decimal? DeleteBy { get; set; }
         public decimal? Status { get; set; }
+        public string NameEn { get; set; }
+        public string NameCn { get; set; }
     }
 }

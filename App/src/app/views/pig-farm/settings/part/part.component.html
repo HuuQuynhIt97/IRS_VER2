@@ -47,6 +47,20 @@
     >
   </e-column>
 
+  <e-column
+      field="nameEn"
+      textAlign="Left"
+      headerText="{{ 'PART_NAME_EN' | translate }}"
+    >
+  </e-column>
+
+  <e-column
+      field="nameCn"
+      textAlign="Left"
+      headerText="{{ 'PART_NAME_CN' | translate }}"
+    >
+  </e-column>
+
 
   </e-columns>
 </ejs-grid>
@@ -101,6 +115,38 @@
           </div> -->
         </div>
 
+        <div class="row">
+          <div class="col-md-12">
+            <label>{{ "PART_NAME_EN" | translate }} </label>
+            <span class="max-length"> ( {{"Text length"| translate }} <= 200 )</span>
+            <div class="form-group">
+              <input
+                maxlength="200"
+                type="text"
+                name="supplier"
+                [(ngModel)]="model.nameEn"
+                class="form-control"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <label>{{ "PART_NAME_CN" | translate }} </label>
+            <span class="max-length"> ( {{"Text length"| translate }} <= 200 )</span>
+            <div class="form-group">
+              <input
+                maxlength="200"
+                type="text"
+                name="supplier"
+                [(ngModel)]="model.nameCn"
+                class="form-control"
+              />
+            </div>
+          </div>
+        </div>
+
         <!-- <div class="row">
           <div class="col-md">
             <label>{{ "SHOE_ARTICEL2" | translate }} </label>
@@ -114,7 +160,7 @@
               />
             </div>
           </div>
-  
+
         </div> -->
 
       </div>
@@ -143,10 +189,10 @@
       {{ "CLOSE" | translate }}
     </button>
     <button
-      
+
 
       [disabled]="
-      !model.name 
+      !model.name
       "
       (click)="save()"
       class="btn btn-primary"

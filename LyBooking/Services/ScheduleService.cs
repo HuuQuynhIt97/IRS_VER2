@@ -19,7 +19,7 @@ namespace IRS.Services
 {
     public interface IScheduleService : IServiceBase<Models.Schedule, ScheduleDto>
     {
-        Task<object> LoadData(string shoeGuid);
+        Task<object> LoadData(string shoeGuid, string lang);
         Task<object> GetAudit(object id);
         Task<object> LoadDataBySite(string siteID);
 
@@ -173,7 +173,7 @@ namespace IRS.Services
             return operationResult;
         }
 
-        public async Task<object> LoadData(string shoeGuid)
+        public async Task<object> LoadData(string shoeGuid, string lang)
         {
             var schedule = await _repo.FindAll(x => x.Status == 1 && x.ShoesGuid == shoeGuid).OrderByDescending(x => x.Id).ToListAsync();
             var treatmentWay = await _repoTreatmentWay.FindAll().ToListAsync();
@@ -185,6 +185,8 @@ namespace IRS.Services
                               join t in treatmentWay on x.TreatmentWayGuid equals t.Guid
                               join p in part on x.PartGuid equals p.Guid
                               join c in color on x.ColorGuid equals c.Guid
+                              let treatment = _repoTreatment.FindByID(t.ProcessId) != null ? " - (" + _repoTreatment.FindByID(t.ProcessId).Name + ")" : ""
+                              let partName = lang == "en" ? p.NameEn != null ? p.NameEn : p.Name : lang == "cn" ? p.NameCn != null ? p.NameCn : p.Name : p.Name
                             //   join tt in treatment on x.TreatmentGuid equals tt.Guid
                             //   join pp in process on x.ProcessGuid equals pp.Guid
                               select new
@@ -199,8 +201,8 @@ namespace IRS.Services
                                   x.ProcessGuid,
                                   x.TreatmentWayGuid,
                                 //   Treatment = tt.Name,
-                                  TreatmentWay = t.Name,
-                                  Part = p.Name,
+                                  TreatmentWay = t.Name + treatment,
+                                  Part = partName,
                                 //   Process = pp.Name,
                                   Color = c.Name,
                               }).ToList();

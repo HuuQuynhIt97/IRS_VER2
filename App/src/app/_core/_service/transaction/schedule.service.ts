@@ -20,9 +20,9 @@ export class ScheduleService extends CURDService<Schedule> {
   changeHall(schedule: Schedule) {
     this.bomSource.next(schedule)
   }
-  
-  loadData(shoeGuid) {
-    return this.http.get<any>(`${this.base}Schedule/LoadData?shoeGuid=${shoeGuid}`, {});
+
+  loadData(shoeGuid, lang) {
+    return this.http.get<any>(`${this.base}Schedule/LoadData?shoeGuid=${shoeGuid}&lang=${lang}`, {});
   }
 
 

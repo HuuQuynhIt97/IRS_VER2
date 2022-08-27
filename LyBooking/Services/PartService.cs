@@ -22,6 +22,7 @@ namespace IRS.Services
         Task<object> LoadData(DataManager data, string colorGuid);
         Task<object> GetAudit(object id);
         Task<object> LoadDataBySite(string siteID);
+        Task<List<Part2Dto>> GetAllPart(string lang);
 
     }
     public class PartService : ServiceBase<Part2, Part2Dto>, IPartService
@@ -135,6 +136,31 @@ namespace IRS.Services
 
         }
 
+        public async Task<List<Part2Dto>> GetAllPart(string lang)
+        {
+            var query = _repo.FindAll(x => x.Status == 1).ProjectTo<Part2Dto>(_configMapper);
+
+            var data = (from x in await query.ToListAsync()
+                        let Name = lang == "en" ? x.NameEn != null ? x.NameEn : x.Name : lang == "cn" ? x.NameCn != null ? x.NameCn : x.Name : x.Name
+                        select new Part2Dto {
+                            Id = x.Id,
+                            Name = Name,
+                            Guid = x.Guid,
+                            CreateDate = x.CreateDate,
+                            CreateBy = x.CreateBy,
+                            UpdateDate = x.UpdateDate,
+                            UpdateBy = x.UpdateBy,
+                            DeleteDate = x.DeleteDate,
+                            DeleteBy = x.DeleteBy,
+                            Status = x.Status,
+                            NameEn = x.NameEn,
+                            NameCn = x.NameCn
+                        }).ToList();
+            
+            return data;
+
+        }
+
         public override async Task<OperationResult> DeleteAsync(object id)
         {
             var item = _repo.FindByID(id);
@@ -166,7 +192,9 @@ namespace IRS.Services
             .Select(x => new {
                 x.Id,
                 x.Guid,
-                x.Name
+                x.Name,
+                NameEn = x.NameEn != null ? x.NameEn : "",
+                NameCn = x.NameCn != null ? x.NameCn : "",
             });
             var count = await datasource.CountAsync();
             if (data.Where != null) // for filtering

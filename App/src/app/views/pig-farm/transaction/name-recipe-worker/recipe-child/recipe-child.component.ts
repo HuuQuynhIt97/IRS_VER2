@@ -86,9 +86,9 @@ export class RecipeChildComponent extends BaseComponent implements OnInit, OnDes
     private alertify: AlertifyService,
     private datePipe: DatePipe,
     public translate: TranslateService,
-  ) { 
-    super(translate); 
-    // this.getRecipePageSetting() 
+  ) {
+    super(translate);
+    // this.getRecipePageSetting()
   }
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
@@ -105,6 +105,7 @@ export class RecipeChildComponent extends BaseComponent implements OnInit, OnDes
     }
     let lang = localStorage.getItem('lang');
     let languages = JSON.parse(localStorage.getItem('languages'));
+
     setCulture(lang);
     let load = {
       [lang]: {
@@ -140,13 +141,20 @@ export class RecipeChildComponent extends BaseComponent implements OnInit, OnDes
     // })
   }
   loadData() {
-    this.service.loadData(this.schedule.shoesGuid).subscribe((res: any) => {
+    let lang = localStorage.getItem('lang');
+    this.service.loadData(this.schedule.shoesGuid, lang).subscribe((res: any) => {
       this.data = res
     })
-    
+
   }
+  // loadDataPart() {
+  //   this.servicePart.getAll().subscribe((res: any) => {
+  //     this.dataPart = res
+  //   })
+  // }
   loadDataPart() {
-    this.servicePart.getAll().subscribe((res: any) => {
+    let lang = localStorage.getItem('lang');
+    this.servicePart.getAllPart(lang).subscribe((res: any) => {
       this.dataPart = res
     })
   }
@@ -232,7 +240,7 @@ export class RecipeChildComponent extends BaseComponent implements OnInit, OnDes
       this.delete(args.data[0].id);
     }
   }
-  
+
   recordClick(args: any) {
     // this.service.changeHall(args.rowData);
     // this.serviceBarn.changeBarn({} as any);
@@ -275,7 +283,7 @@ export class RecipeChildComponent extends BaseComponent implements OnInit, OnDes
     });
 
   }
-  
+
   delete(id) {
     this.alertify.confirm4(
       this.alert.yes_message,

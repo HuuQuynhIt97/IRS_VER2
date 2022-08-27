@@ -23,6 +23,12 @@ namespace IRS.Controllers
         }
 
         [HttpGet]
+        public async Task<ActionResult> GetAllPart(string lang)
+        {
+            return Ok(await _service.GetAllPart(lang));
+        }
+
+        [HttpGet]
         public async Task<ActionResult> LoadDataBySite(string siteID)
         {
             return Ok(await _service.LoadDataBySite(siteID));

@@ -346,6 +346,14 @@ namespace IRS.Data
                 entity.Property(e => e.UpdateDate)
                     .HasColumnType("datetime")
                     .HasColumnName("UPDATE_DATE");
+
+                entity.Property(e => e.NameEn)
+                    .HasMaxLength(255)
+                    .HasColumnName("PART_NAME_EN");
+
+                entity.Property(e => e.NameCn)
+                    .HasMaxLength(255)
+                    .HasColumnName("PART_NAME_CN");
             });
 
             modelBuilder.Entity<Color>(entity =>

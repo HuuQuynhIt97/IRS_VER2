@@ -136,7 +136,7 @@ namespace IRS.Services
             data = model.Select(x => new TreatmentWayDto
             {
                 ID = x.Id,
-                Name = x.Name,
+                Name = _repoProcess.FindByID(x.ProcessId) != null ? x.Name + " - (" + _repoProcess.FindByID(x.ProcessId).Name + ")" : x.Name,
                 NameEn = x.NameEn,
                 Guid = x.Guid,
                 process = _repoProcess.FindByID(x.ProcessId) != null ? _repoProcess.FindByID(x.ProcessId).Name : null

@@ -59,10 +59,10 @@ namespace IRS.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> LoadData([FromQuery] string shoeGuid)
+        public async Task<ActionResult> LoadData([FromQuery] string shoeGuid, string lang)
         {
 
-            var data = await _service.LoadData(shoeGuid);
+            var data = await _service.LoadData(shoeGuid, lang);
             return Ok(data);
         }
 

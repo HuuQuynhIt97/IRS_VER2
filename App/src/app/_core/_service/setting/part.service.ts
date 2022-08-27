@@ -21,5 +21,7 @@ export class PartService  extends CURDService<Part>{
   changeColor(part: Part) {
     this.colorSource.next(part)
   }
-
+  getAllPart(lang) {
+    return this.http.get<any>(`${this.base}Part/GetAllPart?lang=${lang}`, {});
+  }
 }
