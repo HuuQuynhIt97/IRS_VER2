@@ -42,7 +42,7 @@
       </ng-template>
     </e-column>
 
-    
+
     <e-column
       field="modelName"
       textAlign="Left"
@@ -69,12 +69,26 @@
       textAlign="Left"
       headerText="{{ 'VERSION_LABEL' | translate }}"
     >
-    </e-column> 
+    </e-column>
 
     <e-column
       field="article2"
       textAlign="Left"
       headerText="{{ 'SHOE_ARTICEL2' | translate }}"
+      >
+    </e-column>
+
+    <e-column
+      field="treatment"
+      textAlign="Left"
+      headerText="{{ 'TREATMENT_NAME' | translate }}"
+      >
+    </e-column>
+
+    <e-column
+      field="process"
+      textAlign="Left"
+      headerText="{{ 'PROCESS_NAME' | translate }}"
       >
     </e-column>
 
@@ -163,7 +177,7 @@
                   [(ngModel)]="model.article1"
                   class="form-control"
                 />
-       
+
             </div>
           </div>
 
@@ -205,10 +219,10 @@
                   [value]='dateValue'
                   [(ngModel)]="dateValue"
               ></ejs-datepicker>
-              
+
             </div>
           </div> -->
-  
+
         </div>
 
       </div>
@@ -250,12 +264,62 @@
       {{ "CLOSE" | translate }}
     </button>
     <button
-      
+
 
       [disabled]="
-      !model.modelNo 
+      !model.modelNo
       "
       (click)="save()"
+      class="btn btn-primary"
+    >
+      {{ "SAVE" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #importModal let-modal>
+  <div class="modal-header my-modal">
+    <h4 class="modal-title">
+      <i class="fas fa-plus"></i> Import Excel
+    </h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <input (change)="fileProgress($event)" name="file" type="file" class="form-control" />
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label style="color: transparent;" for="Name">Select File (*Notice: Excel file must be followed a system template. If you do not have a
+            template, please
+          </label>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-light"
+      (click)="modal.close('Close click')"
+    >
+      {{ "CLOSE" | translate }}
+    </button>
+    <button
+
+      (click)="uploadFile()"
       class="btn btn-primary"
     >
       {{ "SAVE" | translate }}

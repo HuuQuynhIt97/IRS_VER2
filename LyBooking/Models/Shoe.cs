@@ -23,5 +23,7 @@ namespace IRS.Models
         public DateTime ProductionDate { get; set; }
         public string Guid { get; set; }
         public string Version { get; set; }
+        public string TreatmentGuid { get; set; }
+        public string ProcessGuid { get; set; }
     }
 }

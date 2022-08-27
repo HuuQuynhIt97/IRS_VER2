@@ -36,6 +36,7 @@ export class NameChildComponent extends BaseComponent implements OnInit, OnDestr
   password = '';
   modalReference: NgbModalRef;
   pageSettingsMenu: any;
+  file: any;
   @ViewChild('grid') public grid: GridComponent;
   model: Shoe = {} as Shoe;
   setFocus: any;
@@ -44,11 +45,11 @@ export class NameChildComponent extends BaseComponent implements OnInit, OnDestr
   title: any;
   public dateValue: Date = new Date();
   @ViewChild('optionModal') templateRef: TemplateRef<any>;
+  @ViewChild('importModal') templateRefImportModal: TemplateRef<any>;
   toolbarOptions = ['Add','Cancel','Search'];
   selectionOptions = { checkboxMode: 'ResetOnRowClick'};
   groupCode: any;
   rowIndex: number;
-  file: any;
   apiHost = environment.apiUrl.replace('/api/', '');
   noImage = ImagePathConstants.NO_IMAGE;
   loading = 0;
@@ -60,8 +61,8 @@ export class NameChildComponent extends BaseComponent implements OnInit, OnDestr
     private datePipe: DatePipe,
     private utilityService: UtilitiesService,
     public translate: TranslateService,
-  ) { 
-    super(translate);  
+  ) {
+    super(translate);
     this.getMenuPageSetting()
   }
   ngOnDestroy(): void {
@@ -131,6 +132,10 @@ export class NameChildComponent extends BaseComponent implements OnInit, OnDestr
         args.cancel = true;
         this.model = {} as any;
         this.openModal(this.templateRef);
+        break;
+      case 'grid_Import Excel':
+        args.cancel = true;
+        this.openImportModal(this.templateRefImportModal);
         break;
       default:
         break;
@@ -246,10 +251,8 @@ export class NameChildComponent extends BaseComponent implements OnInit, OnDestr
          this.alertify.error(this.alert.cancelMessage);
        }
      );
- 
- 
   }
-  
+
   // end api
   NO(index) {
     return (this.grid.pageSettings.currentPage - 1) * this.grid.pageSettings.pageSize + Number(index) + 1;
@@ -288,6 +291,29 @@ export class NameChildComponent extends BaseComponent implements OnInit, OnDestr
       return this.apiHost + path;
     }
     return this.noImage;
+  }
+
+  async openImportModal(template) {
+    this.modalReference = this.modalService.open(template, {size: 'xl',backdrop: 'static'});
+  }
+
+  uploadFile() {
+    if (this.file === null) {
+      this.alertify.error('Please choose file upload ! ');
+      return;
+    }
+    this.alertify.confirm2('Warning! <br>!', 'uploading this !', () => {
+      this.serviceShoeGlue.import(this.file).subscribe((res: any) => {
+        this.loadData();
+        this.modalReference.close();
+        this.alertify.success(MessageConstants.CREATED_OK_MSG);
+      });
+    }, () => {
+    });
+  }
+
+  fileProgress(event) {
+    this.file = event.target.files[0];
   }
 
 }

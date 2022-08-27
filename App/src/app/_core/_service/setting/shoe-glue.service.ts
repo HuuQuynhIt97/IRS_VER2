@@ -19,7 +19,7 @@ export class ShoeGlueService extends CURDService<ShoeGlue> {
   changeHall(shoeGlue: ShoeGlue) {
     this.bomSource.next(shoeGlue)
   }
-  
+
   loadData(shoeGuid) {
     return this.http.get<any>(`${this.base}ShoeGlue/LoadData?shoeGuid=${shoeGuid}`, {});
   }
@@ -30,5 +30,11 @@ export class ShoeGlueService extends CURDService<ShoeGlue> {
 
   getRecipePageSetting() {
     return this.http.get<any>(`${this.base}ShoeGlue/getRecipePageSetting`, {});
+  }
+
+  import(file) {
+    const formData = new FormData();
+    formData.append('UploadedFile', file);
+    return this.http.post(this.base + 'ShoeGlue/Import', formData);
   }
 }

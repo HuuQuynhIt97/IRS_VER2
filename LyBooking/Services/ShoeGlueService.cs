@@ -24,6 +24,7 @@ namespace IRS.Services
         Task<object> LoadDataBySite(string siteID);
         Task<object> GetMenuPageSetting();
         Task<object> GetRecipePageSetting();
+        Task ImportExcel(List<ScheduleUploadDto> scheduleUpload);
 
     }
     public class ShoeGlueService : ServiceBase<ShoeGlue, ShoeGlueDto>, IShoeGlueService
@@ -33,6 +34,13 @@ namespace IRS.Services
         private readonly IRepositoryBase<CodeType> _repoCodeType;
         private readonly IRepositoryBase<Glue> _repoGlue;
         private readonly IRepositoryBase<XAccount> _repoXAccount;
+        private readonly IRepositoryBase<Shoe> _repoShoe;
+        private readonly IRepositoryBase<IRS.Models.Schedule> _repoSchedule;
+        private readonly IRepositoryBase<Process2> _repoProcess2;
+        private readonly IRepositoryBase<Part2> _repoPart2;
+        private readonly IRepositoryBase<Color> _repoColor;
+        private readonly IRepositoryBase<TreatmentWay> _repoTreatmentWay;
+        private readonly IRepositoryBase<Process> _repoProcess;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly MapperConfiguration _configMapper;
@@ -42,6 +50,13 @@ namespace IRS.Services
             IRepositoryBase<Chemical> repoChemical,
             IRepositoryBase<Glue> repoGlue,
             IRepositoryBase<XAccount> repoXAccount,
+            IRepositoryBase<Shoe> repoShoe,
+            IRepositoryBase<IRS.Models.Schedule> repoSchedule,
+            IRepositoryBase<Process2> repoProcess2,
+            IRepositoryBase<Part2> repoPart2,
+            IRepositoryBase<Color> repoColor,
+            IRepositoryBase<TreatmentWay> repoTreatmentWay,
+            IRepositoryBase<Process> repoProcess,
             IUnitOfWork unitOfWork,
             IMapper mapper,
             MapperConfiguration configMapper
@@ -53,10 +68,132 @@ namespace IRS.Services
             _repoCodeType = repoCodeType;
             _repoChemical = repoChemical;
             _repoXAccount = repoXAccount;
+            _repoShoe = repoShoe;
+            _repoSchedule = repoSchedule;
+            _repoProcess2 = repoProcess2;
+            _repoPart2 = repoPart2;
+            _repoColor = repoColor;
+            _repoTreatmentWay = repoTreatmentWay;
+            _repoProcess = repoProcess;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _configMapper = configMapper;
         }
+
+        public async Task ImportExcel(List<ScheduleUploadDto> scheduleUpload)
+        {
+           var data = new List<ScheduleUploadDto>();
+           data = scheduleUpload.Select(x => {
+                    var partGuid = _repoPart2.FindAll().Where(k => k.Name == x.PartID).FirstOrDefault() != null ? _repoPart2.FindAll().Where(k => k.Name == x.PartID).FirstOrDefault().Guid : null;
+                    var colorGuid = _repoColor.FindAll().Where(k => k.Name == x.Name).FirstOrDefault() != null ? _repoColor.FindAll().Where(k => k.Name == x.Name).FirstOrDefault().Guid : null;
+                    var treatmentID = _repoProcess.FindAll(k => k.Name == x.Treatment).FirstOrDefault() != null ? _repoProcess.FindAll(k => k.Name == x.Treatment).FirstOrDefault().ID : 0;
+                    var treatmentWayGuid = _repoTreatmentWay.FindAll(k => k.Id == x.TreatmentWayID && k.ProcessId == treatmentID).FirstOrDefault() != null ? _repoTreatmentWay.FindAll(k =>  k.Id == x.TreatmentWayID && k.ProcessId == treatmentID).FirstOrDefault().Guid : null;
+                    return new ScheduleUploadDto  {
+                        ModelName = x.ModelName,
+                        ModelNo = x.ModelNo,
+                        ArticleNo = x.ArticleNo,
+                        Treatment = x.Treatment,
+                        Process = x.Process,
+                        Status = x.Status,
+                        PartID = x.PartID,
+                        // PartID = partGuid,
+                        Name = x.Name,
+                        // Name = colorGuid,
+                        TreatmentWayGuid = treatmentWayGuid,
+                        Consumption = x.Consumption
+                    };}).ToList(); 
+
+           var result = data.GroupBy(x => new { x.ModelName, 
+                                                x.ModelNo,
+                                                x.ArticleNo,
+                                                x.Treatment,
+                                                x.Process})
+               .Select(x => 
+               {
+                var guid = Guid.NewGuid().ToString("N") + DateTime.Now.ToString("ssff").ToUpper();
+                var treatmentGuid = _repoProcess.FindAll(k => k.Name == x.Key.Treatment).FirstOrDefault() != null ? _repoProcess.FindAll(k => k.Name == x.Key.Treatment).FirstOrDefault().Guid : null;
+                var processGuid = _repoProcess2.FindAll(k => k.Name == x.Key.Process).FirstOrDefault() != null ? _repoProcess2.FindAll(k => k.Name == x.Key.Process).FirstOrDefault().Guid : null;
+                var createDate = DateTime.Now;
+            
+                return new ScheduleUploadDto
+                {
+                    Guid = guid,   
+                    ModelName = x.Key.ModelName,
+                    ModelNo = x.Key.ModelNo,
+                    ArticleNo = x.Key.ArticleNo,
+                    TreatmentGuid = treatmentGuid,
+                    ProcessGuid = processGuid,
+                    CreateDate = createDate,
+                    Status = x.First().Status,
+                    Schedule = x.Select( y => {
+                                var guidSchedule = Guid.NewGuid().ToString("N") + DateTime.Now.ToString("ssff").ToUpper();
+                                return new ScheduleDto
+                                {
+                                    Guid = guidSchedule,
+                                    ShoesGuid = guid,
+                                    PartGuid = y.PartID,
+                                    ColorGuid = y.Name,
+                                    Status = y.Status,
+                                    CreateDate = createDate,
+                                    TreatmentWayGuid = y.TreatmentWayGuid,
+                                    Consumption = y.Consumption.ToDouble()
+                                };
+                            }).ToList(),
+                };
+                }).ToList();
+            
+            try
+            {
+                foreach (var item in result)
+                {
+                    //add shoe truoc
+                    var shoe_new = new Shoe();
+                    shoe_new.Guid = item.Guid;
+                    shoe_new.ModelName = item.ModelName;
+                    shoe_new.ModelNo = item.ModelNo;
+                    shoe_new.Article1 = item.ArticleNo;
+                    shoe_new.CreateDate = item.CreateDate;
+                    shoe_new.Status = item.Status;
+                    shoe_new.TreatmentGuid = item.TreatmentGuid;
+                    shoe_new.ProcessGuid = item.ProcessGuid;
+                    
+                    var shoe_add = _mapper.Map<Shoe>(shoe_new);
+                    _repoShoe.Add(shoe_add);
+                    await _unitOfWork.SaveChangeAsync();
+
+                    //add tiep schedule
+
+                    foreach (var item_schedule in item.Schedule)
+                    {
+                        var schedule_new = new Models.Schedule();
+                        schedule_new.ShoesGuid = item_schedule.ShoesGuid;
+                        schedule_new.PartGuid = item_schedule.PartGuid;
+                        schedule_new.ColorGuid = item_schedule.ColorGuid;
+                        schedule_new.TreatmentWayGuid = item_schedule.TreatmentWayGuid;
+                        schedule_new.Guid = item_schedule.Guid;
+                        schedule_new.CreateDate = item_schedule.CreateDate;
+                        schedule_new.Status = item_schedule.Status;
+                        schedule_new.Consumption = item_schedule.Consumption;
+                        if (schedule_new.PartGuid != null && schedule_new.ColorGuid != null && schedule_new.TreatmentWayGuid != null)
+                        {
+                            var schedule_add = _mapper.Map<Models.Schedule>(schedule_new);
+
+                            _repoSchedule.Add(schedule_add);
+                            await _unitOfWork.SaveChangeAsync();
+                        }
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+            
+            //throw new NotImplementedException();
+        }
+
         public override async Task<OperationResult> AddAsync(ShoeGlueDto model)
         {
             try

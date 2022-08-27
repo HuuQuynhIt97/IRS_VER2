@@ -1045,6 +1045,14 @@ namespace IRS.Data
                 entity.Property(e => e.UpdateDate)
                     .HasColumnType("datetime")
                     .HasColumnName("UPDATE_DATE");
+
+                entity.Property(e => e.TreatmentGuid)
+                    .HasMaxLength(50)
+                    .HasColumnName("TREATMENT_GUID");
+
+                entity.Property(e => e.ProcessGuid)
+                    .HasMaxLength(50)
+                    .HasColumnName("PROCESS_GUID");
             });
 
             modelBuilder.Entity<ShoeGlue>(entity =>

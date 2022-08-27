@@ -22,18 +22,21 @@ namespace IRS.Services
         Task<object> LoadData(DataManager data, string farmGuid);
         Task<object> GetAudit(object id);
         Task<object> LoadDataBySite(string siteID);
-
     }
     public class ShoeService : ServiceBase<Shoe, ShoeDto>, IShoeService
     {
         private readonly IRepositoryBase<Shoe> _repo;
         private readonly IRepositoryBase<XAccount> _repoXAccount;
+        private readonly IRepositoryBase<Process> _repoProcess;
+        private readonly IRepositoryBase<Process2> _repoProcess2;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly MapperConfiguration _configMapper;
         public ShoeService(
             IRepositoryBase<Shoe> repo,
             IRepositoryBase<XAccount> repoXAccount,
+            IRepositoryBase<Process> repoProcess,
+            IRepositoryBase<Process2> repoProcess2,
             IUnitOfWork unitOfWork,
             IMapper mapper,
             MapperConfiguration configMapper
@@ -42,6 +45,8 @@ namespace IRS.Services
         {
             _repo = repo;
             _repoXAccount = repoXAccount;
+            _repoProcess = repoProcess;
+            _repoProcess2 = repoProcess2;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _configMapper = configMapper;
@@ -173,7 +178,12 @@ namespace IRS.Services
                 x.Version,
                 x.Remark,
                 x.ProductionDate,
+                x.TreatmentGuid,
+                x.ProcessGuid,
+                Treatment = _repoProcess.FindAll().Where(o => o.Guid == x.TreatmentGuid).FirstOrDefault() != null ? _repoProcess.FindAll().Where(o => o.Guid == x.TreatmentGuid).FirstOrDefault().Name : null,
+                Process = _repoProcess2.FindAll().Where(o => o.Guid == x.ProcessGuid).FirstOrDefault() != null ? _repoProcess2.FindAll().Where(o => o.Guid == x.ProcessGuid).FirstOrDefault().Name : null
             });
+
             var count = await datasource.CountAsync();
             if (data.Where != null) // for filtering
                 datasource = QueryableDataOperations.PerformWhereFilter(datasource, data.Where, data.Where[0].Condition);
@@ -186,12 +196,19 @@ namespace IRS.Services
                 datasource = QueryableDataOperations.PerformSkip(datasource, data.Skip);
             if (data.Take > 0)//for paging
                 datasource = QueryableDataOperations.PerformTake(datasource, data.Take);
+            
             return new
             {
                 Result = await datasource.ToListAsync(),
                 Count = count
             };
         }
+        
+        public string Treatment (string TreatmentGuid) {
+            var TreatmentName = _repoProcess.FindAll(x => x.Guid == TreatmentGuid).FirstOrDefault().Name;
+            return TreatmentName;
+        }
+        
         public async Task<object> GetAudit(object id)
         {
             var data = await _repo.FindAll(x => x.Id.Equals(id)).AsNoTracking().Select(x => new { x.UpdateBy, x.CreateBy, x.UpdateDate, x.CreateDate }).FirstOrDefaultAsync();

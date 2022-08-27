@@ -179,14 +179,14 @@ namespace IRS.Services
             var treatmentWay = await _repoTreatmentWay.FindAll().ToListAsync();
             var part = await _repoPart.FindAll().ToListAsync();
             var color = await _repoColor.FindAll().ToListAsync();
-            var process = await _repoProcess.FindAll().ToListAsync();
-            var treatment = await _repoTreatment.FindAll().ToListAsync();
+            // var process = await _repoProcess.FindAll().ToListAsync();
+            // var treatment = await _repoTreatment.FindAll().ToListAsync();
             var datasource = (from x in schedule
                               join t in treatmentWay on x.TreatmentWayGuid equals t.Guid
                               join p in part on x.PartGuid equals p.Guid
                               join c in color on x.ColorGuid equals c.Guid
-                              join tt in treatment on x.TreatmentGuid equals tt.Guid
-                              join pp in process on x.ProcessGuid equals pp.Guid
+                            //   join tt in treatment on x.TreatmentGuid equals tt.Guid
+                            //   join pp in process on x.ProcessGuid equals pp.Guid
                               select new
                               {
                                   x.Id,
@@ -198,10 +198,10 @@ namespace IRS.Services
                                   x.TreatmentGuid,
                                   x.ProcessGuid,
                                   x.TreatmentWayGuid,
-                                  Treatment = tt.Name,
+                                //   Treatment = tt.Name,
                                   TreatmentWay = t.Name,
                                   Part = p.Name,
-                                  Process = pp.Name,
+                                //   Process = pp.Name,
                                   Color = c.Name,
                               }).ToList();
 
