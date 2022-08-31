@@ -1,3 +1,4 @@
+import { DataManager, UrlAdaptor } from '@syncfusion/ej2-data';
 import { Process2Service } from './../../../../../_core/_service/setting/process2.service';
 import { ProcessService } from './../../../../../_core/_service/setting/process.service';
 import { ColorService } from 'src/app/_core/_service/setting/color.service';
@@ -140,19 +141,29 @@ export class RecipeChildComponent extends BaseComponent implements OnInit, OnDes
     // })
   }
   loadData() {
-    this.service.loadData(this.schedule.shoesGuid).subscribe((res: any) => {
+    this.service.loadData(this.schedule.shoesGuid,this.locale).subscribe((res: any) => {
       this.data = res
     })
     
   }
   loadDataPart() {
-    this.servicePart.getAll().subscribe((res: any) => {
+    // this.dataPart = new DataManager({
+    //   url: `${this.baseUrl}Part/LoadData`,
+    //   adaptor: new UrlAdaptor,
+    // }).dataSource;
+    this.servicePart.loadDataByLang(this.locale).subscribe((res: any) => {
+      console.log(res);
       this.dataPart = res
     })
   }
   loadDataTreatmentWay() {
     this.serviceTreatmentWay.getAll().subscribe((res: any) => {
-      this.dataTreatmentWay = res
+      this.dataTreatmentWay = res.map(item => {
+        return {
+          name: item.name + '(' + item.process + ')',
+          guid: item.guid
+        }
+      })
     })
   }
   loadDataTreatment() {
@@ -296,7 +307,6 @@ export class RecipeChildComponent extends BaseComponent implements OnInit, OnDes
         );
       }, () => {
         this.alertify.error(this.alert.cancelMessage);
-
       }
     );
 

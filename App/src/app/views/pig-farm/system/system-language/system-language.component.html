@@ -41,44 +41,44 @@
         </ng-template>
       <ng-template #pageTemplate let-data>
         <ejs-dropdownlist id='toolbar_dropdown'
-              [allowFiltering]="true"
-              [dataSource]="pageData"
-              [(ngModel)]="slpage"
-              (ngModelChange)="onChangePage($event)"
-              [placeholder]="'Choose a page' | translate"
-              style="width: 200px;"
-              (filtering)='onFiltering($event)'
-            >
-            <ng-template #itemTemplate let-data>
-              <div *ngIf="data === 'All'">
-                {{data | translate}}
-              </div>
-              <div *ngIf="data !== 'All'">
-                {{data }}
-              </div>
+            [allowFiltering]="true"
+            [dataSource]="pageData"
+            [(ngModel)]="slpage"
+            (ngModelChange)="onChangePage($event)"
+            [placeholder]="'Choose a page' | translate"
+            style="width: 200px;"
+            (filtering)='onFiltering($event)'
+          >
+          <ng-template #itemTemplate let-data>
+            <div *ngIf="data === 'All'">
+              {{data | translate}}
+            </div>
+            <div *ngIf="data !== 'All'">
+              {{data }}
+            </div>
           </ng-template>
-          </ejs-dropdownlist>
+        </ejs-dropdownlist>
       </ng-template>
 
       <ng-template #typeTemplate let-data>
         <ejs-dropdownlist id='toolbar_dropdown2'
-              [allowFiltering]="true"
-              [dataSource]="typeData"
-              [(ngModel)]="sltype"
-              (ngModelChange)="onChangeType($event)"
-              [placeholder]="'Choose a type' | translate"
-              style="width: 200px;"
-              (filtering)='onFiltering2($event)'
-            >
-            <ng-template #itemTemplate let-data>
-              <div *ngIf="data === 'All'">
-                {{data | translate}}
-              </div>
-              <div *ngIf="data !== 'All'">
-                {{data }}
-              </div>
+            [allowFiltering]="true"
+            [dataSource]="typeData"
+            [(ngModel)]="sltype"
+            (ngModelChange)="onChangeType($event)"
+            [placeholder]="'Choose a type' | translate"
+            style="width: 200px;"
+            (filtering)='onFiltering2($event)'
+          >
+          <ng-template #itemTemplate let-data>
+            <div *ngIf="data === 'All'">
+              {{data | translate}}
+            </div>
+            <div *ngIf="data !== 'All'">
+              {{data }}
+            </div>
           </ng-template>
-          </ejs-dropdownlist>
+        </ejs-dropdownlist>
       </ng-template>
 
         <e-columns>

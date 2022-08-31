@@ -19,9 +19,10 @@ namespace IRS.Services
 {
     public interface IScheduleService : IServiceBase<Models.Schedule, ScheduleDto>
     {
-        Task<object> LoadData(string shoeGuid);
+        Task<object> LoadData(string shoeGuid,string lang);
         Task<object> GetAudit(object id);
         Task<object> LoadDataBySite(string siteID);
+        Task ImportExcel(List<ScheduleUploadDto> dto);
 
     }
     public class ScheduleService : ServiceBase<Models.Schedule, ScheduleDto>, IScheduleService
@@ -29,6 +30,7 @@ namespace IRS.Services
         private readonly IRepositoryBase<Models.Schedule> _repo;
         private readonly IRepositoryBase<TreatmentWay> _repoTreatmentWay;
         private readonly IRepositoryBase<Part2> _repoPart;
+        private readonly IRepositoryBase<Shoe> _repoShoe;
         private readonly IRepositoryBase<Color> _repoColor;
         private readonly IRepositoryBase<Process2> _repoProcess;
         private readonly IRepositoryBase<Process> _repoTreatment;
@@ -40,6 +42,7 @@ namespace IRS.Services
             IRepositoryBase<Models.Schedule> repo,
             IRepositoryBase<TreatmentWay> repoTreatmentWay,
             IRepositoryBase<Process2> repoProcess,
+            IRepositoryBase<Shoe> repoShoe,
             IRepositoryBase<Process> repoTreatment,
             IRepositoryBase<Part2> repoPart,
             IRepositoryBase<Color> repoColor,
@@ -51,6 +54,7 @@ namespace IRS.Services
             : base(repo, unitOfWork, mapper, configMapper)
         {
             _repo = repo;
+            _repoShoe = repoShoe;
             _repoProcess = repoProcess;
             _repoTreatment = repoTreatment;
             _repoTreatmentWay = repoTreatmentWay;
@@ -173,20 +177,18 @@ namespace IRS.Services
             return operationResult;
         }
 
-        public async Task<object> LoadData(string shoeGuid)
+        public async Task<object> LoadData(string shoeGuid, string lang)
         {
             var schedule = await _repo.FindAll(x => x.Status == 1 && x.ShoesGuid == shoeGuid).OrderByDescending(x => x.Id).ToListAsync();
             var treatmentWay = await _repoTreatmentWay.FindAll().ToListAsync();
             var part = await _repoPart.FindAll().ToListAsync();
             var color = await _repoColor.FindAll().ToListAsync();
-            var process = await _repoProcess.FindAll().ToListAsync();
-            var treatment = await _repoTreatment.FindAll().ToListAsync();
             var datasource = (from x in schedule
                               join t in treatmentWay on x.TreatmentWayGuid equals t.Guid
                               join p in part on x.PartGuid equals p.Guid
                               join c in color on x.ColorGuid equals c.Guid
-                              join tt in treatment on x.TreatmentGuid equals tt.Guid
-                              join pp in process on x.ProcessGuid equals pp.Guid
+                              let process = _repoTreatment.FindAll().Where(o => o.ID == t.ProcessId).FirstOrDefault() != null
+                                  ? _repoTreatment.FindAll().Where(o => o.ID == t.ProcessId).FirstOrDefault().Name : null
                               select new
                               {
                                   x.Id,
@@ -198,11 +200,12 @@ namespace IRS.Services
                                   x.TreatmentGuid,
                                   x.ProcessGuid,
                                   x.TreatmentWayGuid,
-                                  Treatment = tt.Name,
                                   TreatmentWay = t.Name,
-                                  Part = p.Name,
-                                  Process = pp.Name,
+                                  Part = lang == Languages.EN ? (p.PartNameEn == "" || p.PartNameEn == null ? p.Name : p.PartNameEn) 
+                                  : lang == Languages.VI ? (p.Name == "" || p.Name == null ? p.Name : p.Name) 
+                                  : lang == Languages.CN ? (p.PartNameCn == "" || p.PartNameCn == null ? p.Name : p.PartNameCn) : p.Name,
                                   Color = c.Name,
+                                  Process = process
                               }).ToList();
 
             return datasource;
@@ -255,5 +258,104 @@ namespace IRS.Services
             //throw new NotImplementedException();
         }
 
+        public async Task ImportExcel(List<ScheduleUploadDto> res)
+        {
+            var result = res.GroupBy(x => new { 
+                    x.ModelName, 
+                    x.ModelNo, 
+                    x.ArticelNo,
+                    x.Treatment,
+                    x.Process
+            })
+              .Select(x => new
+              {
+
+                  ModelName = x.First().ModelName,
+                  ModelNo = x.First().ModelNo,
+                  ArtNo = x.First().ArticelNo,
+                  Treatment = x.First().Treatment,
+                  Process = x.First().Process,
+                  Name = x.Select(y => new {
+                      y.Name,
+                      y.Part,
+                      y.Consumption,
+                      y.TreatmentWayID
+                  }),
+                  
+              });
+            try
+            {
+                foreach (var item in result)
+                {
+                    //add shoes truoc
+                    var treatmentGuid = _repoTreatment.FindAll(x => x.Name == item.Treatment).FirstOrDefault() != null
+                        ? _repoTreatment.FindAll(x => x.Name == item.Treatment).FirstOrDefault().Guid : null;
+
+                    var processGuid = _repoProcess.FindAll(x => x.Name == item.Process).FirstOrDefault() != null
+                        ? _repoProcess.FindAll(x => x.Name == item.Process).FirstOrDefault().Guid : null;
+
+                    var processID = _repoTreatment.FindAll(x => x.Name == item.Treatment).FirstOrDefault() != null
+                        ? _repoTreatment.FindAll(x => x.Name == item.Treatment).FirstOrDefault().ID : 0;
+
+                    var shoe_add = new Shoe();
+
+                    shoe_add.ModelName = item.ModelName;
+                    shoe_add.ModelNo = item.ModelNo;
+                    shoe_add.Article1 = item.ArtNo;
+                    shoe_add.TreatmentGuid = treatmentGuid;
+                    shoe_add.ProcessGuid = processGuid;
+                    var item_shoe = _mapper.Map<Shoe>(shoe_add);
+                    item_shoe.Status = 1;
+                    item_shoe.Guid = Guid.NewGuid().ToString("N") + DateTime.Now.ToString("ssff").ToUpper();
+                    _repoShoe.Add(item_shoe);
+                    await _unitOfWork.SaveChangeAsync();
+
+                    //add schedule
+
+                    foreach (var item_schedule in item.Name)
+                    {
+                        if (item_schedule.Name != "1")
+                        {
+                            //tim colorGuid
+                            var colorGuid = _repoColor.FindAll(x => x.Name == item_schedule.Name && x.Status == 1).FirstOrDefault() != null
+                                ? _repoColor.FindAll(x => x.Name == item_schedule.Name && x.Status == 1).FirstOrDefault().Guid
+                                : null;
+
+                            var partGuid = _repoPart.FindAll(x => x.Name == item_schedule.Part && x.Status == 1).FirstOrDefault() != null
+                                ? _repoPart.FindAll(x => x.Name == item_schedule.Part && x.Status == 1).FirstOrDefault().Guid
+                                : null;
+
+                            var treatmenWayGuid = _repoTreatmentWay.FindAll(o => o.Id ==  item_schedule.TreatmentWayID && o.ProcessId == processID).FirstOrDefault() != null
+                               ? _repoTreatmentWay.FindAll(o => o.Id == item_schedule.TreatmentWayID && o.ProcessId == processID).FirstOrDefault().Guid
+                               : null;
+
+                            if (colorGuid != null && partGuid != null && treatmenWayGuid != null)
+                            {
+                                //add schedule
+                                var schedule_add = new Models.Schedule();
+                                schedule_add.ColorGuid = colorGuid;
+                                schedule_add.PartGuid = partGuid;
+                                schedule_add.Consumption = item_schedule.Consumption.ToDouble();
+                                schedule_add.TreatmentWayGuid = treatmenWayGuid;
+                                schedule_add.Status = 1;
+                                schedule_add.ShoesGuid = item_shoe.Guid;
+                                schedule_add.Guid = Guid.NewGuid().ToString("N") + DateTime.Now.ToString("ssff").ToUpper();
+                                var item_schedule_add = _mapper.Map<Models.Schedule>(schedule_add);
+                                _repo.Add(item_schedule_add);
+
+                                await _unitOfWork.SaveChangeAsync();
+                            }
+                        }
+                    }
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
     }
 }

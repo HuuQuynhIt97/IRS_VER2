@@ -4,6 +4,10 @@ using IRS.Helpers;
 using IRS.Services;
 using Syncfusion.JavaScript;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using OfficeOpenXml;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace IRS.Controllers
 {
@@ -16,10 +20,53 @@ namespace IRS.Controllers
             _service = service;
         }
 
+        [HttpPost]
+        public async Task<ActionResult> Import([FromForm] IFormFile file2)
+        {
+            IFormFile file = Request.Form.Files["UploadedFile"];
+            var datasList = new List<PartUploadDto>();
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            if ((file != null) && (file.Length > 0) && !string.IsNullOrEmpty(file.FileName))
+            {
+                string fileName = file.FileName;
+                using (var package = new ExcelPackage(file.OpenReadStream()))
+                {
+                    var currentSheet = package.Workbook.Worksheets;
+                    var workSheet = currentSheet.First();
+                    var noOfCol = workSheet.Dimension.End.Column;
+                    var noOfRow = workSheet.Dimension.End.Row;
+
+                    for (int rowIterator = 2; rowIterator <= noOfRow; rowIterator++)
+                    {
+                        datasList.Add(new PartUploadDto()
+                        {
+                            Name = workSheet.Cells[rowIterator, 2].Value.ToString(),
+                           
+                        });
+                    }
+                }
+
+                await _service.ImportExcel(datasList);
+                return Ok();
+            }
+            else
+            {
+                return StatusCode(500);
+            }
+
+        }
+
         [HttpGet]
         public async Task<ActionResult> GetAllAsync()
         {
             return Ok(await _service.GetAllAsync());
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetAllByLang(string lang)
+        {
+            return Ok(await _service.GetAllByLang(lang));
         }
 
         [HttpGet]
@@ -58,10 +105,9 @@ namespace IRS.Controllers
             return Ok(await _service.GetWithPaginationsAsync(paramater));
         }
         [HttpPost]
-        public async Task<ActionResult> LoadData([FromBody] DataManager request, [FromQuery] string colorGuid)
+        public async Task<ActionResult> LoadData([FromBody] DataManager request, [FromQuery] string lang)
         {
-
-            var data = await _service.LoadData(request, colorGuid);
+            var data = await _service.LoadData(request, lang);
             return Ok(data);
         }
         [HttpGet]

@@ -56,7 +56,7 @@
       </ng-template>
     </e-column>
 
-    <e-column   textAlign="Left" headerText="{{ 'TREATMENT_NAME' | translate }}" >
+    <!-- <e-column   textAlign="Left" headerText="{{ 'TREATMENT_NAME' | translate }}" >
       <ng-template #template let-data>
         {{data.treatment}}
       </ng-template>
@@ -67,9 +67,9 @@
           >
         </ejs-dropdownlist>
       </ng-template>
-    </e-column>
+    </e-column> -->
 
-    <e-column  textAlign="Left" headerText="{{ 'PROCESS_NAME' | translate }}">
+    <!-- <e-column  textAlign="Left" headerText="{{ 'PROCESS_NAME' | translate }}">
       <ng-template #template let-data>
         {{data.process}}
       </ng-template>
@@ -80,11 +80,11 @@
           >
         </ejs-dropdownlist>
       </ng-template>
-    </e-column>
+    </e-column> -->
 
     <e-column  textAlign="Left" headerText="TreatmentWay">
       <ng-template let-data #template>
-        {{data.treatmentWay}}
+        {{data.treatmentWay + ' (' + data.process + ')'}}
       </ng-template>
       <ng-template #headerTemplate let-data>
         {{ 'TREATMENT_WAY_NAME' | translate }}

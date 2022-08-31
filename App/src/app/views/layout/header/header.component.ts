@@ -23,7 +23,11 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   fields: object = { text: 'siteName', value: 'guid' };
   fieldsLang: object = { text: 'name', value: 'id' };
   lang: string;
-  languageData = [{id: 'Tw', name: 'Tw'}, {id: 'Cn', name: 'Cn'}, {id: 'En', name: 'En'},{id: 'Vi', name: 'Vi'}]
+  languageData = [
+    // {id: 'Tw', name: 'Tw'}, 
+    {id: 'Cn', name: 'Cn'}, 
+    {id: 'En', name: 'En'},
+    {id: 'Vi', name: 'Vi'}]
   sysConf: any;
   constructor(
     private authService: AuthService,

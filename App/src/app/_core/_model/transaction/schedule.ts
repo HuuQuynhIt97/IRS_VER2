@@ -2,8 +2,8 @@ export interface Schedule {
     id: number;
     colorGuid: string;
     shoesGuid: string;
-    treatmentGuid: string;
     treatmentWayGuid: string;
+    treatmentGuid: string;
     processGuid: string;
     partGuid: string;
     createDate: string | null;

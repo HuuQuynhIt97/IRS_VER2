@@ -45,7 +45,7 @@ namespace IRS.Controllers
                             GlueID = workSheet.Cells[rowIterator, 2].Value.ToInt(),
                             Name = workSheet.Cells[rowIterator, 3].Value.ToSafetyString(),
                             InkID = workSheet.Cells[rowIterator, 4].Value.ToInt(),
-                            ChemicalID = workSheet.Cells[rowIterator, 5].Value.ToInt(),
+                            ChemicalID = workSheet.Cells[rowIterator, 5].Value.ToInt(),   
                             Percentage = workSheet.Cells[rowIterator, 6].Value.ToString(),
                         });
                     }

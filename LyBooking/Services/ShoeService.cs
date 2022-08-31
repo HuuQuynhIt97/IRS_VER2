@@ -27,12 +27,16 @@ namespace IRS.Services
     public class ShoeService : ServiceBase<Shoe, ShoeDto>, IShoeService
     {
         private readonly IRepositoryBase<Shoe> _repo;
+        private readonly IRepositoryBase<Process> _repoTreatment;
+        private readonly IRepositoryBase<Process2> _repoProcess;
         private readonly IRepositoryBase<XAccount> _repoXAccount;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly MapperConfiguration _configMapper;
         public ShoeService(
             IRepositoryBase<Shoe> repo,
+            IRepositoryBase<Process> repoTreatment,
+            IRepositoryBase<Process2> repoProcess,
             IRepositoryBase<XAccount> repoXAccount,
             IUnitOfWork unitOfWork,
             IMapper mapper,
@@ -41,6 +45,8 @@ namespace IRS.Services
             : base(repo, unitOfWork, mapper, configMapper)
         {
             _repo = repo;
+            _repoTreatment = repoTreatment;
+            _repoProcess = repoProcess;
             _repoXAccount = repoXAccount;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -162,7 +168,7 @@ namespace IRS.Services
         public async Task<object> LoadData(DataManager data, string farmGuid)
         {
             var datasource = _repo.FindAll(x => x.Status == 1)
-            .OrderByDescending(x=> x.Id)
+            .OrderByDescending(x => x.Id)
             .Select(x => new {
                 x.Id,
                 x.Guid,
@@ -173,6 +179,10 @@ namespace IRS.Services
                 x.Version,
                 x.Remark,
                 x.ProductionDate,
+                Treatment = _repoTreatment.FindAll().Where(o => o.Guid == x.TreatmentGuid).FirstOrDefault() != null
+                ? _repoTreatment.FindAll().Where(o => o.Guid == x.TreatmentGuid).FirstOrDefault().Name : null,
+                Process = _repoProcess.FindAll().Where(o => o.Guid == x.ProcessGuid).FirstOrDefault() != null
+                ? _repoProcess.FindAll().Where(o => o.Guid == x.ProcessGuid).FirstOrDefault().Name : null
             });
             var count = await datasource.CountAsync();
             if (data.Where != null) // for filtering

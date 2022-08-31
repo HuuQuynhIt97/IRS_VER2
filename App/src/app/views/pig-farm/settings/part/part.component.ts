@@ -54,12 +54,12 @@ export class PartComponent extends BaseComponent implements OnInit, OnDestroy  {
   noImage = ImagePathConstants.NO_IMAGE;
   loading = 0;
   pageSettingsMenu: any
+  @ViewChild('importModal') templateRefImportModal: TemplateRef<any>;
   constructor(
     private service: PartService,
     private serviceShoeGlue: ShoeGlueService,
     public modalService: NgbModal,
     private alertify: AlertifyService,
-    private route: ActivatedRoute,
     private datePipe: DatePipe,
     private utilityService: UtilitiesService,
     public translate: TranslateService,
@@ -92,7 +92,25 @@ export class PartComponent extends BaseComponent implements OnInit, OnDestroy  {
     this.loadData();
     // this.service.changeGlue({} as Glue);
   }
+  fileProgress(event) {
+    this.file = event.target.files[0];
+  }
 
+  uploadFile() {
+    if (this.file === null) {
+      this.alertify.error('Please choose file upload ! ');
+      return;
+    }
+    this.alertify.confirm2('Warning! <br>!', 'uploading this !', () => {
+      this.service.import(this.file)
+      .subscribe((res: any) => {
+        this.loadData();
+        this.modalReference.close();
+        this.alertify.success(MessageConstants.CREATED_OK_MSG);
+      });
+    }, () => {
+    });
+  }
   getMenuPageSetting() {
     this.serviceShoeGlue.getMenuPageSetting().subscribe(res => {
       this.pageSettingsMenu = {
@@ -122,7 +140,9 @@ export class PartComponent extends BaseComponent implements OnInit, OnDestroy  {
     this.grid.selectRow(this.rowIndex);
     // this.grid.autoFitColumns();
   }
-
+  async openImportModal(template) {
+    this.modalReference = this.modalService.open(template, {size: 'xl',backdrop: 'static'});
+  }
   toolbarClick(args) {
     switch (args.item.id) {
       case 'grid_excelexport':
@@ -132,6 +152,10 @@ export class PartComponent extends BaseComponent implements OnInit, OnDestroy  {
         args.cancel = true;
         this.model = {} as any;
         this.openModal(this.templateRef);
+        break;
+      case 'grid_Import Excel':
+        args.cancel = true;
+        this.openImportModal(this.templateRefImportModal);
         break;
       default:
         break;

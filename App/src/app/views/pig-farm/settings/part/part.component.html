@@ -40,14 +40,9 @@
       </ng-template>
     </e-column>
 
-  <e-column
-      field="name"
-      textAlign="Left"
-      headerText="{{ 'PART_NAME' | translate }}"
-    >
-  </e-column>
-
-
+    <e-column field="partNameVN" textAlign="Left" headerText="{{ 'PART_NAME_VN' | translate }}"></e-column>
+    <e-column field="partNameEN" textAlign="Left" headerText="{{ 'PART_NAME_EN' | translate }}"></e-column>
+    <e-column field="partNameCN" textAlign="Left" headerText="{{ 'PART_NAME_CN' | translate }}"></e-column>
   </e-columns>
 </ejs-grid>
 
@@ -72,7 +67,7 @@
 
         <div class="row">
           <div class="col-md-12">
-            <label>{{ "PART_NAME" | translate }} </label>
+            <label>{{ "PART_NAME_VN" | translate }} </label>
             <span *ngIf="!(model.id > 0)" style="color: red">(*)</span>
             <span class="max-length"> ( {{"Text length"| translate }} <= 200 )</span>
             <div class="form-group">
@@ -86,19 +81,43 @@
             </div>
           </div>
 
-          <!-- <div class="col-md-6">
-            <label>{{ "SHOE_MODEL_VERSION" | translate }} </label>
-            <span class="max-length"> ( {{"Text length"| translate }} <= 20 )</span>
+          
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <label>{{ "PART_NAME_EN" | translate }} </label>
+            <span *ngIf="!(model.id > 0)" style="color: red">(*)</span>
+            <span class="max-length"> ( {{"Text length"| translate }} <= 200 )</span>
             <div class="form-group">
               <input
                 maxlength="200"
                 type="text"
                 name="supplier"
-                [(ngModel)]="model.version"
+                [(ngModel)]="model.partNameEn"
                 class="form-control"
               />
             </div>
-          </div> -->
+          </div>
+
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <label>{{ "PART_NAME_CN" | translate }} </label>
+            <span *ngIf="!(model.id > 0)" style="color: red">(*)</span>
+            <span class="max-length"> ( {{"Text length"| translate }} <= 200 )</span>
+            <div class="form-group">
+              <input
+                maxlength="200"
+                type="text"
+                name="supplier"
+                [(ngModel)]="model.partNameCn"
+                class="form-control"
+              />
+            </div>
+          </div>
+
         </div>
 
         <!-- <div class="row">
@@ -149,6 +168,56 @@
       !model.name 
       "
       (click)="save()"
+      class="btn btn-primary"
+    >
+      {{ "SAVE" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #importModal let-modal>
+  <div class="modal-header my-modal">
+    <h4 class="modal-title">
+      <i class="fas fa-plus"></i> Import Excel
+    </h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <input (change)="fileProgress($event)" name="file" type="file" class="form-control" />
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label style="color: transparent;" for="Name">Select File (*Notice: Excel file must be followed a system template. If you do not have a
+            template, please
+          </label>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-light"
+      (click)="modal.close('Close click')"
+    >
+      {{ "CLOSE" | translate }}
+    </button>
+    <button
+      
+      (click)="uploadFile()"
       class="btn btn-primary"
     >
       {{ "SAVE" | translate }}

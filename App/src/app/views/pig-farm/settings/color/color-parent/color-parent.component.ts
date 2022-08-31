@@ -47,7 +47,7 @@ export class ColorParentComponent extends BaseComponent implements OnInit, OnDes
   public dateValue: Date = new Date();
   @ViewChild('optionModal') templateRef: TemplateRef<any>;
   @ViewChild('importModal') templateRefImportModal: TemplateRef<any>;
-  toolbarOptions = ['Add', 'Search','Import Excel'];
+  toolbarOptions = ['Add', 'Search'];
   selectionOptions = { checkboxMode: 'ResetOnRowClick'};
   groupCode: any;
   rowIndex: number;

@@ -13,6 +13,8 @@ namespace IRS.DTO
         public string Article1 { get; set; }
         public string Article2 { get; set; }
         public string Remark { get; set; }
+        public string TreatmentGuid { get; set; }
+        public string ProcessGuid { get; set; }
         public DateTime? CreateDate { get; set; }
         public decimal? CreateBy { get; set; }
         public DateTime? UpdateDate { get; set; }

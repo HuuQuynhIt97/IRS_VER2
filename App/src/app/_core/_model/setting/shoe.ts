@@ -5,6 +5,8 @@ export interface Shoe {
     article1: string;
     article2: string;
     remark: string;
+    treatmentGuid: string;
+    processGuid: string;
     productionDate: string | null;
     createDate: string | null;
     createBy: number | null;

@@ -1,3 +1,4 @@
+import { ScheduleService } from './../../../../../_core/_service/transaction/schedule.service';
 import { ShoeGlueService } from './../../../../../_core/_service/setting/shoe-glue.service';
 import { ShoeService } from './../../../../../_core/_service/setting/shoe.service';
 import { Shoe } from './../../../../../_core/_model/setting/shoe';
@@ -20,6 +21,8 @@ import { DatePipe } from '@angular/common';
 import { UtilitiesService } from 'src/app/_core/_service/utilities.service';
 import { Site } from 'src/app/_core/_model/club-management/site';
 import { SiteService } from 'src/app/_core/_service/club-management/site.service';
+import { ProcessService } from 'src/app/_core/_service/setting/process.service';
+import { Process2Service } from 'src/app/_core/_service/setting/process2.service';
 
 @Component({
   selector: 'app-name-child',
@@ -52,13 +55,20 @@ export class NameChildComponent extends BaseComponent implements OnInit, OnDestr
   apiHost = environment.apiUrl.replace('/api/', '');
   noImage = ImagePathConstants.NO_IMAGE;
   loading = 0;
+  ChemicalFields: object = { text: 'name', value: 'guid' };
+  dataTreatment: any;
+  dataProcess: any;
+  @ViewChild('importModal') templateRefImportModal: TemplateRef<any>;
   constructor(
     private service: ShoeService,
+    private serviceSchedule: ScheduleService,
     private serviceShoeGlue: ShoeGlueService,
     public modalService: NgbModal,
     private alertify: AlertifyService,
     private datePipe: DatePipe,
+    private serviceTreatment: ProcessService,
     private utilityService: UtilitiesService,
+    private serviceProcess: Process2Service,
     public translate: TranslateService,
   ) { 
     super(translate);  
@@ -86,9 +96,44 @@ export class NameChildComponent extends BaseComponent implements OnInit, OnDestr
     };
     L10n.load(load);
     this.loadData();
+    this.loadDataTreatment();
+    this.loadDataProcess();
     // this.service.changeGlue({} as Glue);
   }
 
+  fileProgress(event) {
+    this.file = event.target.files[0];
+  }
+
+  uploadFile() {
+    if (this.file === null) {
+      this.alertify.error('Please choose file upload ! ');
+      return;
+    }
+    this.alertify.confirm2('Warning! <br>!', 'uploading this !', () => {
+      this.serviceSchedule.import(this.file)
+      .subscribe((res: any) => {
+        this.loadData();
+        this.modalReference.close();
+        this.alertify.success(MessageConstants.CREATED_OK_MSG);
+      });
+    }, () => {
+    });
+  }
+  async openImportModal(template) {
+    this.modalReference = this.modalService.open(template, {size: 'xl',backdrop: 'static'});
+  }
+  loadDataTreatment() {
+    this.serviceTreatment.getAll().subscribe((res: any) => {
+      this.dataTreatment = res
+    })
+  }
+
+  loadDataProcess() {
+    this.serviceProcess.getAll().subscribe((res: any) => {
+      this.dataProcess = res
+    })
+  }
   getMenuPageSetting() {
     this.serviceShoeGlue.getMenuPageSetting().subscribe(res => {
       this.pageSettingsMenu = {
@@ -131,6 +176,10 @@ export class NameChildComponent extends BaseComponent implements OnInit, OnDestr
         args.cancel = true;
         this.model = {} as any;
         this.openModal(this.templateRef);
+        break;
+      case 'grid_Import Excel':
+        args.cancel = true;
+        this.openImportModal(this.templateRefImportModal);
         break;
       default:
         break;

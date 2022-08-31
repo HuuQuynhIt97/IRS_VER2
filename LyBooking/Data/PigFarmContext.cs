@@ -334,6 +334,8 @@ namespace IRS.Data
                     .HasColumnName("GUID");
 
                 entity.Property(e => e.Name).HasMaxLength(50);
+                entity.Property(e => e.PartNameEn).HasMaxLength(255).HasColumnName("PART_NAME_EN");
+                entity.Property(e => e.PartNameCn).HasMaxLength(255).HasColumnName("PART_NAME_CN");
 
                 entity.Property(e => e.Status)
                     .HasColumnType("numeric(18, 0)")
@@ -1009,6 +1011,14 @@ namespace IRS.Data
                     .HasColumnType("numeric(18, 0)")
                     .ValueGeneratedOnAdd()
                     .HasColumnName("ID");
+
+                entity.Property(e => e.TreatmentGuid)
+                   .HasMaxLength(50)
+                   .HasColumnName("TREATMENT_GUID");
+
+                entity.Property(e => e.ProcessGuid)
+                   .HasMaxLength(50)
+                   .HasColumnName("PROCESS_GUID");
 
                 entity.Property(e => e.CreateBy)
                     .HasColumnType("numeric(18, 0)")

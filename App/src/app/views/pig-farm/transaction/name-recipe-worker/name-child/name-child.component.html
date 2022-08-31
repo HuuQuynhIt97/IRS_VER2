@@ -11,7 +11,6 @@
   [editSettings]="editSettings"
   [toolbar]="toolbarOptions"
   [allowExcelExport]="true"
-  [enableInfiniteScrolling]="true"
   (rowSelected)="rowSelected($event)"
   (recordClick)="recordClick($event)"
   [selectionSettings]="selectionOptions"
@@ -57,12 +56,11 @@
     >
     </e-column>
 
-    <e-column
-      field="article1"
-      textAlign="Left"
-      headerText="{{ 'SHOE_ARTICEL' | translate }}"
-    >
-    </e-column>
+    <e-column field="article1" textAlign="Left" headerText="{{ 'SHOE_ARTICEL' | translate }}"></e-column>
+
+    <e-column field="treatment" textAlign="Left" headerText="{{ 'SHOE_TREATMENT' | translate }}"></e-column>
+
+    <e-column field="process" textAlign="Left" headerText="{{ 'SHOE_PROCESS' | translate }}"></e-column>
 
     <e-column
       field="version"
@@ -167,6 +165,30 @@
             </div>
           </div>
 
+          <div class="col-md-6">
+            <label>{{ "SHOE_TREATMENT_LABEL" | translate }} </label>
+            <span class="max-length"> ( {{"Text length"| translate }} <= 20 )</span>
+            <div class="form-group">
+              <ejs-dropdownlist #treatmentDropdownlist [dataSource]='dataTreatment' 
+                [fields]='ChemicalFields' [allowFiltering]='true'
+                [(ngModel)]="model.treatmentGuid"
+                >
+              </ejs-dropdownlist>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label>{{ "SHOE_PROCESS_LABEL" | translate }} </label>
+            <span class="max-length"> ( {{"Text length"| translate }} <= 20 )</span>
+            <div class="form-group">
+              <ejs-dropdownlist #processDropdownlist [dataSource]='dataProcess' 
+                [fields]='ChemicalFields' [allowFiltering]='true'
+                [(ngModel)]="model.processGuid"
+                >
+              </ejs-dropdownlist>
+            </div>
+          </div>
+
         </div>
 
         <div class="row">
@@ -214,19 +236,6 @@
       </div>
     </div>
 
-    <!-- <div class="row">
-      <div class="col-md">
-        <label>{{ "COMMENT" | translate }} </label>
-        <div class="form-group">
-          <textarea
-            class="form-control"
-            [(ngModel)]="model.comment"
-            cols="4"
-            rows="4"
-          ></textarea>
-        </div>
-      </div>
-    </div> -->
   </div>
   <div class="modal-footer">
     <div class="mr-auto" *ngIf="model?.id > 0">
@@ -262,3 +271,55 @@
     </button>
   </div>
 </ng-template>
+
+<ng-template #importModal let-modal>
+  <div class="modal-header my-modal">
+    <h4 class="modal-title">
+      <i class="fas fa-plus"></i> Import Excel
+    </h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <input (change)="fileProgress($event)" name="file" type="file" class="form-control" />
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label style="color: transparent;" for="Name">Select File (*Notice: Excel file must be followed a system template. If you do not have a
+            template, please
+          </label>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-light"
+      (click)="modal.close('Close click')"
+    >
+      {{ "CLOSE" | translate }}
+    </button>
+    <button
+      
+      (click)="uploadFile()"
+      class="btn btn-primary"
+    >
+      {{ "SAVE" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+

@@ -22,4 +22,14 @@ export class PartService  extends CURDService<Part>{
     this.colorSource.next(part)
   }
 
+  import(file) {
+    const formData = new FormData();
+    formData.append('UploadedFile', file);
+    return this.http.post(this.base + 'Part/Import', formData);
+  }
+
+  loadDataByLang(lang) {
+    return this.http.get<any>(`${this.base}Part/GetAllByLang?lang=${lang}`, {});
+  }
+
 }

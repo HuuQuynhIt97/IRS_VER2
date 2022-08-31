@@ -9,6 +9,8 @@ namespace IRS.DTO
     {
         public decimal Id { get; set; }
         public string Name { get; set; }
+        public string PartNameEn { get; set; }
+        public string PartNameCn { get; set; }
         public string Guid { get; set; }
         public DateTime? CreateDate { get; set; }
         public decimal? CreateBy { get; set; }

@@ -57,6 +57,7 @@ namespace IRS.Controllers
         {
             return Ok(await _service.GetWithPaginationsAsync(paramater));
         }
+
         [HttpPost]
         public async Task<ActionResult> LoadData([FromBody] DataManager request, [FromQuery] string farmGuid)
         {

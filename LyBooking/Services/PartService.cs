@@ -19,9 +19,12 @@ namespace IRS.Services
 {
     public interface IPartService : IServiceBase<Part2, Part2Dto>
     {
-        Task<object> LoadData(DataManager data, string colorGuid);
+        Task<object> LoadData(DataManager data, string lang);
         Task<object> GetAudit(object id);
         Task<object> LoadDataBySite(string siteID);
+        Task<object> GetAllByLang(string lang);
+
+        Task ImportExcel(List<PartUploadDto> dto);
 
     }
     public class PartService : ServiceBase<Part2, Part2Dto>, IPartService
@@ -159,19 +162,22 @@ namespace IRS.Services
             return operationResult;
         }
 
-        public async Task<object> LoadData(DataManager data, string colorGuid)
+        public async Task<object> LoadData(DataManager data, string lang)
         {
             var datasource = _repo.FindAll(x => x.Status == 1)
             .OrderByDescending(x=> x.Id)
             .Select(x => new {
                 x.Id,
                 x.Guid,
-                x.Name
+                PartNameVN = x.Name,
+                PartNameEN = x.PartNameEn,
+                PartNameCN = x.PartNameCn
+                //
             });
             var count = await datasource.CountAsync();
             if (data.Where != null) // for filtering
                 datasource = QueryableDataOperations.PerformWhereFilter(datasource, data.Where, data.Where[0].Condition);
-            if (data.Sorted != null)//for sorting
+            if (data.Sorted != null) // for sorting
                 datasource = QueryableDataOperations.PerformSorting(datasource, data.Sorted);
             if (data.Search != null)
                 datasource = QueryableDataOperations.PerformSearching(datasource, data.Search);
@@ -231,6 +237,42 @@ namespace IRS.Services
 
             var data = await query.ToListAsync();
             return data;
+            //throw new NotImplementedException();
+        }
+
+        public async Task ImportExcel(List<PartUploadDto> res)
+        {
+            var result = res.DistinctBy(x => x.Name).ToList();
+            try
+            {
+                foreach (var item in result)
+                {
+                    var part_add = new Part2();
+                    part_add.Name = item.Name.Trim();
+                    var item_part = _mapper.Map<Part2>(part_add);
+                    item_part.Status = 1;
+                    item_part.Guid = Guid.NewGuid().ToString("N") + DateTime.Now.ToString("ssff").ToUpper();
+                    _repo.Add(item_part);
+                    await _unitOfWork.SaveChangeAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<object> GetAllByLang(string lang)
+        {
+            var query = await _repo.FindAll(x => x.Status == 1).Select(x => new
+            {
+                x.Id,
+                x.Guid,
+                Name = lang == Languages.EN ? (x.PartNameEn == "" || x.PartNameEn == null ? x.Name : x.PartNameEn) : lang == Languages.VI ? (x.Name == "" || x.Name == null ? x.Name : x.Name) : lang == Languages.CN ? (x.PartNameCn == "" || x.PartNameCn == null ? x.Name : x.PartNameCn) : x.Name
+            }).ToListAsync();
+
+            return query;
             //throw new NotImplementedException();
         }
     }

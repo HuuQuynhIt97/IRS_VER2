@@ -21,8 +21,14 @@ export class ScheduleService extends CURDService<Schedule> {
     this.bomSource.next(schedule)
   }
   
-  loadData(shoeGuid) {
-    return this.http.get<any>(`${this.base}Schedule/LoadData?shoeGuid=${shoeGuid}`, {});
+  loadData(shoeGuid,lang) {
+    return this.http.get<any>(`${this.base}Schedule/LoadData?shoeGuid=${shoeGuid}&lang=${lang}`, {});
+  }
+
+  import(file) {
+    const formData = new FormData();
+    formData.append('UploadedFile', file);
+    return this.http.post(this.base + 'Schedule/Import', formData);
   }
 
 

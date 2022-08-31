@@ -1,6 +1,8 @@
 export interface Part {
     id: number;
     name: string;
+    partNameCn: string;
+    partNameEn: string;
     createDate: string | null;
     createBy: number | null;
     updateDate: string | null;
