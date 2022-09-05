@@ -5,12 +5,12 @@ using System.Collections.Generic;
 
 namespace IRS.DTO
 {
-    public partial class SupplierDto
+    public partial class TreatmentWorkPlanDto
     {
         public int ID { get; set; }
-        public string Name { get; set; }
-        public string Process { get; set; }
-        public string Guid { get; set; }
-        public int ProcessID { get; set; }
+        public string Treatment { get; set; }
+        public bool Status { get; set; }
+        public bool FinishedStatus { get; set; }
+        public string Color { get; set; }
     }
 }

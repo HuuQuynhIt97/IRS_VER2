@@ -146,6 +146,18 @@ const routes: Routes = [
       },
 
       {
+        path: 'execution',
+        data: {
+          title: 'execution',
+          module: 'execution',
+          breadcrumb: 'execution',
+          root: true
+        },
+        loadChildren: () => import('./execution/execution.module').then(m => m.ExecutionModule),
+        //canActivate: [AuthGuard]
+      },
+
+      {
         path: 'stock',
         data: {
           title: 'stock',

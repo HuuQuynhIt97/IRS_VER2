@@ -109,6 +109,7 @@ const routes: Routes = [
   { path: 'settings', loadChildren: () => import('./views/pig-farm/settings/settings.module').then(m => m.SettingsModule) },
   { path: 'transaction', loadChildren: () => import('./views/pig-farm/transaction/transaction.module').then(m => m.TransactionModule) },
   { path: 'stock', loadChildren: () => import('./views/pig-farm/stock/stock.module').then(m => m.StockModule) },
+  { path: 'execution', loadChildren: () => import('./views/pig-farm/execution/execution.module').then(m => m.ExecutionModule) },
   // { path: 'report', loadChildren: () => import('./views/pig-farm/report/report.module').then(m => m.ReportModule) },
   // otherwise redirect to home
   { path: '**', redirectTo: '404', pathMatch: 'full' }

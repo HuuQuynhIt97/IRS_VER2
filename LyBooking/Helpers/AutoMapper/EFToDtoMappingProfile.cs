@@ -78,6 +78,11 @@ namespace IRS.Helpers.AutoMapper
 
             CreateMap<InInk, InInkDto>();
             CreateMap<InChemical, InChemicalDto>();
+            CreateMap<WorkPlan, WorkPlanDto>();
+
+
+            CreateMap<StockInChemical, StockInChemicalDto>();
+            CreateMap<StockInInk, StockInInkDto>();
 
         }
 

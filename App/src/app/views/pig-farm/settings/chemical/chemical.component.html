@@ -81,7 +81,6 @@
 
   <e-column
     field="voc"
-    width="50"
     textAlign="Center"
     headerText="{{ 'CHEMICAL_VOC' | translate }}"
     >
@@ -90,7 +89,6 @@
   <e-column
     field="unit"
     textAlign="Center"
-    width="50"
     headerText="{{ 'CHEMICAL_UNIT' | translate }}"
     >
     <ng-template #template let-data>{{data.unit}} kg</ng-template>
@@ -99,7 +97,6 @@
   <e-column
     field="daysToExpiration"
     textAlign="Center"
-    width="50"
     headerText="{{ 'CHEMICAL_DAY_TO_EXPIRATION' | translate }}"
     >
     <ng-template #template let-data>{{data.daysToExpiration}} days</ng-template>

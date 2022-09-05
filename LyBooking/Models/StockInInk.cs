@@ -3,14 +3,12 @@
 using System;
 using System.Collections.Generic;
 
-namespace IRS.Models3
+namespace IRS.Models
 {
-    public partial class Schedule
+    public partial class StockInInk
     {
-        public int Id { get; set; }
-        public string PartGuid { get; set; }
-        public string ColorGuid { get; set; }
-        public string TreatmentWayGuid { get; set; }
+        public decimal Id { get; set; }
+        public string InkGuid { get; set; }
         public string Guid { get; set; }
         public DateTime? CreateDate { get; set; }
         public decimal? CreateBy { get; set; }
@@ -19,9 +17,10 @@ namespace IRS.Models3
         public DateTime? DeleteDate { get; set; }
         public decimal? DeleteBy { get; set; }
         public decimal? Status { get; set; }
-        public string ShoeGuid { get; set; }
-        public string TreatmentGuid { get; set; }
-        public string ProcessGuid { get; set; }
-        public double? Consumption { get; set; }
+        public DateTime? ExecuteDate { get; set; }
+        public DateTime? ApproveDate { get; set; }
+        public decimal? ApproveBy { get; set; }
+        public double? RealAmount { get; set; }
+        public double? RemainingAmount { get; set; }
     }
 }

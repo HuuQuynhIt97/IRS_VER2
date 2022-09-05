@@ -1,3 +1,5 @@
+import { StockInChemicalComponent } from './stock-in-chemical/stock-in-chemical.component';
+import { StockInInkComponent } from './stock-in-ink/stock-in-ink.component';
 import { AutofocusQrcodeDirective } from './../../../_core/_directive/selectQrcode.directive';
 import { InChemicalComponent } from './in-chemical/in-chemical.component';
 import { InInkComponent } from './in-ink/in-ink.component';
@@ -17,6 +19,8 @@ import { Common2Module } from 'src/app/_core/commons/common2.module';
     StockComponent,
     InInkComponent,
     InChemicalComponent,
+    StockInInkComponent,
+    StockInChemicalComponent,
     AutofocusQrcodeDirective
   ],
   imports: [

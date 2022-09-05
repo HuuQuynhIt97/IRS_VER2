@@ -1,3 +1,5 @@
+import { StockInInkComponent } from './stock-in-ink/stock-in-ink.component';
+import { StockInChemicalComponent } from './stock-in-chemical/stock-in-chemical.component';
 import { InChemicalComponent } from './in-chemical/in-chemical.component';
 import { InInkComponent } from './in-ink/in-ink.component';
 import { NgModule } from '@angular/core';
@@ -9,6 +11,28 @@ const routes: Routes = [
   { 
     path: '', 
     component: StockComponent 
+  },
+  {
+    path: 'stock-In-Ink',
+    component: StockInInkComponent,
+    data: {
+      title: 'Stock In Ink',
+      module: 'stock',
+      breadcrumb: 'Stock In Ink',
+      functionCode: 'stock-in-ink'
+    },
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'stock-In-Chemical',
+    component: StockInChemicalComponent,
+    data: {
+      title: 'Stock In chemical',
+      module: 'stock',
+      breadcrumb: 'Stock In chemical',
+      functionCode: 'stock-in-chemical'
+    },
+    canActivate: [AuthGuard]
   },
   {
     path: 'In-Ink',

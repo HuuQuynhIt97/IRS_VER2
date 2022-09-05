@@ -104,13 +104,136 @@ namespace IRS.Data
 
         public virtual DbSet<InChemical> InChemicals { get; set; }
         public virtual DbSet<InInk> InInks { get; set; }
-
+        public virtual DbSet<StockInChemical> StockInChemicals { get; set; }
+        public virtual DbSet<StockInInk> StockInInks { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "Chinese_Taiwan_Stroke_CI_AS");
             //modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
 
+            modelBuilder.Entity<StockInChemical>(entity =>
+            {
+                entity.ToTable("StockInChemical");
 
+                entity.Property(e => e.Id)
+                    .HasColumnType("numeric(18, 0)")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnName("ID");
+
+                entity.Property(e => e.ApproveBy)
+                    .HasColumnType("numeric(18, 0)")
+                    .HasColumnName("APPROVE_BY");
+
+                entity.Property(e => e.ApproveDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("APPROVE_DATE");
+
+                entity.Property(e => e.ChemicalGuid)
+                    .HasMaxLength(50)
+                    .HasColumnName("CHEMICAL_GUID");
+
+                entity.Property(e => e.CreateBy)
+                    .HasColumnType("numeric(18, 0)")
+                    .HasColumnName("CREATE_BY");
+
+                entity.Property(e => e.CreateDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("CREATE_DATE");
+
+                entity.Property(e => e.DeleteBy)
+                    .HasColumnType("numeric(18, 0)")
+                    .HasColumnName("DELETE_BY");
+
+                entity.Property(e => e.DeleteDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("DELETE_DATE");
+
+                entity.Property(e => e.ExecuteDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("EXECUTE_DATE");
+
+                entity.Property(e => e.Guid)
+                    .HasMaxLength(50)
+                    .HasColumnName("GUID");
+
+                entity.Property(e => e.RealAmount).HasColumnName("REAL_AMOUNT");
+
+                entity.Property(e => e.RemainingAmount).HasColumnName("REMAINING_AMOUNT");
+
+                entity.Property(e => e.Status)
+                    .HasColumnType("numeric(18, 0)")
+                    .HasColumnName("STATUS");
+
+                entity.Property(e => e.UpdateBy)
+                    .HasColumnType("numeric(18, 0)")
+                    .HasColumnName("UPDATE_BY");
+
+                entity.Property(e => e.UpdateDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("UPDATE_DATE");
+            });
+
+            modelBuilder.Entity<StockInInk>(entity =>
+            {
+                entity.ToTable("StockInInk");
+
+                entity.Property(e => e.Id)
+                    .HasColumnType("numeric(18, 0)")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnName("ID");
+
+                entity.Property(e => e.ApproveBy)
+                    .HasColumnType("numeric(18, 0)")
+                    .HasColumnName("APPROVE_BY");
+
+                entity.Property(e => e.ApproveDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("APPROVE_DATE");
+
+                entity.Property(e => e.CreateBy)
+                    .HasColumnType("numeric(18, 0)")
+                    .HasColumnName("CREATE_BY");
+
+                entity.Property(e => e.CreateDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("CREATE_DATE");
+
+                entity.Property(e => e.DeleteBy)
+                    .HasColumnType("numeric(18, 0)")
+                    .HasColumnName("DELETE_BY");
+
+                entity.Property(e => e.DeleteDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("DELETE_DATE");
+
+                entity.Property(e => e.ExecuteDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("EXECUTE_DATE");
+
+                entity.Property(e => e.Guid)
+                    .HasMaxLength(50)
+                    .HasColumnName("GUID");
+
+                entity.Property(e => e.InkGuid)
+                    .HasMaxLength(50)
+                    .HasColumnName("INK_GUID");
+
+                entity.Property(e => e.RealAmount).HasColumnName("REAL_AMOUNT");
+
+                entity.Property(e => e.RemainingAmount).HasColumnName("REMAINING_AMOUNT");
+
+                entity.Property(e => e.Status)
+                    .HasColumnType("numeric(18, 0)")
+                    .HasColumnName("STATUS");
+
+                entity.Property(e => e.UpdateBy)
+                    .HasColumnType("numeric(18, 0)")
+                    .HasColumnName("UPDATE_BY");
+
+                entity.Property(e => e.UpdateDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("UPDATE_DATE");
+            });
             modelBuilder.Entity<InChemical>(entity =>
             {
                 entity.ToTable("InChemical");

@@ -1,0 +1,146 @@
+<div class="card-header">
+  <ejs-toolbar #toolbarTodo  >
+    <e-items>
+      <e-item >
+        <ng-template #template>
+          <span> {{'EXECUTEDATE_LABEL' | translate}}: </span> 
+          <ejs-datepicker locale='en-US'
+          format="yyyy/MM/dd" (valueChange)='onChangeExecuteDate($event)' [(ngModel)]="fiterRequest.executionDate" ></ejs-datepicker>
+        </ng-template>
+      </e-item>
+
+      <e-item >
+        <ng-template #template>
+          <span> {{'INSERTDATE_LABEL' | translate}}: </span> 
+          <ejs-datepicker locale='en-US'
+          format="yyyy/MM/dd" (valueChange)='onChangeInsertDate($event)' [(ngModel)]="fiterRequest.createDate" ></ejs-datepicker>
+        </ng-template>
+      </e-item>
+
+    </e-items>
+  </ejs-toolbar>
+</div>
+<ejs-grid
+  #grid
+  id="grid"
+  [dataSource]="data"
+  [allowPaging]="true"
+  [allowResizing]="true"
+  [allowSorting]="true"
+  gridLines="Both"
+  [locale]="locale"
+  [editSettings]="chemicalEditSettings"
+  [toolbar]="toolbarOptions"
+  [pageSettings]='pageSettingsRecipe'
+  [allowExcelExport]="true"
+  [enableInfiniteScrolling]="true"
+  (rowSelected)="rowSelected($event)"
+  (recordClick)="recordClick($event)"
+  (actionBegin)="actionBegin($event)"
+  [selectionSettings]="selectionOptions"
+  (toolbarClick)="toolbarClick($event)"
+  (dataBound)='dataBound()'
+>
+
+  <e-columns>
+    <e-column
+      field="option"
+      [allowSorting]="false"
+      [allowSearching]="false"
+      [allowGrouping]="false"
+      [allowFiltering]="false"
+      [allowEditing]="false"
+      textAlign="Center"
+      headerTextAlign="Center"
+      width="50"
+      headerTextAlign="Center"
+      headerText="{{ 'OPTION' | translate}}"
+    >
+      <ng-template #template let-data>
+        <span (click)="delete(data.id)" *ngIf="groupCode !== 'ADMIN'" class="delete-grid">
+          <i class="fa fa-trash"></i>
+        </span>
+      </ng-template>
+    </e-column>
+
+    <e-column field="chemicalName" textAlign="Left" headerTextAlign="Center" headerText="{{ 'CHEMICAL_NAME' | translate }}" >
+      <ng-template #editTemplate let-data>
+        <ejs-dropdownlist 
+          #chemicalDropdownlist 
+          [dataSource]='dataInk' 
+          [fields]='ChemicalFields' [allowFiltering]='true'
+          [(ngModel)]="inkColor.chemicalGuid"
+          >
+        </ejs-dropdownlist>
+      </ng-template>
+    </e-column>
+
+    <e-column field="executeDate" textAlign="Left" headerTextAlign="Center" type='date' format='yyyy-MM-dd' headerText="{{ 'EXECUTE_DATE_LABEL' | translate }}" >
+      <ng-template #editTemplate let-data>
+
+      </ng-template>
+      
+    </e-column>
+
+    <e-column field="createDate" textAlign="Left" headerTextAlign="Center" type='date' format='yyyy-MM-dd' headerText="{{ 'CREATE_DATE_LABEL' | translate }}" >
+      <ng-template #editTemplate let-data>
+
+      </ng-template>
+      
+    </e-column>
+
+    <e-column field="realAmount" textAlign="Left" headerTextAlign="Center" headerText="{{ 'AMOUNT_LABEL' | translate }}" ></e-column>
+
+    <e-column field="approveStatus" textAlign="Left" headerTextAlign="Center"  headerText="approveStatus" >
+      <ng-template #headerTemplate let-data>
+        {{ 'APPROVE_STATUS_LABEL' | translate }}
+      </ng-template>
+      
+      <ng-template #template let-data>
+        <ng-container *ngIf="data.approveStatus; else elseTemplate">
+          <span>{{"APPROVE_DONE_LABEL" | translate}}</span>
+        </ng-container>
+        <ng-template #elseTemplate>
+          <span>
+            <i  class="fas fa-exclamation-circle" style="color: red; font-size: 20px;"></i>
+            {{"APPROVE_UNDONE_LABEL" | translate}}
+          </span>
+        </ng-template>
+      </ng-template>
+      <ng-template #editTemplate let-data>
+
+      </ng-template>
+      
+    </e-column>
+
+    <e-column field="" textAlign="Center" headerTextAlign="Center"  headerText="ApproveLabel" >
+      <ng-template #headerTemplate let-data>
+        {{ 'APPROVE_LABEL' | translate }}
+      </ng-template>
+      <ng-template #template let-data>
+        <ng-container *ngIf="data.executeDate !== null; else elseTemplate">
+          <ng-container *ngIf="data.approveStatus; else elseTemplate">
+            <button  type="button" (click)="unApproveSingle(data)" class="btn btn-danger">{{ 'UNAPPROVE_BUTTON_LABEL' | translate}}</button>
+          </ng-container>
+          <ng-template #elseTemplate>
+            <button  type="button" (click)="approveSingle(data)" class="btn btn-success">{{ 'APPROVE_BUTTON_LABEL' | translate}}</button>
+          </ng-template>
+          
+        </ng-container>
+        <ng-template #elseTemplate>
+          
+        </ng-template>
+        
+        
+        <!-- <button type="button"  class="btn bg-gradient-secondary btn-sm rounded-pill">
+          
+        </button> -->
+      </ng-template>
+      <ng-template #editTemplate let-data>
+
+      </ng-template>
+      
+    </e-column>
+    
+  </e-columns>
+</ejs-grid>

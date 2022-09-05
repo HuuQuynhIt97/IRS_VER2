@@ -11,13 +11,21 @@ using System.Linq;
 
 namespace IRS.Controllers
 {
-    public class ScheduleController : ApiControllerBase
+    public class WorkPlanController : ApiControllerBase
     {
-        private readonly IScheduleService _service;
+        private readonly IWorkPlanService _service;
 
-        public ScheduleController(IScheduleService service)
+        public WorkPlanController(IWorkPlanService service)
         {
             _service = service;
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllWorkPlan()
+        {
+            var workplans = await _service.GetAllWorkPlan();
+            return Ok(workplans);
         }
 
         [HttpPost]
@@ -78,13 +86,13 @@ namespace IRS.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddAsync([FromBody] ScheduleDto model)
+        public async Task<ActionResult> AddAsync([FromBody] WorkPlanDto model)
         {
             return StatusCodeResult(await _service.AddAsync(model));
         }
 
         [HttpPost]
-        public async Task<ActionResult> UpdateAsync([FromBody] ScheduleDto model)
+        public async Task<ActionResult> UpdateAsync([FromBody] WorkPlanDto model)
         {
             return StatusCodeResult(await _service.UpdateAsync(model));
         }
