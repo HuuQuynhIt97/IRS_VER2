@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using OfficeOpenXml;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace IRS.Controllers
 {
@@ -26,6 +27,13 @@ namespace IRS.Controllers
         {
             var workplans = await _service.GetAllWorkPlan();
             return Ok(workplans);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllWorkPlanNew()
+        {
+            var workplanNew = await _service.GetAllWorkPlanNew();
+            return Ok(workplanNew);
         }
 
         [HttpPost]
@@ -64,6 +72,51 @@ namespace IRS.Controllers
                 }
                 
                 await _service.ImportExcel(datasList);
+                return Ok();
+            }
+            else
+            {
+                return StatusCode(500);
+            }
+
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> ImportWorkPlanNew([FromForm] IFormFile file2)
+        {
+            IFormFile file = Request.Form.Files["UploadedFile"];
+            var datasList = new List<WorkPlanNewDto>();
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            if ((file != null) && (file.Length > 0) && !string.IsNullOrEmpty(file.FileName))
+            {
+                using (var package = new ExcelPackage(file.OpenReadStream()))
+                {
+                    var currentSheet = package.Workbook.Worksheets;
+                    var workSheet = currentSheet.First();
+                    var noOfCol = workSheet.Dimension.End.Column;
+                    var noOfRow = workSheet.Dimension.End.Row;
+                    var currentTime = DateTime.Now;
+
+                    for (int rowIterator = 5; rowIterator <= noOfRow; rowIterator++)
+                    {
+                        datasList.Add(new WorkPlanNewDto()
+                        {   
+                            Line = workSheet.Cells["A" + rowIterator.ToString()].Value.ToSafetyString(),
+                            Line2 = workSheet.Cells["B" + rowIterator.ToString()].Value.ToSafetyString(),
+                            Pono = workSheet.Cells["I" + rowIterator.ToString()].Value.ToSafetyString(),
+                            ModelName = workSheet.Cells["K" + rowIterator.ToString()].Value.ToSafetyString(),
+                            ModelNo = workSheet.Cells["L" + rowIterator.ToString()].Value.ToSafetyString(),
+                            ArticleNo = workSheet.Cells["M" + rowIterator.ToString()].Value.ToSafetyString(),
+                            Qty = workSheet.Cells["N" + rowIterator.ToString()].Value.ToSafetyString(),
+                            Treatment = workSheet.Cells["S" + rowIterator.ToString()].Value.ToSafetyString(),
+                            ScheduleId = 0,
+                            Status = true,
+                            CreateDate = currentTime
+                        });
+                    }
+                }
+                await _service.ImportExcelWorkPlanNew(datasList);
                 return Ok();
             }
             else

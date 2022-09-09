@@ -23,7 +23,9 @@ namespace IRS.Services
         Task<object> GetAudit(object id);
         Task<object> LoadDataBySite(string siteID);
         Task<object> GetAllWorkPlan();
+        Task<object> GetAllWorkPlanNew();
         Task ImportExcel(List<ScheduleUploadDto> dto);
+        Task ImportExcelWorkPlanNew(List<WorkPlanNewDto> dto);
 
     }
     public class WorkPlanService : ServiceBase<WorkPlan, WorkPlanDto>, IWorkPlanService
@@ -37,6 +39,7 @@ namespace IRS.Services
         private readonly IRepositoryBase<Process2> _repoProcess;
         private readonly IRepositoryBase<Process> _repoTreatment;
         private readonly IRepositoryBase<XAccount> _repoXAccount;
+        private readonly IRepositoryBase<WorkPlanNew> _repoWorkPlanNew;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly MapperConfiguration _configMapper;
@@ -50,6 +53,7 @@ namespace IRS.Services
             IRepositoryBase<Part2> repoPart,
             IRepositoryBase<Color> repoColor,
             IRepositoryBase<XAccount> repoXAccount,
+            IRepositoryBase<WorkPlanNew> repoWorkPlanNew,
             IUnitOfWork unitOfWork,
             IMapper mapper,
             MapperConfiguration configMapper
@@ -65,6 +69,7 @@ namespace IRS.Services
             _repoPart = repoPart;
             _repoColor = repoColor;
             _repoXAccount = repoXAccount;
+            _repoWorkPlanNew = repoWorkPlanNew;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _configMapper = configMapper;
@@ -363,6 +368,36 @@ namespace IRS.Services
             }
         }
 
+        public async Task ImportExcelWorkPlanNew(List<WorkPlanNewDto> res)
+        {
+            try
+            {
+                foreach (var item in res)
+                {
+                    var checkDuplicate = _repoWorkPlanNew.FindAll().Where(x => x.Line == item.Line && x.Line2 == item.Line2 && x.Pono == item.Pono && x.ModelName == item.ModelName && x.ModelNo == item.ModelNo && x.ArticleNo == item.ArticleNo && x.Qty == item.Qty && x.Treatment == item.Treatment).FirstOrDefault();
+                    if (checkDuplicate == null)
+                    {
+                        var item_workPlanNew = _mapper.Map<WorkPlanNew>(item);
+                    
+                        var query = _repoShoe.FindAll().Where(x => x.ModelName == item.ModelName && x.ModelNo == item.ModelNo && x.Article1 == item.ArticleNo).FirstOrDefault();
+                        if (query != null)
+                        {
+                            item_workPlanNew.ShoeGuid = query.Guid;
+                            item_workPlanNew.Guid = Guid.NewGuid().ToString("N") + DateTime.Now.ToString("ssff").ToUpper();
+                            _repoWorkPlanNew.Add(item_workPlanNew);
+                            await _unitOfWork.SaveChangeAsync();
+                        }
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
         public async Task<object> GetAllWorkPlan()
         {
             var res = await _repo.FindAll().ToListAsync();
@@ -404,6 +439,14 @@ namespace IRS.Services
                 //    FinishedStatus = _repoWorkPlan.FindAll().Where(b => b.ScheduleID == x.ID).All(b => b.Status == true) ? true : false,
                 //    Color = _repoProcess.FindAll().Where(y => y.Name == x.Treatment).FirstOrDefault().Color
                 //}),
+                // Treatment = _repoShoe.FindAll().Where(a => a.ModelName == x.ModelName && a.ModelNo == x.ModelNo && a.Article1 == x.ArticleNo).Select(x => new TreatmentWorkPlanDto
+                // {
+                // //    ID = x.ID,
+                //    Treatment = _repoTreatment.FindAll().Where(b => b.Guid == x.TreatmentGuid).FirstOrDefault() != null ? _repoTreatment.FindAll().Where(b => b.Guid == x.TreatmentGuid).FirstOrDefault().Name : "",
+                // //    Status = _repoGlues.FindAll().Where(b => b.ScheduleID == x.ID).ToList().Count > 0 ? true : false,
+                // //    FinishedStatus = _repoWorkPlan.FindAll().Where(b => b.ScheduleID == x.ID).All(b => b.Status == true) ? true : false,
+                // //    Color = _repoProcess.FindAll().Where(y => y.Name == x.Treatment).FirstOrDefault().Color
+                // }),
                 Qty = x.Qty,
                 Stitching = x.Stitching,
                 Stockfitting = x.Stockfitting,
@@ -431,6 +474,19 @@ namespace IRS.Services
             return new
             {
                 result = result.ToList(),
+                time_upload = time_upload
+            };
+            //throw new NotImplementedException();
+        }
+
+        public async Task<object> GetAllWorkPlanNew()
+        {
+            var res = await _repoWorkPlanNew.FindAll().ToListAsync();
+            var time_upload = _repoWorkPlanNew.FindAll().ToList().Count > 0 ? _repoWorkPlanNew.FindAll().ToList().LastOrDefault().CreateDate.Value.ToString("yyyy-MM-dd") : "";
+            
+            return new
+            {
+                result = res.ToList(),
                 time_upload = time_upload
             };
             //throw new NotImplementedException();

@@ -18,9 +18,13 @@ export class WorkPlanService extends CURDService<WorkPlan> {
   changeHall(workPlan: WorkPlan) {
     this.bomSource.next(workPlan)
   }
-  
+
   getAllWorkPlan() {
     return this.http.get(this.base + 'workplan/GetAllWorkPlan', {});
+  }
+
+  getAllWorkPlanNew() {
+    return this.http.get(this.base + 'workplan/GetAllWorkPlanNew', {});
   }
 
   getAllWorkPlanWithDate(time) {
@@ -35,6 +39,13 @@ export class WorkPlanService extends CURDService<WorkPlan> {
     formData.append('UploadedFile', file);
     formData.append('Time', time);
     return this.http.post(this.base + 'WorkPlan/Import', formData);
+  }
+
+  importWorkPlanNew(file ,time) {
+    const formData = new FormData();
+    formData.append('UploadedFile', file);
+    formData.append('Time', time);
+    return this.http.post(this.base + 'WorkPlan/ImportWorkPlanNew', formData);
   }
 
   updatePoGlue(workPlanID) {

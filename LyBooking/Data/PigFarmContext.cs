@@ -45,6 +45,7 @@ namespace IRS.Data
         public virtual DbSet<ToDoList> ToDoLists { get; set; }
         public virtual DbSet<TreatmentWay> TreatmentWays { get; set; }
         public virtual DbSet<WorkPlan> WorkPlans { get; set; }
+        public virtual DbSet<WorkPlanNew> WorkPlanNews { get; set; }
 
         public virtual DbSet<Chemical> Chemicals { get; set; }
         public virtual DbSet<Glue> Glues { get; set; }
@@ -992,6 +993,90 @@ namespace IRS.Data
                 entity.Property(e => e.ScheduleId).HasColumnName("ScheduleID");
             });
 
+            modelBuilder.Entity<WorkPlanNew>(entity =>
+            {
+                entity.ToTable("WorkPlanNew");
+                
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Guid)
+                    .HasMaxLength(50)
+                    .HasColumnName("GUID");
+
+                entity.Property(e => e.Line)
+                    .HasColumnType("nvarchar(max)")
+                    .HasColumnName("Line");
+
+                entity.Property(e => e.Line2)
+                    .HasColumnType("nvarchar(max)")
+                    .HasColumnName("Line2");
+
+                entity.Property(e => e.Pono)
+                    .HasColumnType("nvarchar(max)")
+                    .HasColumnName("PONo");
+
+                entity.Property(e => e.ModelName)
+                    .HasColumnType("nvarchar(max)")
+                    .HasColumnName("ModelName");
+
+                entity.Property(e => e.ModelNo)
+                    .HasColumnType("nvarchar(max)")
+                    .HasColumnName("ModelNo");
+
+                entity.Property(e => e.ArticleNo)
+                    .HasColumnType("nvarchar(max)")
+                    .HasColumnName("ArticleNo");
+
+                entity.Property(e => e.Qty)
+                    .HasColumnType("nvarchar(max)")
+                    .HasColumnName("Qty");
+
+                entity.Property(e => e.Treatment)
+                    .HasColumnType("nvarchar(max)")
+                    .HasColumnName("Treatment");
+
+                entity.Property(e => e.Stitching)
+                    .HasColumnType("nvarchar(max)")
+                    .HasColumnName("Stitching");
+
+                entity.Property(e => e.Stockfitting)
+                    .HasColumnType("nvarchar(max)")
+                    .HasColumnName("Stockfitting");
+
+                entity.Property(e => e.ScheduleId).HasColumnName("ScheduleID");
+
+                entity.Property(e => e.Status)
+                    .IsRequired()
+                    .HasDefaultValueSql("(CONVERT([bit],(0)))");
+
+                entity.Property(e => e.ShoeGuid)
+                    .HasColumnType("nvarchar(max)")
+                    .HasColumnName("SHOE_GUID");
+
+                entity.Property(e => e.CreateDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("CREATE_DATE");
+                
+                entity.Property(e => e.CreateBy)
+                    .HasColumnType("numeric(18, 0)")
+                    .HasColumnName("CREATE_BY");
+
+                entity.Property(e => e.UpdateDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("UPDATE_DATE");
+                
+                entity.Property(e => e.UpdateBy)
+                    .HasColumnType("numeric(18, 0)")
+                    .HasColumnName("UPDATE_BY");
+
+                entity.Property(e => e.DeleteDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("DELETE_DATE");
+                    
+                entity.Property(e => e.DeleteBy)
+                    .HasColumnType("numeric(18, 0)")
+                    .HasColumnName("DELETE_BY");
+            });
 
             modelBuilder.Entity<Chemical>(entity =>
             {

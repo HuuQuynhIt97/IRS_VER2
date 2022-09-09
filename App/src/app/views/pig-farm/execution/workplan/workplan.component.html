@@ -10,14 +10,14 @@
           <e-items>
             <e-item id='Import Excel' prefixIcon="fa fa-file-excel-o" text=" {{ 'Import Excel' | translate }}"> </e-item>
 
-            <e-item style="color: transparent;" prefixIcon="fa fa-plus" text=" {{ 'Add' | translate }}"> 
+            <e-item style="color: transparent;" prefixIcon="fa fa-plus" text=" {{ 'Add' | translate }}">
               <ng-template #template>
 
               </ng-template>
-              
+
             </e-item>
-            
-            <e-item > 
+
+            <e-item >
               <ng-template #template>
                 <ejs-datepicker [start]='start' (change)='onChangeSystemDate($event)' [values]="workPlanDate" [depth]='depth' [format]='format'></ejs-datepicker>
                 <div style="color: transparent;" class="font-weight-bold pr-3"></div>
@@ -25,14 +25,14 @@
                   <i class="fa fa-times"></i>
                 </button>
               </ng-template>
-              
+
             </e-item>
 
-            <e-item > 
+            <e-item >
               <ng-template #template>
                 <span style="font-size: 20px; color: red;">Upload Date:  {{time_upload}}</span>
               </ng-template>
-              
+
             </e-item>
 
             <e-item align='right'>
@@ -47,7 +47,7 @@
                 </div>
               </ng-template>
             </e-item>
-  
+
           </e-items>
         </ejs-toolbar>
 
@@ -85,7 +85,7 @@
                 </ng-container>
                 <ng-template #elseTemplate>
                   <i style="color: red; font-size: 20px;" class="fas fa-exclamation-circle"></i> {{data.modelName}}
-                  
+
                 </ng-template>
               </ng-template>
 
@@ -107,9 +107,9 @@
               <ng-template let-data #editTemplate>{{data.qty}}</ng-template>
             </e-column>
 
-           
 
-            <e-column field='treatment' isPrimaryKey='true' textAlign='Center'  headerText='Treatment'>
+
+            <!-- <e-column field='treatment' isPrimaryKey='true' textAlign='Center'  headerText='Treatment'>
               <ng-template #template let-data>
                 <ng-container>
                   <button  type="button" *ngFor="let item of data.treatment" [style.background]="item.color" style="margin: 3px;color: white;"
@@ -117,17 +117,22 @@
                     <ng-container *ngIf="item.finishedStatus; else elseTemplate">
                      <span (click)="recordDoubleClick(item)">
                       {{item.treatment}}
-                     </span> 
+                     </span>
                     </ng-container>
                     <ng-template #elseTemplate>
                      <span (click)="recordDoubleClick(item)">
                         <i style="color: gold; font-size: 20px;" class="fas fa-exclamation-circle"></i> {{item.treatment}}
-                     </span> 
+                     </span>
                     </ng-template>
                   </button>
                 </ng-container>
-                
+
               </ng-template>
+            </e-column> -->
+
+            <e-column field='treatment'  textAlign='Center'  headerText='Treatment'>
+              <ng-template let-data #template>{{data.treatment}}</ng-template>
+              <ng-template let-data #editTemplate>{{data.treatment}}</ng-template>
             </e-column>
 
             <e-column field='stitching' isPrimaryKey='true' textAlign='Center' headerText='Stitching'>
@@ -172,12 +177,12 @@
             template, please <a [href]="excelDownloadUrl">click here</a> to download. Thank you!)</label>
             <div class="input-group mb-3">
               <input (change)="fileProgress($event)" name="file" type="file" class="form-control" />
-  
+
               <div class="input-group-append">
                 <button type="button" class="btn btn-primary" (click)="uploadFile()">Upload File</button>
               </div>
             </div>
-          
+
         </div>
       </div>
 
@@ -185,10 +190,10 @@
         <div class="form-group">
           <label for="Name" style="color: transparent;">Choose date (*Notice: Excel file must be followed a system template. If you do not have a
             template, please </label>
-          <ejs-datepicker 
-            (change)='onChangeDate($event)' 
-            format='yyyy-MM-dd' 
-            placeholder='Enter date' 
+          <ejs-datepicker
+            (change)='onChangeDate($event)'
+            format='yyyy-MM-dd'
+            placeholder='Enter date'
             [value]="workPlanDate">
 
           </ejs-datepicker>
@@ -226,5 +231,5 @@
       <span style="color: transparent;">|</span><button class="btn btn-info" (click)="export()">Click here</button>
     </p>
   </div>
- 
+
 </ng-template>

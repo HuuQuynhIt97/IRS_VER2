@@ -8,6 +8,7 @@ import { Column, GridComponent } from '@syncfusion/ej2-angular-grids';
 import { Tooltip } from '@syncfusion/ej2-angular-popups';
 import { AlertifyService } from 'src/app/_core/_service/alertify.service';
 import { environment } from 'src/environments/environment';
+import { MessageConstants } from 'src/app/_core/_constants';
 
 @Component({
   selector: 'app-workplan',
@@ -15,7 +16,7 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./workplan.component.scss']
 })
 export class WorkplanComponent implements OnInit {
-  
+
   @ViewChild('grid')
   public gridObj: GridComponent;
   modalReference: NgbModalRef;
@@ -37,7 +38,7 @@ export class WorkplanComponent implements OnInit {
   time_upload: any;
   locale: string = localStorage.getItem('lang')
   public dateValue: any = new Date();
-  workPlanDate: any = new Date(); 
+  workPlanDate: any = new Date();
   systemDate: Date;
   file: any;
   name: string;
@@ -74,11 +75,11 @@ export class WorkplanComponent implements OnInit {
       link.download = `WorkPlan.xlsx`;
       link.click();
     });
-    
+
   }
   onChangeDate(args) {
     this.workPlanDate = this.datePipe.transform(args.value,'yyyy-MM-dd')
-    
+
   }
   openVerticallyCentered(content) {
     this.modalService.open(content, { centered: true });
@@ -88,22 +89,25 @@ export class WorkplanComponent implements OnInit {
       this.alertify.error('No data upload')
       return;
     }
-    this.service.importWorkPlan(this.file, this.datePipe.transform(this.workPlanDate, 'yyyy-MM-dd'))
+    this.service.importWorkPlanNew(this.file, this.datePipe.transform(this.workPlanDate, 'yyyy-MM-dd'))
     .subscribe((res: any) => {
-      if(res.status) {
-        this.modalReference.close();
-        this.getAll();
-        this.total = res.total
-        this.added = res.added
-        this.dataExist = res.dataExist
-        this.noAdd = res.noAdd
-        this.failedAdd = res.failedAdd
-        this.openVerticallyCentered(this.content) ;
-      } else {
-        this.alertify.error('The uploaded file has a date format error, please check the format and re-upload')
-      }
+      // if(res.status) {
+      //   this.modalReference.close();
+      //   this.getAll();
+      //   this.total = res.total
+      //   this.added = res.added
+      //   this.dataExist = res.dataExist
+      //   this.noAdd = res.noAdd
+      //   this.failedAdd = res.failedAdd
+      //   this.openVerticallyCentered(this.content) ;
+      // } else {
+      //   this.alertify.error('The uploaded file has a date format error, please check the format and re-upload')
+      // }
+      this.getAll();
+      this.modalReference.close();
+      this.alertify.success(MessageConstants.CREATED_OK_MSG);
     });
- 
+
   }
   fileProgress(event) {
     this.file = event.target.files[0];
@@ -111,7 +115,7 @@ export class WorkplanComponent implements OnInit {
   recordDoubleClick(args) {
     // const url = this.router.serializeUrl(this.router.createUrlTree([`ink/establish/schedule/detail-workplan/${args.id}/${args.treatment}`]))
     // window.open(url,'_blank')
-  
+
     // this.GetDetailSchedule(args.rowData.id);
     // this.modalReference = this.modalService.open(editModal, { size: 'xxl' });
   }
@@ -133,7 +137,7 @@ export class WorkplanComponent implements OnInit {
   search(args) {
     this.gridObj.search(this.name)
   }
-  
+
   showModal(importModal) {
     this.modalReference = this.modalService.open(importModal, { size: 'xl' });
     this.modalReference.result.then((result) => {
@@ -215,28 +219,33 @@ export class WorkplanComponent implements OnInit {
   }
 
   getAll() {
-    this.service.getAllWorkPlan().subscribe( (res: any) => {
-      this.data = res.result ;
-      this.time_upload = res.time_upload ;
-      // this.data = res.map(item => {
-      //   return {
-      //     id: item.id,
-      //     approvalStatus: item.approvalStatus === true ? 'Yes' : 'No',
-      //     articleNo: item.articleNo,
-      //     establishDate: this.datePipe.transform(item.establishDate, 'yyyy-MM-dd'),
-      //     productionDate: this.datePipe.transform(item.productionDate, 'yyyy-MM-dd'),
-      //     artProcess: item.artProcess,
-      //     finishedStatus: item.finishedStatus === true ? 'Yes' : 'No',
-      //     modelNo: item.modelNo,
-      //     modelName: item.modelName,
-      //     treatment: item.treatment,
-      //     process: item.process,
-      //     parts: item.parts,
-      //     approvalBy: item.approvalBy,
-      //     createdBy: item.createdBy,
-      //     processID: item.processID,
-      //   };
-      // });
+    // this.service.getAllWorkPlan().subscribe( (res: any) => {
+    //   this.data = res.result ;
+    //   this.time_upload = res.time_upload ;
+    //   // this.data = res.map(item => {
+    //   //   return {
+    //   //     id: item.id,
+    //   //     approvalStatus: item.approvalStatus === true ? 'Yes' : 'No',
+    //   //     articleNo: item.articleNo,
+    //   //     establishDate: this.datePipe.transform(item.establishDate, 'yyyy-MM-dd'),
+    //   //     productionDate: this.datePipe.transform(item.productionDate, 'yyyy-MM-dd'),
+    //   //     artProcess: item.artProcess,
+    //   //     finishedStatus: item.finishedStatus === true ? 'Yes' : 'No',
+    //   //     modelNo: item.modelNo,
+    //   //     modelName: item.modelName,
+    //   //     treatment: item.treatment,
+    //   //     process: item.process,
+    //   //     parts: item.parts,
+    //   //     approvalBy: item.approvalBy,
+    //   //     createdBy: item.createdBy,
+    //   //     processID: item.processID,
+    //   //   };
+    //   // });
+    // });
+
+    this.service.getAllWorkPlanNew().subscribe((res: any) => {
+      this.data = res.result;
+      this.time_upload = res.time_upload;
     });
   }
 
