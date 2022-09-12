@@ -41,7 +41,7 @@
       </ng-template>
     </e-column>
 
-    
+
     <e-column
       field="modelName"
       textAlign="Left"
@@ -67,7 +67,7 @@
       textAlign="Left"
       headerText="{{ 'VERSION_LABEL' | translate }}"
     >
-    </e-column> 
+    </e-column>
 
     <e-column
       field="article2"
@@ -150,7 +150,7 @@
           </div>
 
           <div class="col-md">
-            <label>{{ "SHOE_ARTICEL1" | translate }} </label>
+            <label>{{ "SHOE_MODEL_ARTICEL1" | translate }} </label>
             <span *ngIf="!(model.id > 0)" style="color: red">(*)</span>
             <span *ngIf="!(model.guid !== (null || ''))" style="color: red">(*)</span>
             <div class="form-group">
@@ -161,7 +161,7 @@
                   [(ngModel)]="model.article1"
                   class="form-control"
                 />
-       
+
             </div>
           </div>
 
@@ -169,7 +169,7 @@
             <label>{{ "SHOE_TREATMENT_LABEL" | translate }} </label>
             <span class="max-length"> ( {{"Text length"| translate }} <= 20 )</span>
             <div class="form-group">
-              <ejs-dropdownlist #treatmentDropdownlist [dataSource]='dataTreatment' 
+              <ejs-dropdownlist #treatmentDropdownlist [dataSource]='dataTreatment'
                 [fields]='ChemicalFields' [allowFiltering]='true'
                 [(ngModel)]="model.treatmentGuid"
                 >
@@ -181,7 +181,7 @@
             <label>{{ "SHOE_PROCESS_LABEL" | translate }} </label>
             <span class="max-length"> ( {{"Text length"| translate }} <= 20 )</span>
             <div class="form-group">
-              <ejs-dropdownlist #processDropdownlist [dataSource]='dataProcess' 
+              <ejs-dropdownlist #processDropdownlist [dataSource]='dataProcess'
                 [fields]='ChemicalFields' [allowFiltering]='true'
                 [(ngModel)]="model.processGuid"
                 >
@@ -227,10 +227,10 @@
                   [value]='dateValue'
                   [(ngModel)]="dateValue"
               ></ejs-datepicker>
-              
+
             </div>
           </div> -->
-  
+
         </div>
 
       </div>
@@ -259,10 +259,10 @@
       {{ "CLOSE" | translate }}
     </button>
     <button
-      
+
 
       [disabled]="
-      !model.modelNo 
+      !model.modelNo
       "
       (click)="save()"
       class="btn btn-primary"
@@ -313,7 +313,7 @@
       {{ "CLOSE" | translate }}
     </button>
     <button
-      
+
       (click)="uploadFile()"
       class="btn btn-primary"
     >

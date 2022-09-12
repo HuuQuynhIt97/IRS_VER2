@@ -1,0 +1,250 @@
+<!-- <ngx-spinner bdColor ="rgba(174,171,171,0.8)" size = "medium" color = "#166cc1" type = "ball-climbing-dot" [fullScreen] = "true"><p style="color: white" > Loading... </p>
+</ngx-spinner> -->
+<div class="card">
+
+  <div class="card-body p-0">
+    <div class="row">
+      <div class="col-md-12">
+
+        <ejs-toolbar #toolbarTodo (click)='toolbarClick($event)'>
+          <e-items>
+            <e-item id='Import Excel' prefixIcon="fa fa-file-excel-o" text=" {{ 'Import Excel' | translate }}"> </e-item>
+
+            <e-item style="color: transparent;" prefixIcon="fa fa-plus" text=" {{ 'Add' | translate }}">
+              <ng-template #template>
+
+              </ng-template>
+
+            </e-item>
+
+            <e-item >
+              <ng-template #template>
+                <ejs-datepicker [start]='start' (change)='onChangeSystemDate($event)' [values]="workPlanDate" [depth]='depth' [format]='format'></ejs-datepicker>
+                <div style="color: transparent;" class="font-weight-bold pr-3"></div>
+                <button class="btn btn-sm btn-secondary" (click)='onClickDefault()'>
+                  <i class="fa fa-times"></i>
+                </button>
+              </ng-template>
+
+            </e-item>
+
+            <e-item >
+              <ng-template #template>
+                <span style="font-size: 20px; color: red;">Upload Date:  {{time_upload}}</span>
+              </ng-template>
+
+            </e-item>
+
+            <e-item align='right'>
+              <ng-template #template>
+                <div class="e-toolbar-item e-search-wrapper e-toolbar-right" aria-disabled="false" title="Search">
+                  <div class="e-input-group e-search" role="search"> <input id="toolbar_searchbar" style="width:178px" autocomplete="off"
+                      [(ngModel)]="name" (change)='search($event)'  class="e-input"
+                      placeholder="{{ 'Search' | translate }}">
+                    <span id="toolbar_searchbutton" class="e-input-group-icon fa fa-search e-icons" tabindex="-1"
+                      title="Search" aria-label="search"></span>
+                  </div>
+                </div>
+              </ng-template>
+            </e-item>
+
+          </e-items>
+        </ejs-toolbar>
+
+        <ejs-grid #grid
+          [dataSource]='data' allowSorting='true' allowResizing='true' allowPaging="true"
+          [pageSettings]='pageSettings' allowFiltering='true' [filterSettings]='filterSettings'
+          [editSettings]='editSettings'  [allowExcelExport]='true' allowResizing='true'
+          gridLines='Both' showColumnMenu='true'
+          (toolbarClick)='toolbarClick($event)'
+          autoFit='true'
+          (queryCellInfo)='tooltip($event)'
+          (excelExportComplete)='excelExportComplete()'
+          >
+          <e-columns>
+
+            <e-column field='#' [visible]='true' isPrimaryKey='true' textAlign='Center' headerText='#' width=40>
+              <ng-template let-data #template>{{NO(data.index)}}</ng-template>
+            </e-column>
+
+            <e-column field='sT_Team' textAlign='Center' headerText='ST_Team' width=150>
+              <ng-template let-data #template>{{data.sT_Team}}</ng-template>
+              <ng-template let-data #editTemplate>{{data.sT_Team}}</ng-template>
+            </e-column>
+
+            <e-column field='sF_Team' textAlign='Center' headerText='SF_Team' width=150>
+              <ng-template let-data #template>{{data.sF_Team}}</ng-template>
+              <ng-template let-data #editTemplate>{{data.sF_Team}}</ng-template>
+            </e-column>
+
+            <e-column field='pono' textAlign='Center' headerText='P.O.'>
+              <ng-template let-data #template>{{data.pono}}</ng-template>
+              <ng-template let-data #editTemplate>{{data.pono}}</ng-template>
+            </e-column>
+
+            <e-column field='batch' textAlign='Center' headerText='Batch' width=150>
+              <ng-template let-data #template>{{data.batch}}</ng-template>
+              <ng-template let-data #editTemplate>{{data.batch}}</ng-template>
+            </e-column>
+
+            <e-column field='modelName' textAlign='Center'  headerText='Model Name'>
+
+              <ng-template let-data #template>
+                <ng-container *ngIf="data.status; else elseTemplate">
+                  {{data.modelName}}
+                </ng-container>
+                <ng-template #elseTemplate>
+                  <i style="color: red; font-size: 20px;" class="fas fa-exclamation-circle"></i> {{data.modelName}}
+
+                </ng-template>
+              </ng-template>
+
+              <ng-template let-data #editTemplate>{{data.modelName}}</ng-template>
+            </e-column>
+
+            <e-column field='modelNo'  textAlign='Center' headerText='Model No.'>
+              <ng-template let-data #template>{{data.modelNo}}</ng-template>
+              <ng-template let-data #editTemplate>{{data.modelNo}}</ng-template>
+            </e-column>
+
+            <e-column field='articleNo'  textAlign='Center' headerText='Art#'>
+              <ng-template let-data #template>{{data.articleNo}}</ng-template>
+              <ng-template let-data #editTemplate>{{data.articleNo}}</ng-template>
+            </e-column>
+
+            <e-column field='qty'  textAlign='Center'  headerText='Plan Qty'>
+              <ng-template let-data #template>{{data.qty}}</ng-template>
+              <ng-template let-data #editTemplate>{{data.qty}}</ng-template>
+            </e-column>
+
+
+
+            <!-- <e-column field='treatment' isPrimaryKey='true' textAlign='Center'  headerText='Treatment'>
+              <ng-template #template let-data>
+                <ng-container>
+                  <button  type="button" *ngFor="let item of data.treatment" [style.background]="item.color" style="margin: 3px;color: white;"
+                    class="btn btn-sm rounded-pill">
+                    <ng-container *ngIf="item.finishedStatus; else elseTemplate">
+                     <span (click)="recordDoubleClick(item)">
+                      {{item.treatment}}
+                     </span>
+                    </ng-container>
+                    <ng-template #elseTemplate>
+                     <span (click)="recordDoubleClick(item)">
+                        <i style="color: gold; font-size: 20px;" class="fas fa-exclamation-circle"></i> {{item.treatment}}
+                     </span>
+                    </ng-template>
+                  </button>
+                </ng-container>
+
+              </ng-template>
+            </e-column> -->
+
+            <e-column field='cutStartDate' textAlign='Center'  headerText='Cut start date'>
+              <ng-template let-data #template>{{data.cutStartDate}}</ng-template>
+              <ng-template let-data #editTemplate>{{data.cutStartDate}}</ng-template>
+            </e-column>
+
+            <e-column field='sfStartDate' textAlign='Center'  headerText='Cut start date'>
+              <ng-template let-data #template>{{data.sfStartDate}}</ng-template>
+              <ng-template let-data #editTemplate>{{data.sfStartDate}}</ng-template>
+            </e-column>
+
+            <!-- <e-column field='stitching' isPrimaryKey='true' textAlign='Center' headerText='Stitching'>
+
+            </e-column> -->
+
+            <!-- <e-column field='stockfitting' isPrimaryKey='true' textAlign='Center'  headerText='StockFitting'>
+              <ng-template #template let-data>
+                <ng-container *ngIf="data.stockfitting; else elseTemplate">
+                  {{data.stockfitting}}
+                </ng-container>
+                <ng-template #elseTemplate>
+                  #N/A
+                </ng-template>
+
+              </ng-template>
+            </e-column> -->
+
+          </e-columns>
+        </ejs-grid>
+
+      </div>
+    </div>
+  </div>
+  <div class="card-footer"></div>
+</div>
+
+<ng-template #importModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">
+      <i class="fas fa-plus"></i> Import Excel
+    </h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="Name">Select File (*Notice: Excel file must be followed a system template. If you do not have a
+            template, please <a [href]="excelDownloadUrl">click here</a> to download. Thank you!)</label>
+            <div class="input-group mb-3">
+              <input (change)="fileProgress($event)" name="file" type="file" class="form-control" />
+
+              <div class="input-group-append">
+                <button type="button" class="btn btn-primary" (click)="uploadFile()">Upload File</button>
+              </div>
+            </div>
+
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="Name" style="color: transparent;">Choose date (*Notice: Excel file must be followed a system template. If you do not have a
+            template, please </label>
+          <ejs-datepicker
+            (change)='onChangeDate($event)'
+            format='yyyy-MM-dd'
+            placeholder='Enter date'
+            [value]="workPlanDate">
+
+          </ejs-datepicker>
+        </div>
+      </div>
+
+      <div class="col-md-12">
+        <p class="text-danger font-2xl">
+          Format column "Stitching & Stock-fitting"
+         </p>
+        <img [src]="apiUrl" height="280px" class="img-fluid" alt="Responsive image">
+      </div>
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="modal.close('Close click')">Close</button>
+  </div>
+
+</ng-template>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Success</h4>
+    <!-- <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button> -->
+  </div>
+  <div class="modal-body">
+    <h3>The excel has been imported into system</h3>
+    <h4>Total rows in excel:  {{total}}</h4>
+    <h4>Successfully saved:  {{added}}</h4>
+    <h4>Duplicate: {{dataExist}}</h4>
+    <h4>Failure to add: {{noAdd}}</h4>
+    <p *ngIf="noAdd > 0" style="color: red;">
+      Do you want download the Failure data
+      <span style="color: transparent;">|</span><button class="btn btn-info" (click)="export()">Click here</button>
+    </p>
+  </div>
+
+</ng-template>
