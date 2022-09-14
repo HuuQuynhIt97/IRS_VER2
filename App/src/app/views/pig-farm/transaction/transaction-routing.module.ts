@@ -5,18 +5,18 @@ import { TransactionComponent } from './transaction.component';
 import { AuthGuard } from 'src/app/_core/_guards/auth.guard';
 
 const routes: Routes = [
-  { 
-    path: '', 
-    component: TransactionComponent 
+  {
+    path: '',
+    component: TransactionComponent
   },
   {
     path: 'Schedule',
     component: NameRecipeWorkerComponent,
     data: {
-      title: 'Schedule',
+      title: 'Receipt',
       module: 'transaction',
-      breadcrumb: 'Schedule',
-      functionCode: 'Schedule'
+      breadcrumb: 'Receipt',
+      functionCode: 'Receipt'
     },
     canActivate: [AuthGuard]
   },

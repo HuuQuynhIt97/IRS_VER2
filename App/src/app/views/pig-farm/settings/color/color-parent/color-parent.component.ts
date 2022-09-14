@@ -65,8 +65,8 @@ export class ColorParentComponent extends BaseComponent implements OnInit, OnDes
     private datePipe: DatePipe,
     private utilityService: UtilitiesService,
     public translate: TranslateService,
-  ) { 
-    super(translate);  
+  ) {
+    super(translate);
     this.getMenuPageSetting()
   }
 
@@ -80,7 +80,7 @@ export class ColorParentComponent extends BaseComponent implements OnInit, OnDes
     if (this.groupCode !== 'ADMIN') {
       this.toolbarOptions = ['Search'];
     }
-    
+
     let lang = localStorage.getItem('lang');
     let languages = JSON.parse(localStorage.getItem('languages'));
     setCulture(lang);
@@ -268,8 +268,8 @@ export class ColorParentComponent extends BaseComponent implements OnInit, OnDes
          this.alertify.error(this.alert.cancelMessage);
        }
      );
- 
- 
+
+
    }
   // end api
   NO(index) {

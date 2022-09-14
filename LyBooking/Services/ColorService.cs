@@ -33,6 +33,8 @@ namespace IRS.Services
         private readonly IRepositoryBase<Chemical2> _repoChemical;
         private readonly IRepositoryBase<InkColor> _repoInkColor;
         private readonly IRepositoryBase<ChemicalColor> _repoChemicalColor;
+        private readonly IRepositoryBase<Shoe> _repoShoe;
+        private readonly IRepositoryBase<Models.Schedule> _repoSchedule;
         private readonly IRepositoryBase<XAccount> _repoXAccount;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -44,6 +46,8 @@ namespace IRS.Services
             IRepositoryBase<Chemical2> repoChemical,
             IRepositoryBase<InkColor> repoInkColor,
             IRepositoryBase<ChemicalColor> repoChemicalColor,
+            IRepositoryBase<Shoe> repoShoe,
+            IRepositoryBase<Models.Schedule> repoSchedule,
             IRepositoryBase<XAccount> repoXAccount,
             IUnitOfWork unitOfWork,
             IMapper mapper,
@@ -57,6 +61,8 @@ namespace IRS.Services
             _repoChemical = repoChemical;
             _repoInkColor = repoInkColor;
             _repoChemicalColor = repoChemicalColor;
+            _repoShoe = repoShoe;
+            _repoSchedule = repoSchedule;
             _repoXAccount = repoXAccount;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -177,28 +183,106 @@ namespace IRS.Services
 
         public async Task<object> LoadData(DataManager data, string colorGuid)
         {
-            var datasource = _repo.FindAll(x => x.Status == 1)
+            var result = _repo.FindAll(x => x.Status == 1)
             .OrderByDescending(x=> x.Id)
+            .Select(x => new ColorShoeModelDto {
+                Id = x.Id,
+                Guid = x.Guid,
+                Name = x.Name,
+                ModelNo = ""
+            }).ToList();
+
+            // foreach (var item in datasource1)
+            // {
+            //     string ShoeModel = "";
+            //     var listShoeModel = new List<ShoeModelNoDto>();
+            //     var listSchedule = _repoSchedule.FindAll().Where(x => x.ColorGuid == item.Guid)
+            //                                     .Select(x => new {
+            //                                         x.ShoesGuid
+            //                                     }).DistinctBy(x => x.ShoesGuid);
+
+            //     foreach (var itemSchedule in listSchedule)
+            //     {
+            //         // var listShoe = _repoShoe.FindAll().Where(x => x.Guid == itemSchedule.ShoesGuid)
+            //         //                         .Select(x => new {
+            //         //                             x.ModelNo
+            //         //                         });
+
+            //         string shoeModelNo = _repoShoe.FindAll().Where(x => x.Guid == itemSchedule.ShoesGuid).FirstOrDefault().ModelNo;
+            //         string shoeArticle = _repoShoe.FindAll().Where(x => x.Guid == itemSchedule.ShoesGuid).FirstOrDefault().Article1;
+            //         var newShoeModel = new ShoeModelNoDto();
+            //         newShoeModel.ModelNo = shoeModelNo;
+            //         newShoeModel.ArticelNo = shoeArticle;
+            //         listShoeModel.Add(newShoeModel);
+            //     }
+            //     var newlist = listShoeModel.DistinctBy(x => new { x.ModelNo, x.ArticelNo});
+
+            //     foreach (var itemShoe in newlist)
+            //     {
+            //         ShoeModel = ShoeModel + ", " + itemShoe.ModelNo + " - " + itemShoe.ArticelNo;
+            //     }
+
+            //     item.ModelNo = "ShoeModel";
+            // }
+            result.ForEach(item =>
+            {
+                string ShoeModel = "";
+                var listShoeModel = new List<ShoeModelNoDto>();
+                var listSchedule = _repoSchedule.FindAll().Where(x => x.ColorGuid == item.Guid)
+                                                .Select(x => new
+                                                {
+                                                    x.ShoesGuid
+                                                }).DistinctBy(x => x.ShoesGuid);
+
+                foreach (var itemSchedule in listSchedule)
+                {
+                    string shoeModelNo = _repoShoe.FindAll().Where(x => x.Guid == itemSchedule.ShoesGuid).FirstOrDefault().ModelNo;
+                    string shoeArticle = _repoShoe.FindAll().Where(x => x.Guid == itemSchedule.ShoesGuid).FirstOrDefault().Article1;
+                    var newShoeModel = new ShoeModelNoDto();
+                    newShoeModel.ModelNo = shoeModelNo;
+                    newShoeModel.ArticelNo = shoeArticle;
+                    listShoeModel.Add(newShoeModel);
+                }
+                var newlist = listShoeModel.DistinctBy(x => new { x.ModelNo, x.ArticelNo });
+
+                foreach (var itemShoe in newlist)
+                {
+                    if (ShoeModel == string.Empty)
+                    {
+                        ShoeModel = ShoeModel + itemShoe.ModelNo + " - " + itemShoe.ArticelNo;
+                    }
+                    else
+                    {
+                        ShoeModel = ShoeModel + ", " + itemShoe.ModelNo + " - " + itemShoe.ArticelNo;
+                    }
+                }
+
+                item.ModelNo = ShoeModel;
+            });
+
+            var queryable = result.AsQueryable();
+            var datasource = queryable
             .Select(x => new {
                 x.Id,
                 x.Guid,
                 x.Name,
+                x.ModelNo
             });
-            var count = await datasource.CountAsync();
+            var count = datasource.Count();
             if (data.Where != null) // for filtering
                 datasource = QueryableDataOperations.PerformWhereFilter(datasource, data.Where, data.Where[0].Condition);
             if (data.Sorted != null)//for sorting
                 datasource = QueryableDataOperations.PerformSorting(datasource, data.Sorted);
             if (data.Search != null)
                 datasource = QueryableDataOperations.PerformSearching(datasource, data.Search);
-            count = await datasource.CountAsync();
+            count = datasource.Count();
             if (data.Skip >= 0)//for paging
                 datasource = QueryableDataOperations.PerformSkip(datasource, data.Skip);
             if (data.Take > 0)//for paging
                 datasource = QueryableDataOperations.PerformTake(datasource, data.Take);
             return new
             {
-                Result = await datasource.ToListAsync(),
+                Result = datasource,
                 Count = count
             };
         }

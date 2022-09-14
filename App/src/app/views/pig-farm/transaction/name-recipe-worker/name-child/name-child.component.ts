@@ -70,8 +70,8 @@ export class NameChildComponent extends BaseComponent implements OnInit, OnDestr
     private utilityService: UtilitiesService,
     private serviceProcess: Process2Service,
     public translate: TranslateService,
-  ) { 
-    super(translate);  
+  ) {
+    super(translate);
     this.getMenuPageSetting()
   }
   ngOnDestroy(): void {
@@ -295,10 +295,10 @@ export class NameChildComponent extends BaseComponent implements OnInit, OnDestr
          this.alertify.error(this.alert.cancelMessage);
        }
      );
- 
- 
+
+
   }
-  
+
   // end api
   NO(index) {
     return (this.grid.pageSettings.currentPage - 1) * this.grid.pageSettings.pageSize + Number(index) + 1;

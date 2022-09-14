@@ -46,8 +46,25 @@
       textAlign="Left"
       headerText="{{ 'COLOR_NAME' | translate }}"
     >
-  </e-column>
+    <ng-template let-data #template>
+      <!-- <ejs-tooltip #tooltip content="Let's go green to save the planet!!">
+        <span style="text-align: left; font-size: 14px;">
+          {{data.name}}
+        </span>
+      </ejs-tooltip> -->
 
+
+      <ejs-tooltip >
+        <span style="text-align: left; font-size: 14px;">
+          {{data.name}}
+        </span>
+        <ng-template #content >
+          {{data.modelNo}}
+        </ng-template>
+      </ejs-tooltip>
+    </ng-template>
+    <ng-template let-data #editTemplate>{{data.name}}</ng-template>
+  </e-column>
 
   </e-columns>
 </ejs-grid>
@@ -115,7 +132,7 @@
               />
             </div>
           </div>
-  
+
         </div> -->
 
       </div>
@@ -144,10 +161,10 @@
       {{ "CLOSE" | translate }}
     </button>
     <button
-      
+
 
       [disabled]="
-      !model.name 
+      !model.name
       "
       (click)="save()"
       class="btn btn-primary"
@@ -198,7 +215,7 @@
       {{ "CLOSE" | translate }}
     </button>
     <button
-      
+
       (click)="uploadFile()"
       class="btn btn-primary"
     >
