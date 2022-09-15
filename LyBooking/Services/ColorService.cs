@@ -192,38 +192,6 @@ namespace IRS.Services
                 ModelNo = ""
             }).ToList();
 
-            // foreach (var item in datasource1)
-            // {
-            //     string ShoeModel = "";
-            //     var listShoeModel = new List<ShoeModelNoDto>();
-            //     var listSchedule = _repoSchedule.FindAll().Where(x => x.ColorGuid == item.Guid)
-            //                                     .Select(x => new {
-            //                                         x.ShoesGuid
-            //                                     }).DistinctBy(x => x.ShoesGuid);
-
-            //     foreach (var itemSchedule in listSchedule)
-            //     {
-            //         // var listShoe = _repoShoe.FindAll().Where(x => x.Guid == itemSchedule.ShoesGuid)
-            //         //                         .Select(x => new {
-            //         //                             x.ModelNo
-            //         //                         });
-
-            //         string shoeModelNo = _repoShoe.FindAll().Where(x => x.Guid == itemSchedule.ShoesGuid).FirstOrDefault().ModelNo;
-            //         string shoeArticle = _repoShoe.FindAll().Where(x => x.Guid == itemSchedule.ShoesGuid).FirstOrDefault().Article1;
-            //         var newShoeModel = new ShoeModelNoDto();
-            //         newShoeModel.ModelNo = shoeModelNo;
-            //         newShoeModel.ArticelNo = shoeArticle;
-            //         listShoeModel.Add(newShoeModel);
-            //     }
-            //     var newlist = listShoeModel.DistinctBy(x => new { x.ModelNo, x.ArticelNo});
-
-            //     foreach (var itemShoe in newlist)
-            //     {
-            //         ShoeModel = ShoeModel + ", " + itemShoe.ModelNo + " - " + itemShoe.ArticelNo;
-            //     }
-
-            //     item.ModelNo = "ShoeModel";
-            // }
             result.ForEach(item =>
             {
                 string ShoeModel = "";

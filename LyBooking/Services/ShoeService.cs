@@ -179,6 +179,7 @@ namespace IRS.Services
                 x.Version,
                 x.Remark,
                 x.ProductionDate,
+                x.TreatmentGuid,
                 Treatment = _repoTreatment.FindAll().Where(o => o.Guid == x.TreatmentGuid).FirstOrDefault() != null
                 ? _repoTreatment.FindAll().Where(o => o.Guid == x.TreatmentGuid).FirstOrDefault().Name : null,
                 Process = _repoProcess.FindAll().Where(o => o.Guid == x.ProcessGuid).FirstOrDefault() != null

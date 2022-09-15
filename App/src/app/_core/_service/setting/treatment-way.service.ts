@@ -24,4 +24,8 @@ export class TreatmentWayService  extends CURDService<TreatmentWay> {
     this.bomSource.next(treatmentWay)
   }
 
+  getAllTreatmentWay(treatmentGuid) {
+    return this.http.get<any>(`${this.base}TreatmentWay/GetAllTreatmentWay/${treatmentGuid}`);
+  }
+
 }

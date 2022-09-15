@@ -22,6 +22,12 @@ namespace IRS.Controllers
             return Ok(await _service.GetAllAsync());
         }
 
+        [HttpGet("{treatmentGuid}")]
+        public async Task<ActionResult> GetAllTreatmentWay(string treatmentGuid)
+        {
+            return Ok(await _service.GetAllTreatmentWay(treatmentGuid));
+        }
+
         [HttpGet]
         public async Task<ActionResult> LoadDataBySite(string siteID)
         {

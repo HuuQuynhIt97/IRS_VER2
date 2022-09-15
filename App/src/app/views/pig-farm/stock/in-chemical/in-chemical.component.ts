@@ -139,7 +139,7 @@ export class InChemicalComponent extends BaseComponent implements OnInit, OnDest
         this.update(this.model);
       }
     }
-  
+
   }
 
   update(modelSup) {
@@ -155,7 +155,12 @@ export class InChemicalComponent extends BaseComponent implements OnInit, OnDest
               this.alertify.success(this.alert.updated_ok_msg);
               this.getInk();
             } else {
-              this.alertify.warning(this.alert.system_error_msg);
+              this.alertify.errorLimitStock(this.alert.yes_message, this.trans.instant('UPDATE_DELIVERY_FAILED'), this.trans.instant('ERROR_UPDATE_DELIVERY'),
+                () => {
+                  this.alertify.error(this.alert.cancelMessage);
+                  this.getInk();
+                }
+              )
             }
           },
           (error) => {
@@ -167,7 +172,7 @@ export class InChemicalComponent extends BaseComponent implements OnInit, OnDest
         this.getInk();
       }
     );
-  
+
   }
   onClickDefault() {
     this.startDate = new Date();
@@ -200,7 +205,7 @@ export class InChemicalComponent extends BaseComponent implements OnInit, OnDest
   onFilteringBuilding: EmitType<FilteringEventArgs> = (
     e: FilteringEventArgs
   ) => {
-    let query: Query = new Query(); 
+    let query: Query = new Query();
     // frame the query based on search string with filter type.
     query =
       e.text !== '' ? query.where('name', 'contains', e.text, true) : query;
@@ -251,13 +256,13 @@ export class InChemicalComponent extends BaseComponent implements OnInit, OnDest
 
   showPopupWindow(count, chemical) {
     this.alertify.$swal.fire({
-      html: `<div class='d-flex justify-content-center align-items-center' style='Width:100%; height: 400px;'>
-               <h1 style='font-size: 150px;' class='display-1 mb-3 align-self-center text-${this.toggleColor === true ? 'success' : 'danger'} font-weight-bold'> ${count} | ${chemical.name}</h1>
+      html: `<div class='d-flex justify-content-center align-items-center' style='Width:100%; height: 100px;'>
+               <h1 style='font-size: 50px;' class='display-1 mb-3 align-self-center text-${this.toggleColor === true ? 'success' : 'danger'} font-weight-bold'> ${count} | ${chemical.name}</h1>
              </div>`,
-      timer: 2000,
+      timer: 3000,
       showConfirmButton: false,
       timerProgressBar: true,
-      width: '90%',
+      width: '60%',
       icon: 'success'
     });
     this.toggleColor = !this.toggleColor;
@@ -303,7 +308,7 @@ export class InChemicalComponent extends BaseComponent implements OnInit, OnDest
     // if (this.buildingID === 0) {
     //   this.alertify.warning('Vui lòng chọn tòa nhà trước!', true);
     // } else {
-      
+
     // }
   }
 

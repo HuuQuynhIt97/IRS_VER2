@@ -111,16 +111,34 @@ namespace IRS.Services
         {
             try
             {
-                var item = _mapper.Map<InChemical>(model);
-                _repo.Update(item);
-                await _unitOfWork.SaveChangeAsync();
-                operationResult = new OperationResult
+                var unit = model.Unit.ToDouble();
+                var delivery = model.Deliver.ToDouble();
+
+                if (unit >= delivery)
                 {
-                    StatusCode = HttpStatusCode.OK,
-                    Message = MessageReponse.UpdateSuccess,
-                    Success = true,
-                    Data = model
-                };
+                    var item = _mapper.Map<InChemical>(model);
+                    _repo.Update(item);
+                    await _unitOfWork.SaveChangeAsync();
+                    operationResult = new OperationResult
+                    {
+                        StatusCode = HttpStatusCode.OK,
+                        Message = MessageReponse.UpdateSuccess,
+                        Success = true,
+                        Data = model
+                    };
+                }
+                else
+                {
+                    operationResult = new OperationResult
+                    {
+                        StatusCode = HttpStatusCode.OK,
+                        Message = MessageReponse.UpdateError,
+                        Success = false,
+                        Data = model
+                    };
+                }
+                
+                
             }
             catch (Exception ex)
             {

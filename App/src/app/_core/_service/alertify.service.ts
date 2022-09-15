@@ -161,6 +161,30 @@ export class AlertifyService {
       Swal.fire(this.trans.instant('SUCCESS_ALERT_MESSAGE'), message, 'success');
     }
   }
+
+  error(message: string, noToast?: boolean) {
+    if (!noToast) {
+      this.Toast.fire({
+        icon: 'error',
+        title: message
+      });
+    } else {
+      Swal.fire(this.trans.instant('ERROR_ALERT_MESSAGE'), message, 'error');
+    }
+  }
+
+  errorLimitStock(confirmButtonText: string, title: string, message: string, okCallback: () => void) {
+    Swal.fire({
+      title,
+      html: message,
+      icon: 'error',
+      showCancelButton: false,
+      confirmButtonText: confirmButtonText
+    }).then((result) => {
+        okCallback();
+    });
+  }
+
   errorBackToLogin(message: string, btnText: string, callBack: any, showCancelButton = false, errorCallBack = () => {}) {
     Swal.fire({
       text: message,
@@ -176,16 +200,6 @@ export class AlertifyService {
         errorCallBack()
       }
     });
-  }
-  error(message: string, noToast?: boolean) {
-    if (!noToast) {
-      this.Toast.fire({
-        icon: 'error',
-        title: message
-      });
-    } else {
-      Swal.fire(this.trans.instant('ERROR_ALERT_MESSAGE'), message, 'error');
-    }
   }
 
   warning(message: string, noToast?: boolean) {

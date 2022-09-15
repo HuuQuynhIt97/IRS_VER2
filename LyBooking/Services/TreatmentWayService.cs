@@ -22,6 +22,7 @@ namespace IRS.Services
         Task<object> LoadData(DataManager data, string farmGuid);
         Task<object> GetAudit(object id);
         Task<object> LoadDataBySite(string siteID);
+        Task<List<TreatmentWayDto>> GetAllTreatmentWay(string treatmentGuid);
 
     }
     public class TreatmentWayService : ServiceBase<TreatmentWay, TreatmentWayDto>, ITreatmentWayService
@@ -141,6 +142,24 @@ namespace IRS.Services
                 Guid = x.Guid,
                 process = _repoProcess.FindByID(x.ProcessId) != null ? _repoProcess.FindByID(x.ProcessId).Name : null
             }).Where(x => x.process != null).OrderByDescending(x => x.ID).ToList();
+            return data;
+
+        }
+
+        public async Task<List<TreatmentWayDto>> GetAllTreatmentWay(string treatmentGuid)
+        {
+            var treatmentID = _repoProcess.FindAll().Where(x => x.Guid == treatmentGuid).FirstOrDefault() != null ? _repoProcess.FindAll().Where(x => x.Guid == treatmentGuid).FirstOrDefault().ID : 0;
+            var data = new List<TreatmentWayDto>();
+            var model = await _repo.FindAll().ToListAsync();
+            data = model.Select(x => new TreatmentWayDto
+            {
+                ID = x.Id,
+                Name = x.Name,
+                NameEn = x.NameEn,
+                Guid = x.Guid,
+                processID = x.ProcessId,
+                process = _repoProcess.FindByID(x.ProcessId) != null ? _repoProcess.FindByID(x.ProcessId).Name : null
+            }).Where(x => x.process != null && x.processID == treatmentID).OrderByDescending(x => x.ID).ToList();
             return data;
 
         }

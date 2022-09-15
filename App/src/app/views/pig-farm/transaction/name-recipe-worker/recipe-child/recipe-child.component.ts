@@ -72,6 +72,7 @@ export class RecipeChildComponent extends BaseComponent implements OnInit, OnDes
   dataPart: any;
   dataTreatment: any;
   dataTreatmentWay: any;
+  dataTreatmentWay2: any;
   dataProcess: any;
   dataColor: any;
   pageSettingsRecipe: any
@@ -87,9 +88,9 @@ export class RecipeChildComponent extends BaseComponent implements OnInit, OnDes
     private alertify: AlertifyService,
     private datePipe: DatePipe,
     public translate: TranslateService,
-  ) { 
-    super(translate); 
-    // this.getRecipePageSetting() 
+  ) {
+    super(translate);
+    // this.getRecipePageSetting()
   }
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
@@ -116,6 +117,7 @@ export class RecipeChildComponent extends BaseComponent implements OnInit, OnDes
     L10n.load(load);
     this.subscription = this.serviceShoe.currentShoe.subscribe(shoe => {
       this.schedule.shoesGuid = shoe.guid
+      this.schedule.treatmentGuid = shoe.treatmentGuid
       this.glue = shoe
       if (this.glue?.guid) {
         this.rowIndex = undefined;
@@ -123,7 +125,8 @@ export class RecipeChildComponent extends BaseComponent implements OnInit, OnDes
         this.loadDataPart();
         this.loadDataColor();
         this.loadDataTreatment();
-        this.loadDataTreatmentWay();
+        // this.loadDataTreatmentWay();
+        this.getAllTreatmentWay();
         this.loadDataProcess();
       }
     });
@@ -144,7 +147,6 @@ export class RecipeChildComponent extends BaseComponent implements OnInit, OnDes
     this.service.loadData(this.schedule.shoesGuid,this.locale).subscribe((res: any) => {
       this.data = res
     })
-    
   }
   loadDataPart() {
     // this.dataPart = new DataManager({
@@ -152,7 +154,6 @@ export class RecipeChildComponent extends BaseComponent implements OnInit, OnDes
     //   adaptor: new UrlAdaptor,
     // }).dataSource;
     this.servicePart.loadDataByLang(this.locale).subscribe((res: any) => {
-      console.log(res);
       this.dataPart = res
     })
   }
@@ -166,6 +167,18 @@ export class RecipeChildComponent extends BaseComponent implements OnInit, OnDes
       })
     })
   }
+
+  getAllTreatmentWay() {
+    this.serviceTreatmentWay.getAllTreatmentWay(this.schedule.treatmentGuid).subscribe((res: any) => {
+      this.dataTreatmentWay = res.map(item => {
+        return {
+          name: item.name + '(' + item.process + ')',
+          guid: item.guid
+        }
+      })
+    })
+  }
+
   loadDataTreatment() {
     this.serviceTreatment.getAll().subscribe((res: any) => {
       this.dataTreatment = res
@@ -243,7 +256,7 @@ export class RecipeChildComponent extends BaseComponent implements OnInit, OnDes
       this.delete(args.data[0].id);
     }
   }
-  
+
   recordClick(args: any) {
     // this.service.changeHall(args.rowData);
     // this.serviceBarn.changeBarn({} as any);
@@ -286,7 +299,7 @@ export class RecipeChildComponent extends BaseComponent implements OnInit, OnDes
     });
 
   }
-  
+
   delete(id) {
     this.alertify.confirm4(
       this.alert.yes_message,
