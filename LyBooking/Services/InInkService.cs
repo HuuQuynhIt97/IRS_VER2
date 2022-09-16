@@ -112,6 +112,9 @@ namespace IRS.Services
         {
             try
             {
+                var unit = model.Unit.ToDouble();
+                var delivery = model.Deliver.ToDouble();
+                
                 //var checkKey = await _repo.FindAll(x => x.Id == model.ID).AsNoTracking().FirstOrDefaultAsync();
                 //if (checkKey != null )
                 //{
@@ -122,16 +125,32 @@ namespace IRS.Services
                 //    }
                     
                 //}
-                var item = _mapper.Map<InInk>(model);
-                _repo.Update(item);
-                await _unitOfWork.SaveChangeAsync();
-                operationResult = new OperationResult
+
+                if (unit >= delivery)
                 {
-                    StatusCode = HttpStatusCode.OK,
-                    Message = MessageReponse.UpdateSuccess,
-                    Success = true,
-                    Data = model
-                };
+                    var item = _mapper.Map<InInk>(model);
+                    _repo.Update(item);
+                    await _unitOfWork.SaveChangeAsync();
+                    operationResult = new OperationResult
+                    {
+                        StatusCode = HttpStatusCode.OK,
+                        Message = MessageReponse.UpdateSuccess,
+                        Success = true,
+                        Data = model
+                    };
+                }
+                else
+                {
+                    operationResult = new OperationResult
+                    {
+                        StatusCode = HttpStatusCode.OK,
+                        Message = MessageReponse.UpdateError,
+                        Success = false,
+                        Data = model
+                    };
+                }
+                
+                
             }
             catch (Exception ex)
             {
