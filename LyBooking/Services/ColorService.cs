@@ -234,7 +234,7 @@ namespace IRS.Services
                 x.Id,
                 x.Guid,
                 x.Name,
-                x.ModelNo
+                ModelNo = x.ModelNo != string.Empty ? x.ModelNo : "N/A"
             });
             var count = datasource.Count();
             if (data.Where != null) // for filtering
