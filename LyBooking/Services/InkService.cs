@@ -71,6 +71,7 @@ namespace IRS.Services
                 if (!check.Success) return check;
                 var item = _mapper.Map<Ink>(model);
                 item.Guid = Guid.NewGuid().ToString("N") + DateTime.Now.ToString("ssff").ToUpper();
+                item.IsShow = true;
                 _repo.Add(item);
                 await _unitOfWork.SaveChangeAsync();
                 operationResult = new OperationResult
@@ -150,6 +151,7 @@ namespace IRS.Services
         {
             var item = _repo.FindByID(id);
             //item.CancelFlag = "Y";
+            item.IsShow = false;
             _repo.Update(item);
             try
             {
