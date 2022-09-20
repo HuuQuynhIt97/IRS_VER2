@@ -17,6 +17,7 @@
   [selectionSettings]="selectionOptions"
   (toolbarClick)="toolbarClick($event)"
   (dataBound)='dataBound()'
+  (queryCellInfo)='tooltips($event)'
 >
   <e-columns>
     <e-column
@@ -47,21 +48,14 @@
       headerText="{{ 'COLOR_NAME' | translate }}"
     >
     <ng-template let-data #template>
-      <!-- <ejs-tooltip #tooltip content="Let's go green to save the planet!!">
-        <span style="text-align: left; font-size: 14px;">
-          {{data.name}}
-        </span>
+      <!-- <ejs-tooltip [content]="tooltips(data)">
+        {{data.name}}
       </ejs-tooltip> -->
-
-
-      <ejs-tooltip >
-        <span style="text-align: left; font-size: 14px;">
-          {{data.name}}
-        </span>
-        <ng-template #content >
-          {{data.modelNo}}
-        </ng-template>
-      </ejs-tooltip>
+      <!-- <ejs-tooltip id='tooltip' #tooltip class="fix-css" position='TopCenter'
+        (beforeRender)="onBeforeRender($event, data, data.index)" content="loading...">
+        {{data.name}}
+      </ejs-tooltip> -->
+      {{data.name}}
     </ng-template>
     <ng-template let-data #editTemplate>{{data.name}}</ng-template>
   </e-column>

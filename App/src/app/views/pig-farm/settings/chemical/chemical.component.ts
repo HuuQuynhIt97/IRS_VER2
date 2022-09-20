@@ -62,6 +62,7 @@ export class ChemicalComponent extends BaseComponent implements OnInit, OnDestro
     },
   ];
   public fieldsModify: object = { text: 'name', value: 'id' };
+  searchOptions: { fields: string[]; operator: string; key: string; ignoreCase: boolean; };
   constructor(
     private service: ChemicalService,
     private serviceHall: HallService,
@@ -81,6 +82,7 @@ export class ChemicalComponent extends BaseComponent implements OnInit, OnDestro
     this.pageSettings.currentPage=args.value;
   }
   ngOnInit() {
+    this.searchOptions = { fields: ['name','supplier','materialNO' ], operator: 'contains', key: '', ignoreCase: true };
     // this.Permission(this.route);
     let lang = localStorage.getItem('lang');
     let languages = JSON.parse(localStorage.getItem('languages'));
@@ -94,6 +96,23 @@ export class ChemicalComponent extends BaseComponent implements OnInit, OnDestro
     };
     L10n.load(load);
     this.loadData();
+  }
+  created(): void {
+    document.getElementById(this.grid.element.id + "_searchbar").addEventListener('keyup', () => {
+      this.grid.search((event.target as HTMLInputElement).value)
+    });
+
+    var gridElement = this.grid.element;
+    var span = document.createElement("span");
+    span.className = "e-clear-icon";
+    span.id = gridElement.id + "clear";
+    span.onclick = this.cancelBtnClick.bind(this);
+    gridElement.querySelector(".e-toolbar-item .e-input-group").appendChild(span);
+
+ }
+  public cancelBtnClick(args) {
+    this.grid.searchSettings.key = "";
+    (this.grid.element.querySelector(".e-input-group.e-search .e-input") as any).value = "";
   }
   onChangeModify(args) {
     this.model.modify = args.value;

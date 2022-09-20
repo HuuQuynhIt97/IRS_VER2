@@ -20,7 +20,9 @@ export class ColorService extends CURDService<Color> {
   changeColor(color: Color) {
     this.colorSource.next(color)
   }
-
+  getToolTip(tooltip) {
+    return this.http.post(`${this.base}Color/GetToolTip/`, tooltip);
+  }
   import(file) {
     const formData = new FormData();
     formData.append('UploadedFile', file);

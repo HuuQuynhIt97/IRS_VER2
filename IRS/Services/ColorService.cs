@@ -23,6 +23,7 @@ namespace IRS.Services
         Task<object> GetAudit(object id);
         Task<object> LoadDataBySite(string siteID);
         Task ImportExcel(List<ColorUploadDto> dto);
+        Task<object> GetToolTip(TooltipParams tooltip);
 
     }
     public class ColorService : ServiceBase<Color, ColorDto>, IColorService
@@ -183,76 +184,103 @@ namespace IRS.Services
 
         public async Task<object> LoadData(DataManager data, string colorGuid)
         {
-            var result = _repo.FindAll(x => x.Status == 1)
-            .OrderByDescending(x=> x.Id)
-            .Select(x => new ColorShoeModelDto {
-                Id = x.Id,
-                Guid = x.Guid,
-                Name = x.Name,
-                ModelNo = ""
-            }).ToList();
 
-            result.ForEach(item =>
-            {
-                string ShoeModel = "";
-                var listShoeModel = new List<ShoeModelNoDto>();
-                var listSchedule = _repoSchedule.FindAll().Where(x => x.ColorGuid == item.Guid)
-                                                .Select(x => new
-                                                {
-                                                    x.ShoesGuid
-                                                }).DistinctBy(x => x.ShoesGuid);
-
-                foreach (var itemSchedule in listSchedule)
-                {
-                    string shoeModelNo = _repoShoe.FindAll().Where(x => x.Guid == itemSchedule.ShoesGuid).FirstOrDefault().ModelNo;
-                    string shoeArticle = _repoShoe.FindAll().Where(x => x.Guid == itemSchedule.ShoesGuid).FirstOrDefault().Article1;
-                    var newShoeModel = new ShoeModelNoDto();
-                    newShoeModel.ModelNo = shoeModelNo;
-                    newShoeModel.ArticelNo = shoeArticle;
-                    listShoeModel.Add(newShoeModel);
-                }
-                var newlist = listShoeModel.DistinctBy(x => new { x.ModelNo, x.ArticelNo });
-
-                foreach (var itemShoe in newlist)
-                {
-                    if (ShoeModel == string.Empty)
-                    {
-                        ShoeModel = ShoeModel + itemShoe.ModelNo + " - " + itemShoe.ArticelNo;
-                    }
-                    else
-                    {
-                        ShoeModel = ShoeModel + ", " + itemShoe.ModelNo + " - " + itemShoe.ArticelNo;
-                    }
-                }
-
-                item.ModelNo = ShoeModel;
-            });
-
-            var queryable = result.AsQueryable();
-            var datasource = queryable
+            var datasource =  _repo.FindAll(x => x.Status == 1)
+            .OrderByDescending(x => x.Id)
             .Select(x => new {
                 x.Id,
                 x.Guid,
                 x.Name,
-                ModelNo = x.ModelNo != string.Empty ? x.ModelNo : "N/A"
             });
-            var count = datasource.Count();
+            var count = await datasource.CountAsync();
             if (data.Where != null) // for filtering
                 datasource = QueryableDataOperations.PerformWhereFilter(datasource, data.Where, data.Where[0].Condition);
             if (data.Sorted != null)//for sorting
                 datasource = QueryableDataOperations.PerformSorting(datasource, data.Sorted);
             if (data.Search != null)
                 datasource = QueryableDataOperations.PerformSearching(datasource, data.Search);
-            count = datasource.Count();
+            count = await datasource.CountAsync();
             if (data.Skip >= 0)//for paging
                 datasource = QueryableDataOperations.PerformSkip(datasource, data.Skip);
             if (data.Take > 0)//for paging
                 datasource = QueryableDataOperations.PerformTake(datasource, data.Take);
             return new
             {
-                Result = datasource,
+                Result = await datasource.ToListAsync(),
                 Count = count
             };
+
+
+            //var result = _repo.FindAll(x => x.Status == 1)
+            //.OrderByDescending(x=> x.Id)
+            //.Select(x => new ColorShoeModelDto {
+            //    Id = x.Id,
+            //    Guid = x.Guid,
+            //    Name = x.Name,
+            //    ModelNo = ""
+            //}).ToList();
+
+            //result.ForEach(item =>
+            //{
+            //    string ShoeModel = "";
+            //    var listShoeModel = new List<ShoeModelNoDto>();
+            //    var listSchedule = _repoSchedule.FindAll().Where(x => x.ColorGuid == item.Guid)
+            //                                    .Select(x => new
+            //                                    {
+            //                                        x.ShoesGuid
+            //                                    }).DistinctBy(x => x.ShoesGuid);
+
+            //    foreach (var itemSchedule in listSchedule)
+            //    {
+            //        string shoeModelNo = _repoShoe.FindAll().Where(x => x.Guid == itemSchedule.ShoesGuid).FirstOrDefault().ModelNo;
+            //        string shoeArticle = _repoShoe.FindAll().Where(x => x.Guid == itemSchedule.ShoesGuid).FirstOrDefault().Article1;
+            //        var newShoeModel = new ShoeModelNoDto();
+            //        newShoeModel.ModelNo = shoeModelNo;
+            //        newShoeModel.ArticelNo = shoeArticle;
+            //        listShoeModel.Add(newShoeModel);
+            //    }
+            //    var newlist = listShoeModel.DistinctBy(x => new { x.ModelNo, x.ArticelNo });
+
+            //    foreach (var itemShoe in newlist)
+            //    {
+            //        if (ShoeModel == string.Empty)
+            //        {
+            //            ShoeModel = ShoeModel + itemShoe.ModelNo + " - " + itemShoe.ArticelNo;
+            //        }
+            //        else
+            //        {
+            //            ShoeModel = ShoeModel + ", " + itemShoe.ModelNo + " - " + itemShoe.ArticelNo;
+            //        }
+            //    }
+
+            //    item.ModelNo = ShoeModel;
+            //});
+
+            //var queryable = result.AsQueryable();
+            //var datasource = queryable
+            //.Select(x => new {
+            //    x.Id,
+            //    x.Guid,
+            //    x.Name,
+            //    ModelNo = x.ModelNo != string.Empty ? x.ModelNo : "N/A"
+            //});
+            //var count = datasource.Count();
+            //if (data.Where != null) // for filtering
+            //    datasource = QueryableDataOperations.PerformWhereFilter(datasource, data.Where, data.Where[0].Condition);
+            //if (data.Sorted != null)//for sorting
+            //    datasource = QueryableDataOperations.PerformSorting(datasource, data.Sorted);
+            //if (data.Search != null)
+            //    datasource = QueryableDataOperations.PerformSearching(datasource, data.Search);
+            //count = datasource.Count();
+            //if (data.Skip >= 0)//for paging
+            //    datasource = QueryableDataOperations.PerformSkip(datasource, data.Skip);
+            //if (data.Take > 0)//for paging
+            //    datasource = QueryableDataOperations.PerformTake(datasource, data.Take);
+            //return new
+            //{
+            //    Result = datasource,
+            //    Count = count
+            //};
         }
         public async Task<object> GetAudit(object id)
         {
@@ -405,6 +433,26 @@ namespace IRS.Services
                 throw;
             }
             
+            //throw new NotImplementedException();
+        }
+
+        public async Task<object> GetToolTip(TooltipParams tooltip)
+        {
+            var results = new List<string>();
+            var schedule = await _repoSchedule.FindAll(x => x.ColorGuid == tooltip.Guid).ToListAsync();
+            var shoes = await _repoShoe.FindAll().ToListAsync();
+            var data = from x in shoes
+                       join y in schedule on x.Guid equals y.ShoesGuid
+                       select new
+                       {
+                           toolTip = x.ModelNo + " - " + x.Article1
+                       };
+
+            foreach (var item in data)
+            {
+                results.Add(item.toolTip);
+            }
+            return results.Distinct();
             //throw new NotImplementedException();
         }
     }

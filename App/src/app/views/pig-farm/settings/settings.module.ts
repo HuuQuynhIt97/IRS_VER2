@@ -29,8 +29,6 @@ import { ShoeChildComponent } from './shoe-glue/shoe-child/shoe-child.component'
 import { ShoeGlueChildComponent } from './shoe-glue/shoe-glue-child/shoe-glue-child.component';
 import { PrintQrcodeComponent } from './Ink/print-qrcode/print-qrcode.component';
 import { QRCodeGeneratorAllModule } from '@syncfusion/ej2-angular-barcode-generator';
-
-
 @NgModule({
   declarations: [
     SettingsComponent,

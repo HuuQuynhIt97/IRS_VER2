@@ -20,7 +20,12 @@ namespace IRS.Controllers
             _service = service;
         }
 
-
+        [HttpPost]
+        public async Task<IActionResult> GetToolTip([FromBody] TooltipParams tooltip)
+        {
+            var plans = await _service.GetToolTip(tooltip);
+            return Ok(plans);
+        }
         [HttpPost]
         public async Task<ActionResult> Import([FromForm] IFormFile file2)
         {

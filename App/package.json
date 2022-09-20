@@ -53,6 +53,7 @@
     "admin-lte": "^3.0.2",
     "alertifyjs": "^1.13.1",
     "angular-mentions": "^1.1.6",
+    "angular-simple-tooltip": "^2.0.0",
     "animate.css": "^4.1.1",
     "bootstrap-fileinput": "^5.2.6",
     "bootstrap4-toggle": "^3.6.1",

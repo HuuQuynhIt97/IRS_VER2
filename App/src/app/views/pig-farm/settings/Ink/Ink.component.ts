@@ -49,6 +49,7 @@ export class InkComponent extends BaseComponent implements OnInit, OnDestroy {
   public textProcess = 'Select Process';
   supplier: any [] = [];
   public fieldsGlue: object = { text: 'name', value: 'id' };
+  searchOptions: { fields: string[]; operator: string; key: string; ignoreCase: boolean; };
   constructor(
     private service: ChemicalService,
     private serviceHall: HallService,
@@ -69,6 +70,7 @@ export class InkComponent extends BaseComponent implements OnInit, OnDestroy {
   }
   ngOnInit() {
     // this.Permission(this.route);
+    this.searchOptions = { fields: ['name','supplier','materialNO' ], operator: 'contains', key: '', ignoreCase: true };
     let lang = localStorage.getItem('lang');
     let languages = JSON.parse(localStorage.getItem('languages'));
     this.siteId = localStorage.getItem('farmGuid') ;
@@ -83,6 +85,24 @@ export class InkComponent extends BaseComponent implements OnInit, OnDestroy {
     this.loadData();
   }
 
+ 
+  created(): void {
+    document.getElementById(this.grid.element.id + "_searchbar").addEventListener('keyup', () => {
+      this.grid.search((event.target as HTMLInputElement).value)
+    });
+
+    var gridElement = this.grid.element;
+    var span = document.createElement("span");
+    span.className = "e-clear-icon";
+    span.id = gridElement.id + "clear";
+    span.onclick = this.cancelBtnClick.bind(this);
+    gridElement.querySelector(".e-toolbar-item .e-input-group").appendChild(span);
+
+ }
+  public cancelBtnClick(args) {
+    this.grid.searchSettings.key = "";
+    (this.grid.element.querySelector(".e-input-group.e-search .e-input") as any).value = "";
+  }
   onChangeProcess(args) {
     this.getSupllier(args.value);
   }
@@ -197,7 +217,6 @@ export class InkComponent extends BaseComponent implements OnInit, OnDestroy {
   }
 
   create() {
-    
    this.alertify.confirm4(
       this.alert.yes_message,
       this.alert.no_message,

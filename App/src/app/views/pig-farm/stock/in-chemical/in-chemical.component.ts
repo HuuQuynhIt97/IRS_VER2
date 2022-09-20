@@ -134,6 +134,12 @@ export class InChemicalComponent extends BaseComponent implements OnInit, OnDest
     }
     if (args.requestType === "save" ) {
       if (args.action === "edit") {
+        if(args.data.deliver > this.model.unit)
+        {
+          this.alertify.error(this.trans.instant('OVER_QTY_MESSAGE'))
+          args.cancel = true ;
+          return;
+        }
         this.model.deliver = args.data.deliver || 0;
         // this.modelSup.ProcessID = args.data.processID;
         this.update(this.model);

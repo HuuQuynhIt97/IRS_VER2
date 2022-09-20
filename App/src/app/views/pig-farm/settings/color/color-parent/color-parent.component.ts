@@ -6,10 +6,10 @@ import { GlueService } from './../../../../../_core/_service/setting/glue.servic
 import { Glue } from './../../../../../_core/_model/setting/glue';
 import { DataManager, UrlAdaptor } from '@syncfusion/ej2-data';
 import { L10n,setCulture } from '@syncfusion/ej2-base';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, QueryList, TemplateRef, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { GridComponent } from '@syncfusion/ej2-angular-grids';
+import { GridComponent, QueryCellInfoEventArgs } from '@syncfusion/ej2-angular-grids';
 import { ImagePathConstants, MessageConstants } from 'src/app/_core/_constants';
 import { AlertifyService } from 'src/app/_core/_service/alertify.service';
 import { BaseComponent } from 'src/app/_core/_component/base.component';
@@ -22,6 +22,7 @@ import { UtilitiesService } from 'src/app/_core/_service/utilities.service';
 import { Site } from 'src/app/_core/_model/club-management/site';
 import { SiteService } from 'src/app/_core/_service/club-management/site.service';
 import { Color } from 'src/app/_core/_model/setting/color';
+import { Tooltip } from '@syncfusion/ej2-angular-popups';
 
 @Component({
   selector: 'app-color-parent',
@@ -56,6 +57,7 @@ export class ColorParentComponent extends BaseComponent implements OnInit, OnDes
   noImage = ImagePathConstants.NO_IMAGE;
   loading = 0;
   pageSettingsMenu: any
+  @ViewChildren('tooltip') tooltip: QueryList<any>;
   constructor(
     private service: ColorService,
     private serviceShoeGlue: ShoeGlueService,
@@ -94,7 +96,37 @@ export class ColorParentComponent extends BaseComponent implements OnInit, OnDes
     this.loadData();
     // this.service.changeGlue({} as Glue);
   }
-
+  tooltips(args){ 
+    const model = { guid : args.data.guid};
+    this.service.getToolTip(model).subscribe((res: any) => {
+      if(res.length > 0) {
+        let tooltip: Tooltip = new Tooltip({ 
+          content: res.join('<br>'),
+          position: 'TopLeft'
+         }, args.cell); 
+      }else {
+        let tooltip: Tooltip = new Tooltip({ 
+          content: 'N/A',
+          position: 'TopLeft'
+         }, args.cell); 
+      }
+      
+    });
+  //  let tooltip: Tooltip = new Tooltip({ 
+  //   content: args.data['name'].toString()
+  //  }, args.cell); 
+  } 
+  
+  onBeforeRender(args, data, i) {
+    const t = this.tooltip.filter((item, index) => index === +i)[0];
+    t.content = 'Loading...';
+    t.dataBind();
+    const model = { guid : data.guid};
+    this.service.getToolTip(model).subscribe((res: any) => {
+      t.content = res.join('<br>');
+      t.dataBind();
+    });
+  }
   getMenuPageSetting() {
     this.serviceShoeGlue.getMenuPageSetting().subscribe(res => {
       this.pageSettingsMenu = {
