@@ -8,6 +8,8 @@ import { SystemLanguageService } from './_service/system-language.service';
 import { languagesInitializer } from './_helper/languagesInitializer';
 import { sysConfInitializer } from './_helper/sysConfInitializer';
 import { SystemConfigService } from './_service/systemconfig.service';
+import { ShoeGlueService } from './_service/setting/shoe-glue.service';
+import { colorPageSettingConfInitializer } from './_helper/colorPageSettingConfInitializer';
 
 
 @NgModule({
@@ -33,6 +35,12 @@ import { SystemConfigService } from './_service/systemconfig.service';
       useFactory: sysConfInitializer,
       multi: true,
       deps: [SystemConfigService],
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: colorPageSettingConfInitializer,
+      multi: true,
+      deps: [ShoeGlueService],
     },
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
   ],

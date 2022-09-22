@@ -3,10 +3,12 @@ import { ActivatedRoute } from "@angular/router";
 import { ActionConstant, MessageConstants } from "../_constants";
 import { FunctionSystem } from "../_model/application-user";
 import { environment } from 'src/environments/environment';
+import { ShoeGlueService } from '../_service/setting/shoe-glue.service';
 
 export abstract class BaseComponent {
   isodsExport = true;
   pageSettings: any;
+  pageSettingsColor: any;
   globalLang = localStorage.getItem('lang');
   skip = 0;
   take = 10;
@@ -150,13 +152,24 @@ export abstract class BaseComponent {
         return [undefined];
     }
   }
-  constructor(public translate: TranslateService) {
+  constructor(
+    public translate: TranslateService,
+    ) {
+      console.log('load truoc ngOnInit');
     let user = JSON.parse(localStorage.getItem('user'));
     let pageSize = Number(user?.pageSizeSettingValue) || 20;
     let pageSizesTemp = user?.pageSizeSettingList || ['5', '10', '12', '20'];
     let pageSizes = pageSizesTemp.map(x=> +x);
     this.pageSettings = {  pageSizes: pageSizes, enableQueryString: true,  pageSize: pageSize, currentPage: 1, enableScroll: true };
     this.take = this.pageSettings.pageSize;
+    
+    let pageSettingColor = JSON.parse(localStorage.getItem('colorPageSetting'));
+    this.pageSettingsColor = {
+      pageCount: pageSettingColor.pageCount,
+      pageSizes: pageSettingColor.pageSizes,
+      pageSize: pageSettingColor.pageSize,
+    }
+    console.log(this.pageSettingsColor);
   }
   convertDate(data) {
     if ( data instanceof Date ) {

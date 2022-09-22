@@ -4,9 +4,9 @@ import { ShoeService } from './../../../../../_core/_service/setting/shoe.servic
 import { Shoe } from './../../../../../_core/_model/setting/shoe';
 import { GlueService } from './../../../../../_core/_service/setting/glue.service';
 import { Glue } from './../../../../../_core/_model/setting/glue';
-import { DataManager, UrlAdaptor } from '@syncfusion/ej2-data';
+import { DataManager, UrlAdaptor, Query } from '@syncfusion/ej2-data';
 import { L10n,setCulture } from '@syncfusion/ej2-base';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, QueryList, TemplateRef, ViewChild, ViewChildren } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, QueryList, SimpleChanges, TemplateRef, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { GridComponent, QueryCellInfoEventArgs } from '@syncfusion/ej2-angular-grids';
@@ -56,8 +56,14 @@ export class ColorParentComponent extends BaseComponent implements OnInit, OnDes
   apiHost = environment.apiUrl.replace('/api/', '');
   noImage = ImagePathConstants.NO_IMAGE;
   loading = 0;
-  pageSettingsMenu: any
+  // pageSettingsMenu: any
   @ViewChildren('tooltip') tooltip: QueryList<any>;
+  pageSettingsMenu = { 
+    pageCount: 5, 
+    pageSizes: [5, 10, 15, "All"],
+    pageSize: 5 } as any;
+  @Input() message: string;
+  public query: Query ;
   constructor(
     private service: ColorService,
     private serviceShoeGlue: ShoeGlueService,
@@ -69,14 +75,20 @@ export class ColorParentComponent extends BaseComponent implements OnInit, OnDes
     public translate: TranslateService,
   ) {
     super(translate);
-    this.getMenuPageSetting()
+    
   }
 
   ngOnDestroy(): void {
     // throw new Error('Method not implemented.');
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log('ngOnChanges');
+  }
+  
   ngOnInit() {
+    console.log('ngOnInit');
+    this.loadDataAsync()
     // this.Permission(this.route);
     this.groupCode = JSON.parse(localStorage.getItem('user')).groupCode || "";
     if (this.groupCode !== 'ADMIN') {
@@ -93,10 +105,17 @@ export class ColorParentComponent extends BaseComponent implements OnInit, OnDes
       }
     };
     L10n.load(load);
-    this.loadData();
+   
     // this.service.changeGlue({} as Glue);
   }
+  
+  async loadDataAsync() {
+    await this.loadData();
+    // await this.getMenuPageSetting()
+  }
   tooltips(args){ 
+    if(args.requestType !== undefined) {
+    }
     const model = { guid : args.data.guid};
     this.service.getToolTip(model).subscribe((res: any) => {
       if(res.length > 0) {
@@ -107,7 +126,7 @@ export class ColorParentComponent extends BaseComponent implements OnInit, OnDes
       }else {
         let tooltip: Tooltip = new Tooltip({ 
           content: 'N/A',
-          position: 'TopLeft'
+          position: 'TopLeft',
          }, args.cell); 
       }
       
@@ -127,15 +146,41 @@ export class ColorParentComponent extends BaseComponent implements OnInit, OnDes
       t.dataBind();
     });
   }
-  getMenuPageSetting() {
-    this.serviceShoeGlue.getMenuPageSetting().subscribe(res => {
-      this.pageSettingsMenu = {
-        pageCount: res.pageCount,
-        pageSize: res.pageSize,
-        pageSizes: res.pageSizes
-      }
-      this.pageSettingsMenu?.pageSizes.unshift(['All'])
+  async loadData() {
+    return new Promise((res, rej) => {
+      this.data = new DataManager({
+        url: `${this.baseUrl}Color/LoadData`,
+        adaptor: new UrlAdaptor,
+      });
+      res(this.data);
     })
+  }
+  async getMenuPageSetting() {
+    return new Promise((res, rej) => {
+      this.serviceShoeGlue.getMenuPageSetting().subscribe(
+        (result) => {
+          this.pageSettingsMenu = {
+            pageCount: result.pageCount,
+            pageSize: result.pageSize,
+            pageSizes: result.pageSizes
+          }
+          this.pageSettingsMenu?.pageSizes.unshift(['All'])
+          
+          res(result);
+        },
+        (error) => {
+          rej(error);
+        }
+      );
+    });
+    // this.serviceShoeGlue.getMenuPageSetting().subscribe(res => {
+    //   this.pageSettingsMenu = {
+    //     pageCount: res.pageCount,
+    //     pageSize: res.pageSize,
+    //     pageSizes: res.pageSizes
+    //   }
+    //   this.pageSettingsMenu?.pageSizes.unshift(['All'])
+    // })
   }
 
   onFileChangeLogo(args) {
@@ -203,12 +248,7 @@ export class ColorParentComponent extends BaseComponent implements OnInit, OnDes
     });
 
   }
-  loadData() {
-    this.data = new DataManager({
-      url: `${this.baseUrl}Color/LoadData`,
-      adaptor: new UrlAdaptor,
-    });
-  }
+  
   delete(id) {
     this.alertify.confirm4(
       this.alert.yes_message,
