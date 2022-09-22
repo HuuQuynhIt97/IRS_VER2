@@ -25,10 +25,10 @@ const routes: Routes = [
     path: 'work-plan2',
     component: Workplan2Component,
     data: {
-      title: 'Work Plan2',
+      title: 'Buying List',
       module: 'execution',
-      breadcrumb: 'Work Plan2',
-      functionCode: 'work-plan2'
+      breadcrumb: 'Buying List',
+      functionCode: 'buying-list'
     },
     canActivate: [AuthGuard]
   },

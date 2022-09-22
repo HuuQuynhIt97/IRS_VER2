@@ -63,8 +63,8 @@ namespace IRS.Controllers
                         }
                         datasList.Add(new WorkPlan2Dto()
                         {   
-                            ST_Team = workSheet.Cells["E" + rowIterator.ToString()].Value.ToSafetyString(),
-                            SF_Team = workSheet.Cells["F" + rowIterator.ToString()].Value.ToSafetyString(),
+                            StTeam = workSheet.Cells["E" + rowIterator.ToString()].Value.ToSafetyString(),
+                            SfTeam = workSheet.Cells["F" + rowIterator.ToString()].Value.ToSafetyString(),
                             Pono = workSheet.Cells["R" + rowIterator.ToString()].Value.ToSafetyString(),
                             Batch = workSheet.Cells["S" + rowIterator.ToString()].Value.ToSafetyString(),
                             ModelName = workSheet.Cells["X" + rowIterator.ToString()].Value.ToSafetyString(),
@@ -72,7 +72,7 @@ namespace IRS.Controllers
                             ArticleNo = workSheet.Cells["Z" + rowIterator.ToString()].Value.ToSafetyString(),
                             Qty = workSheet.Cells["AA" + rowIterator.ToString()].Value.ToSafetyString(),
                             CutStartDate = CutStartDate,
-                            SFStartDate = SFStartDate,
+                            SfStartDate = SFStartDate,
                             ScheduleId = 0,
                             Status = true,
                             CreateDate = currentTime
@@ -89,5 +89,18 @@ namespace IRS.Controllers
 
         }
 
+        [HttpGet]
+        public async Task<ActionResult> GetBuyingList() {
+            var data = await _service.GetBuyingList();
+            return Ok(data);
+        }
+
+        [HttpPost("{lang}")]
+        public async Task<IActionResult> ExportExcelBuyingList(string lang)
+        {
+            var bin = await _service.ExportExcelBuyingList(lang);
+            return File(bin, "application/octet-stream", "ExportExcelBuyingList.xlsx");
+        }
+             
     }
 }

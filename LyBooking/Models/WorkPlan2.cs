@@ -9,8 +9,8 @@ namespace IRS.Models
     {
         public int Id { get; set; }
         public string Guid { get; set; }
-        public string ST_Team { get; set; }
-        public string SF_Team { get; set; }
+        public string StTeam { get; set; }
+        public string SfTeam { get; set; }
         public string Pono { get; set; }
         public string Batch { get; set; }
         public string ModelName { get; set; }
@@ -18,7 +18,7 @@ namespace IRS.Models
         public string ArticleNo { get; set; }
         public string Qty { get; set; }
         public string CutStartDate { get; set; }
-        public string SFStartDate { get; set; }
+        public string SfStartDate { get; set; }
         public int? ScheduleId { get; set; }
         public bool? Status { get; set; }
         public string ShoeGuid { get; set; }
