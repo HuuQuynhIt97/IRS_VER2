@@ -9,6 +9,7 @@
         <ejs-toolbar #toolbarTodo (click)='toolbarClick($event)'>
           <e-items>
             <e-item id='Import Excel' prefixIcon="fa fa-file-excel-o" text=" {{ 'Import Excel' | translate }}"> </e-item>
+            <e-item id='Export Excel' prefixIcon="e-paste-icon tb-icons" text=" {{ 'Export Excel' | translate }}"> </e-item>
 
             <e-item style="color: transparent;" prefixIcon="fa fa-plus" text=" {{ 'Add' | translate }}">
               <ng-template #template>
@@ -72,9 +73,9 @@
               <ng-template let-data #editTemplate>{{data.sT_Team}}</ng-template>
             </e-column>
 
-            <e-column field='sF_Team' textAlign='Center' headerText='SF_Team' width=150>
-              <ng-template let-data #template>{{data.sF_Team}}</ng-template>
-              <ng-template let-data #editTemplate>{{data.sF_Team}}</ng-template>
+            <e-column field='sT_Team' textAlign='Center' headerText='SF_Team' width=150>
+              <ng-template let-data #template>{{data.sT_Team}}</ng-template>
+              <ng-template let-data #editTemplate>{{data.sT_Team}}</ng-template>
             </e-column>
 
             <e-column field='pono' textAlign='Center' headerText='P.O.'>

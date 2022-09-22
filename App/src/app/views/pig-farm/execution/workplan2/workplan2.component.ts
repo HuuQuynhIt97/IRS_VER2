@@ -10,6 +10,7 @@ import { AlertifyService } from 'src/app/_core/_service/alertify.service';
 import { environment } from 'src/environments/environment';
 import { MessageConstants } from 'src/app/_core/_constants';
 import { WorkPlan2Service } from 'src/app/_core/_service/execution/work-plan2.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-workplan2',
@@ -55,10 +56,12 @@ export class Workplan2Component implements OnInit {
     public modalService: NgbModal,
     private datePipe: DatePipe,
     private router: Router,
-    private service: WorkPlan2Service
+    private service: WorkPlan2Service,
+    private spinner: NgxSpinnerService,
   ) { }
 
   ngOnInit() {
+    // this.spinner.show();
     this.excelDownloadUrl = `${environment.apiUrl}workplan/ExcelExport`;
     this.toolbar = [ 'Search'];
     this.filterSettings = { type: 'Excel' };
@@ -169,15 +172,32 @@ export class Workplan2Component implements OnInit {
         //     parts: item.parts.join(' - ') || '#N/A',
         //   };
         // });
-        (this.gridObj.columns[0] as Column).visible = false;
-        (this.gridObj.columns[11] as Column).visible = false;
-        const exportProperties = {
-          // dataSource: data,
-          fileName: 'ScheduleData.xlsx'
-        };
-        this.gridObj.excelExport(exportProperties);
+        // (this.gridObj.columns[0] as Column).visible = false;
+        // (this.gridObj.columns[11] as Column).visible = false;
+        // const exportProperties = {
+        //   // dataSource: data,
+        //   fileName: 'ScheduleData.xlsx'
+        // };
+        // this.gridObj.excelExport(exportProperties);
+
+            this.exportExcelBuyingList();
         break;
     }
+  }
+
+  exportExcelBuyingList() {
+    const lang = localStorage.getItem('lang');
+    // this.spinner.show();
+    this.service.exportExcelBuyingList(this.locale).subscribe((data: any) => {
+      const blob = new Blob([data],
+        { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const downloadURL = window.URL.createObjectURL(data);
+      const link = document.createElement('a');
+      link.href = downloadURL;
+      link.download = `BuyingList.xlsx`;
+      link.click();
+      // this.spinner.hide();
+    });
   }
 
   onChangeSystemDate(args) {

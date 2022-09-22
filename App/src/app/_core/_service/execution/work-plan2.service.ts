@@ -51,6 +51,10 @@ export class WorkPlan2Service  {
     return this.http.post(this.base + 'WorkPlan2/ImportExcelWorkPlan2', formData);
   }
 
+  exportExcelBuyingList(lang) {
+    return this.http.post(this.base + `WorkPlan2/ExportExcelBuyingList/${lang}`,{}, { responseType: 'blob' });
+  }
+
   updatePoGlue(workPlanID) {
     return this.http.post(`${this.base}workplan/UpdatePoGlue/${workPlanID}`, {});
   }
