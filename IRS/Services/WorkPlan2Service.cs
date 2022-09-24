@@ -308,7 +308,8 @@ namespace IRS.Services
                                 Consumption = Math.Round((a.Percentage.ToDouble() * StandardConsumption)/100, 2)
                             }).ToList();
 
-            var listInk = listInkColor.GroupBy(x => x.InkGuid)
+
+            var listInk = listInkColor.Where(x => x.Consumption > 0).GroupBy(x => x.InkGuid)
                                         .Select(x => new InkListDto(){
                                             Code = x.First().Code,
                                             NameInk = x.First().NameInk,
@@ -342,7 +343,7 @@ namespace IRS.Services
                                         Consumption = Math.Round((a.Percentage.ToDouble() * StandardConsumption)/100, 2)
                                     }).ToList();
 
-            var listChemical = listChemicalColor.GroupBy(x => x.ChemicalGuid)
+            var listChemical = listChemicalColor.Where(x => x.Consumption > 0).GroupBy(x => x.ChemicalGuid)
                                         .Select(x => new ChemicalListDto(){
                                             Code = x.First().Code,
                                             NameChemical = x.First().NameChemical,
