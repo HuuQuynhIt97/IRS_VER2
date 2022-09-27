@@ -62,6 +62,7 @@ export class ColorChemicalComponent extends BaseComponent implements OnInit, OnD
   groupCode: any;
   chemicalEditSettings = { showDeleteConfirmDialog: false, allowEditing: true, allowAdding: true, allowDeleting: true, mode: 'Normal' };
   dataChemicals: any;
+  dataChemicalsFilter: any;
   pageSettingsRecipe: any
   constructor(
     private service: ChemicalColorService,
@@ -72,9 +73,9 @@ export class ColorChemicalComponent extends BaseComponent implements OnInit, OnD
     private alertify: AlertifyService,
     private datePipe: DatePipe,
     public translate: TranslateService,
-  ) { 
-    super(translate); 
-    this.getRecipePageSetting() 
+  ) {
+    super(translate);
+    this.getRecipePageSetting()
   }
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
@@ -124,7 +125,7 @@ export class ColorChemicalComponent extends BaseComponent implements OnInit, OnD
     this.service.loadData(this.chemicalColor.colorGuid).subscribe((res: any) => {
       this.data = res
     })
-    
+
   }
   loadDataChemical() {
     this.serviceChemical.getAll().subscribe((res: any) => {
@@ -132,7 +133,8 @@ export class ColorChemicalComponent extends BaseComponent implements OnInit, OnD
       this.dataChemicals = res.map(item => {
         return {
           name: item.name + '(' + item.code + ')' + ' - ' + item.process,
-          guid: item.guid
+          guid: item.guid,
+          code: item.code
         }
       })
     })
@@ -153,6 +155,12 @@ export class ColorChemicalComponent extends BaseComponent implements OnInit, OnD
   onChangeChemical(args, data, index) {
 
   }
+
+  keyUp(code: string){
+    this.dataChemicalsFilter = this.dataChemicals;
+    this.dataChemicalsFilter = this.dataChemicalsFilter.filter(x => x.code.indexOf(code) >=0)
+  }
+
   // life cycle ejs-grid
   rowSelected(args) {
     this.rowIndex = args.rowIndex;
@@ -171,10 +179,12 @@ export class ColorChemicalComponent extends BaseComponent implements OnInit, OnD
   }
   async actionBegin(args) {
     if (args.requestType === 'add') {
+      this.dataChemicalsFilter = this.dataChemicals;
       this.initialModel();
     }
 
     if (args.requestType === 'beginEdit') {
+      this.dataChemicalsFilter = this.dataChemicals;
       const item = await this.getById(args.rowData.id);
       this.chemicalColor = {...item};
     }
@@ -198,7 +208,7 @@ export class ColorChemicalComponent extends BaseComponent implements OnInit, OnD
       this.delete(args.data[0].id);
     }
   }
-  
+
   recordClick(args: any) {
     this.service.changeHall(args.rowData);
     // this.serviceBarn.changeBarn({} as any);
@@ -240,7 +250,7 @@ export class ColorChemicalComponent extends BaseComponent implements OnInit, OnD
     });
 
   }
-  
+
   delete(id) {
     this.alertify.confirm4(
       this.alert.yes_message,
