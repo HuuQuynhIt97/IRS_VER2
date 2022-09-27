@@ -47,7 +47,7 @@
       headerText="{{ 'CHEMICAL_NAME' | translate }}"
     >
     <ng-template #editTemplate let-data>
-      <ejs-dropdownlist #chemicalDropdownlist [dataSource]='dataChemicals' 
+      <ejs-dropdownlist #chemicalDropdownlist [dataSource]='dataChemicals'
         [fields]='ChemicalFields' [allowFiltering]='true'
         [(ngModel)]="chemicalColor.chemicalGuid"
         >
@@ -55,9 +55,13 @@
     </ng-template>
     </e-column>
 
-    <e-column field="code" textAlign="Left" headerText="{{ 'CODE_LABEL' | translate }}"></e-column>
+    <e-column field="code" textAlign="Left" headerText="{{ 'CODE_LABEL' | translate }}">
+      <ng-template #editTemplate let-data>
+        <input class="e-field e-input e-defaultcell" type="text" (keyup)="keyUp(data.code)" [(ngModel)]="data.code" name="Description" style="text-align:Left">
+      </ng-template>
+    </e-column>
 
     <e-column field="percentage" textAlign="Left" headerText="{{ 'PERCENTAGE_LABEL' | translate }}"></e-column>
-    
+
   </e-columns>
 </ejs-grid>
