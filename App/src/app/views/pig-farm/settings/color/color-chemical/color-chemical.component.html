@@ -47,7 +47,7 @@
       headerText="{{ 'CHEMICAL_NAME' | translate }}"
     >
     <ng-template #editTemplate let-data>
-      <ejs-dropdownlist #chemicalDropdownlist [dataSource]='dataChemicals'
+      <ejs-dropdownlist #chemicalDropdownlist [dataSource]='dataChemicalsFilter'
         [fields]='ChemicalFields' [allowFiltering]='true'
         [(ngModel)]="chemicalColor.chemicalGuid"
         >
