@@ -82,7 +82,7 @@ export class ChemicalComponent extends BaseComponent implements OnInit, OnDestro
     this.pageSettings.currentPage=args.value;
   }
   ngOnInit() {
-    this.searchOptions = { fields: ['name','supplier','materialNO' ], operator: 'contains', key: '', ignoreCase: true };
+    this.searchOptions = { fields: ['name','supplier','materialNO', 'code'], operator: 'contains', key: '', ignoreCase: true };
     // this.Permission(this.route);
     let lang = localStorage.getItem('lang');
     let languages = JSON.parse(localStorage.getItem('languages'));
@@ -151,7 +151,7 @@ export class ChemicalComponent extends BaseComponent implements OnInit, OnDestro
       adaptor: new UrlAdaptor,
     });
   }
-  
+
   loadHallData() {
     this.serviceHall.loadDataBySiteGuiId(this.siteId).subscribe(res => {
       this.hallData = res
@@ -202,7 +202,7 @@ export class ChemicalComponent extends BaseComponent implements OnInit, OnDestro
     });
 
   }
-  
+
   delete(id) {
     this.alertify.confirm4(
       this.alert.yes_message,
@@ -230,7 +230,7 @@ export class ChemicalComponent extends BaseComponent implements OnInit, OnDestro
   }
 
   create() {
-    
+
    this.alertify.confirm4(
       this.alert.yes_message,
       this.alert.no_message,
@@ -258,7 +258,7 @@ export class ChemicalComponent extends BaseComponent implements OnInit, OnDestro
       }
     );
   }
-  
+
   ToDate(date: any) {
     if (date &&  date instanceof Date) {
       return this.datePipe.transform(date, "yyyy/MM/dd");

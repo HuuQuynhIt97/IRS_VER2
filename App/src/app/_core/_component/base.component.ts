@@ -155,21 +155,21 @@ export abstract class BaseComponent {
   constructor(
     public translate: TranslateService,
     ) {
-      console.log('load truoc ngOnInit');
+      // console.log('load truoc ngOnInit');
     let user = JSON.parse(localStorage.getItem('user'));
     let pageSize = Number(user?.pageSizeSettingValue) || 20;
     let pageSizesTemp = user?.pageSizeSettingList || ['5', '10', '12', '20'];
     let pageSizes = pageSizesTemp.map(x=> +x);
     this.pageSettings = {  pageSizes: pageSizes, enableQueryString: true,  pageSize: pageSize, currentPage: 1, enableScroll: true };
     this.take = this.pageSettings.pageSize;
-    
+
     let pageSettingColor = JSON.parse(localStorage.getItem('colorPageSetting'));
     this.pageSettingsColor = {
       pageCount: pageSettingColor.pageCount,
       pageSizes: pageSettingColor.pageSizes,
       pageSize: pageSettingColor.pageSize,
     }
-    console.log(this.pageSettingsColor);
+    // console.log(this.pageSettingsColor);
   }
   convertDate(data) {
     if ( data instanceof Date ) {

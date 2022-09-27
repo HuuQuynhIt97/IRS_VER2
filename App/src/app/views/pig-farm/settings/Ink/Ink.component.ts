@@ -70,7 +70,7 @@ export class InkComponent extends BaseComponent implements OnInit, OnDestroy {
   }
   ngOnInit() {
     // this.Permission(this.route);
-    this.searchOptions = { fields: ['name','supplier','materialNO' ], operator: 'contains', key: '', ignoreCase: true };
+    this.searchOptions = { fields: ['name','supplier','materialNO', 'code'], operator: 'contains', key: '', ignoreCase: true };
     let lang = localStorage.getItem('lang');
     let languages = JSON.parse(localStorage.getItem('languages'));
     this.siteId = localStorage.getItem('farmGuid') ;
@@ -85,7 +85,7 @@ export class InkComponent extends BaseComponent implements OnInit, OnDestroy {
     this.loadData();
   }
 
- 
+
   created(): void {
     document.getElementById(this.grid.element.id + "_searchbar").addEventListener('keyup', () => {
       this.grid.search((event.target as HTMLInputElement).value)
@@ -138,7 +138,7 @@ export class InkComponent extends BaseComponent implements OnInit, OnDestroy {
       adaptor: new UrlAdaptor,
     });
   }
-  
+
   loadHallData() {
     this.serviceHall.loadDataBySiteGuiId(this.siteId).subscribe(res => {
       this.hallData = res
@@ -189,7 +189,7 @@ export class InkComponent extends BaseComponent implements OnInit, OnDestroy {
     });
 
   }
-  
+
   delete(id) {
     this.alertify.confirm4(
       this.alert.yes_message,
@@ -244,7 +244,7 @@ export class InkComponent extends BaseComponent implements OnInit, OnDestroy {
       }
     );
   }
-  
+
   ToDate(date: any) {
     if (date &&  date instanceof Date) {
       return this.datePipe.transform(date, "yyyy/MM/dd");

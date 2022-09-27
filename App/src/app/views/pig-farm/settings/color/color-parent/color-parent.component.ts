@@ -58,8 +58,8 @@ export class ColorParentComponent extends BaseComponent implements OnInit, OnDes
   loading = 0;
   // pageSettingsMenu: any
   @ViewChildren('tooltip') tooltip: QueryList<any>;
-  pageSettingsMenu = { 
-    pageCount: 5, 
+  pageSettingsMenu = {
+    pageCount: 5,
     pageSizes: [5, 10, 15, "All"],
     pageSize: 5 } as any;
   @Input() message: string;
@@ -75,7 +75,7 @@ export class ColorParentComponent extends BaseComponent implements OnInit, OnDes
     public translate: TranslateService,
   ) {
     super(translate);
-    
+
   }
 
   ngOnDestroy(): void {
@@ -85,9 +85,9 @@ export class ColorParentComponent extends BaseComponent implements OnInit, OnDes
   ngOnChanges(changes: SimpleChanges): void {
     console.log('ngOnChanges');
   }
-  
+
   ngOnInit() {
-    console.log('ngOnInit');
+    // console.log('ngOnInit');
     this.loadDataAsync()
     // this.Permission(this.route);
     this.groupCode = JSON.parse(localStorage.getItem('user')).groupCode || "";
@@ -105,37 +105,37 @@ export class ColorParentComponent extends BaseComponent implements OnInit, OnDes
       }
     };
     L10n.load(load);
-   
+
     // this.service.changeGlue({} as Glue);
   }
-  
+
   async loadDataAsync() {
     await this.loadData();
     // await this.getMenuPageSetting()
   }
-  tooltips(args){ 
+  tooltips(args){
     if(args.requestType !== undefined) {
     }
     const model = { guid : args.data.guid};
     this.service.getToolTip(model).subscribe((res: any) => {
       if(res.length > 0) {
-        let tooltip: Tooltip = new Tooltip({ 
+        let tooltip: Tooltip = new Tooltip({
           content: res.join('<br>'),
           position: 'TopLeft'
-         }, args.cell); 
+         }, args.cell);
       }else {
-        let tooltip: Tooltip = new Tooltip({ 
+        let tooltip: Tooltip = new Tooltip({
           content: 'N/A',
           position: 'TopLeft',
-         }, args.cell); 
+         }, args.cell);
       }
-      
+
     });
-  //  let tooltip: Tooltip = new Tooltip({ 
+  //  let tooltip: Tooltip = new Tooltip({
   //   content: args.data['name'].toString()
-  //  }, args.cell); 
-  } 
-  
+  //  }, args.cell);
+  }
+
   onBeforeRender(args, data, i) {
     const t = this.tooltip.filter((item, index) => index === +i)[0];
     t.content = 'Loading...';
@@ -165,7 +165,7 @@ export class ColorParentComponent extends BaseComponent implements OnInit, OnDes
             pageSizes: result.pageSizes
           }
           this.pageSettingsMenu?.pageSizes.unshift(['All'])
-          
+
           res(result);
         },
         (error) => {
@@ -248,7 +248,7 @@ export class ColorParentComponent extends BaseComponent implements OnInit, OnDes
     });
 
   }
-  
+
   delete(id) {
     this.alertify.confirm4(
       this.alert.yes_message,

@@ -1,3 +1,4 @@
+import { filter } from 'rxjs/operators';
 import { InkService } from './../../../../../_core/_service/setting/ink.service';
 import { ColorScreen } from './../../../../../_core/_model/setting/color';
 import { ColorService } from './../../../../../_core/_service/setting/color.service';
@@ -27,7 +28,6 @@ import { GlueChemical } from 'src/app/_core/_model/setting/glueChemical';
   styleUrls: ['./color-ink.component.scss']
 })
 export class ColorInkComponent extends BaseComponent implements OnInit, OnDestroy {
-
   @Input() height;
   localLang =  (window as any).navigator.userLanguage || (window as any).navigator.language;
   @Output() selectArea = new EventEmitter();
@@ -61,6 +61,7 @@ export class ColorInkComponent extends BaseComponent implements OnInit, OnDestro
   groupCode: any;
   chemicalEditSettings = { showDeleteConfirmDialog: false, allowEditing: true, allowAdding: true, allowDeleting: true, mode: 'Normal' };
   dataInk: any;
+  dataInkFilter: any;
   dataSupplier: any;
   pageSettingsRecipe: any
   constructor(
@@ -72,9 +73,9 @@ export class ColorInkComponent extends BaseComponent implements OnInit, OnDestro
     private alertify: AlertifyService,
     private datePipe: DatePipe,
     public translate: TranslateService,
-  ) { 
-    super(translate); 
-    this.getRecipePageSetting() 
+  ) {
+    super(translate);
+    this.getRecipePageSetting()
   }
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
@@ -124,14 +125,15 @@ export class ColorInkComponent extends BaseComponent implements OnInit, OnDestro
     this.service.loadData(this.inkColor.colorGuid).subscribe((res: any) => {
       this.data = res
     })
-    
+
   }
   loadDataColor() {
     this.serviceInk.getAll().subscribe((res: any) => {
       this.dataInk = res.map(item => {
         return {
           name: item.name + '(' + item.code + ')' + ' - ' + item.process,
-          guid: item.guid
+          guid: item.guid,
+          code: item.code
         }
       })
     })
@@ -152,6 +154,11 @@ export class ColorInkComponent extends BaseComponent implements OnInit, OnDestro
   onChangeChemical(args, data, index) {
 
   }
+
+  keyUp(code: string){
+    this.dataInkFilter = this.dataInk;
+    this.dataInkFilter = this.dataInkFilter.filter(x => x.code.indexOf(code) >=0)
+  }
   // life cycle ejs-grid
   rowSelected(args) {
     this.rowIndex = args.rowIndex;
@@ -171,10 +178,12 @@ export class ColorInkComponent extends BaseComponent implements OnInit, OnDestro
 
   async actionBegin(args) {
     if (args.requestType === 'add') {
+      this.dataInkFilter = this.dataInk;
       this.initialModel();
     }
 
     if (args.requestType === 'beginEdit') {
+      this.dataInkFilter = this.dataInk;
       const item = await this.getById(args.rowData.id);
       this.inkColor = {...item};
     }
@@ -198,7 +207,7 @@ export class ColorInkComponent extends BaseComponent implements OnInit, OnDestro
       this.delete(args.data[0].id);
     }
   }
-  
+
   recordClick(args: any) {
     this.service.changeHall(args.rowData);
     // this.serviceBarn.changeBarn({} as any);
@@ -236,7 +245,7 @@ export class ColorInkComponent extends BaseComponent implements OnInit, OnDestro
       this.audit = data;
     });
   }
-  
+
   delete(id) {
     this.alertify.confirm4(
       this.alert.yes_message,
