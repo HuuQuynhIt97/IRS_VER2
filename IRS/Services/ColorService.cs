@@ -191,6 +191,7 @@ namespace IRS.Services
                 x.Id,
                 x.Guid,
                 x.Name,
+                Additive = x.Additive == SystemColorAdditve.Color ? "Color" : "Additive"
             });
             var count = await datasource.CountAsync();
             if (data.Where != null) // for filtering

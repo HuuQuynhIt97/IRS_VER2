@@ -17,5 +17,6 @@ namespace IRS.DTO
         public DateTime? DeleteDate { get; set; }
         public decimal? DeleteBy { get; set; }
         public decimal? Status { get; set; }
+        public string Additive { get; set; }
     }
 }

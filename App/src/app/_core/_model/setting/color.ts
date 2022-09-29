@@ -9,6 +9,7 @@ export interface Color {
     deleteBy: number | null;
     status: number | null;
     guid: string;
+    additive: string;
 }
 
 export interface ColorScreen {

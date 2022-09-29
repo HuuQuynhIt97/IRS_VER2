@@ -23,6 +23,7 @@ import { Site } from 'src/app/_core/_model/club-management/site';
 import { SiteService } from 'src/app/_core/_service/club-management/site.service';
 import { Color } from 'src/app/_core/_model/setting/color';
 import { Tooltip } from '@syncfusion/ej2-angular-popups';
+import { ThisReceiver } from '@angular/compiler';
 
 @Component({
   selector: 'app-color-parent',
@@ -56,6 +57,11 @@ export class ColorParentComponent extends BaseComponent implements OnInit, OnDes
   apiHost = environment.apiUrl.replace('/api/', '');
   noImage = ImagePathConstants.NO_IMAGE;
   loading = 0;
+  public dataAdditiveFilter: object[] = [
+    { id: '0', name: 'Additive' },
+    { id: '1', name: 'Color' },
+  ];
+  additiveFields: object = { text: 'name', value: 'id' };
   // pageSettingsMenu: any
   @ViewChildren('tooltip') tooltip: QueryList<any>;
   pageSettingsMenu = {
@@ -113,29 +119,42 @@ export class ColorParentComponent extends BaseComponent implements OnInit, OnDes
     await this.loadData();
     // await this.getMenuPageSetting()
   }
-  tooltips(args){
-    if(args.requestType !== undefined) {
-    }
+
+  async tooltips(args){
     const model = { guid : args.data.guid};
-    this.service.getToolTip(model).subscribe((res: any) => {
-      if(res.length > 0) {
-        let tooltip: Tooltip = new Tooltip({
-          content: res.join('<br>'),
+    // this.service.getToolTip(model).subscribe((res: any) => {
+    //   if(res.length > 0) {
+
+    //     // let tooltip: Tooltip = new Tooltip({
+    //     //   content: res.join('<br>'),
+    //     //   position: 'TopLeft'
+    //     //  }, args.cell);
+    //   }else {
+    //     // let tooltip: Tooltip = new Tooltip({
+    //     //   content: 'N/A',
+    //     //   position: 'TopLeft',
+    //     //  }, args.cell);
+
+    //   }});
+
+    if (args.column.field === 'name') {
+      let data = await this.service.getToolTip2(model).toPromise() as any
+      let tooltip: Tooltip = new Tooltip({
+          content: data,
           position: 'TopLeft'
          }, args.cell);
-      }else {
-        let tooltip: Tooltip = new Tooltip({
-          content: 'N/A',
-          position: 'TopLeft',
-         }, args.cell);
-      }
+    }
 
-    });
+    // });
   //  let tooltip: Tooltip = new Tooltip({
   //   content: args.data['name'].toString()
   //  }, args.cell);
   }
-
+  async getToolTip(tt) {
+    let data = await this.service.getToolTip2(tt).toPromise() as any
+    console.log(data)
+    return data
+  }
   onBeforeRender(args, data, i) {
     const t = this.tooltip.filter((item, index) => index === +i)[0];
     t.content = 'Loading...';
@@ -221,7 +240,7 @@ export class ColorParentComponent extends BaseComponent implements OnInit, OnDes
     });
   }
   toolbarClick(args) {
-    console.log(args.item.id);
+    // console.log(args.item.id);
     switch (args.item.id) {
       case 'grid_excelexport':
         this.grid.excelExport({ hierarchyExportMode: 'All' });
@@ -366,6 +385,7 @@ export class ColorParentComponent extends BaseComponent implements OnInit, OnDes
       this.title = 'COLOR_EDIT_MODAL';
     } else {
       this.model.id = 0;
+      this.model.additive = "1";
       // this.model.version = '1'
       // this.model.startDate = new Date();
       // this.model.endDate = new Date(2099,11,31);

@@ -513,6 +513,10 @@ namespace IRS.Data
                     .HasMaxLength(50)
                     .HasColumnName("GUID");
 
+                entity.Property(e => e.Additive)
+                    .HasMaxLength(50)
+                    .HasColumnName("ADDITIVE");
+
                 entity.Property(e => e.Name).HasMaxLength(200);
             });
 

@@ -13,12 +13,12 @@
   [allowExcelExport]="true"
   (rowSelected)="rowSelected($event)"
   (recordClick)="recordClick($event)"
-  [selectionSettings]="selectionOptions"
   (toolbarClick)="toolbarClick($event)"
   (dataBound)='dataBound()'
   (queryCellInfo)='tooltips($event)'
 >
   <e-columns>
+
     <e-column
       field="option"
       [allowSorting]="false"
@@ -27,7 +27,7 @@
       [allowFiltering]="false"
       [allowEditing]="false"
       textAlign="Center"
-      width="80"
+      width="50"
       headerTextAlign="Center"
       headerText="{{ 'OPTION' | translate}}"
     >
@@ -41,23 +41,20 @@
       </ng-template>
     </e-column>
 
-  <e-column
-      field="name"
-      textAlign="Left"
-      headerText="{{ 'COLOR_NAME' | translate }}"
-    >
-    <ng-template let-data #template>
-      <!-- <ejs-tooltip [content]="tooltips(data)">
-        {{data.name}}
-      </ejs-tooltip> -->
-      <!-- <ejs-tooltip id='tooltip' #tooltip class="fix-css" position='TopCenter'
-        (beforeRender)="onBeforeRender($event, data, data.index)" content="loading...">
-        {{data.name}}
-      </ejs-tooltip> -->
-      {{data.name}}
-    </ng-template>
-    <ng-template let-data #editTemplate>{{data.name}}</ng-template>
-  </e-column>
+    <e-column
+        field="additive"
+        textAlign="Center"
+        headerText="{{ 'ADDITIVE' | translate }}"
+        width="60px"
+      >
+      <ng-template let-data #template>
+        {{data.additive}}
+      </ng-template>
+      <ng-template let-data #editTemplate>{{data.additive}}</ng-template>
+    </e-column>
+
+    <e-column field="name" textAlign="Left"  headerText="{{ 'COLOR_NAME' | translate }}"></e-column>
+
 
   </e-columns>
 </ejs-grid>
@@ -94,6 +91,18 @@
                 [(ngModel)]="model.name"
                 class="form-control"
               />
+            </div>
+          </div>
+          <div class="col-md-12">
+            <label>{{ "ADDITIVE" | translate }} </label>
+            <div class="form-group">
+              <ejs-dropdownlist
+                #additiveDropdownlist
+                [dataSource]='dataAdditiveFilter'
+                [fields]='additiveFields' [allowFiltering]='true'
+                [(ngModel)]="model.additive"
+                >
+              </ejs-dropdownlist>
             </div>
           </div>
 
