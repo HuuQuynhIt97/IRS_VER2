@@ -30,11 +30,11 @@
       [allowEditing]="false"
       textAlign="Center"
       headerTextAlign="Center"
-      width="50"
+      width="30"
       headerTextAlign="Center"
       headerText="{{ 'OPTION' | translate}}"
     >
-    
+
       <ng-template #template let-data>
         <span (click)="delete(data.id)" *ngIf="groupCode === 'ADMIN'" class="delete-grid">
           <i class="fa fa-trash"></i>
@@ -42,12 +42,12 @@
       </ng-template>
     </e-column>
 
-    <e-column  textAlign="Left"  headerText="Part">
+    <e-column  textAlign="Left" width="40"  headerText="Part">
       <ng-template #template let-data>
         {{data.part}}
       </ng-template>
       <ng-template #editTemplate let-data>
-        <ejs-dropdownlist #partDropdownlist [dataSource]='dataPart' 
+        <ejs-dropdownlist #partDropdownlist [dataSource]='dataPart'
           [fields]='ChemicalFields' [allowFiltering]='true'
           [(ngModel)]="schedule.partGuid"
           id='partDropdownlist'
@@ -61,7 +61,7 @@
         {{data.treatment}}
       </ng-template>
       <ng-template #editTemplate let-data>
-        <ejs-dropdownlist #treatmentDropdownlist [dataSource]='dataTreatment' 
+        <ejs-dropdownlist #treatmentDropdownlist [dataSource]='dataTreatment'
           [fields]='ChemicalFields' [allowFiltering]='true'
           [(ngModel)]="schedule.treatmentGuid"
           >
@@ -74,7 +74,7 @@
         {{data.process}}
       </ng-template>
       <ng-template #editTemplate let-data>
-        <ejs-dropdownlist #processDropdownlist [dataSource]='dataProcess' 
+        <ejs-dropdownlist #processDropdownlist [dataSource]='dataProcess'
           [fields]='ChemicalFields' [allowFiltering]='true'
           [(ngModel)]="schedule.processGuid"
           >
@@ -82,16 +82,16 @@
       </ng-template>
     </e-column> -->
 
-    <e-column  textAlign="Left" headerText="TreatmentWay">
+    <e-column  textAlign="Left" width="50" headerText="TreatmentWay">
       <ng-template let-data #template>
         {{data.treatmentWay + ' (' + data.process + ')'}}
       </ng-template>
       <ng-template #headerTemplate let-data>
         {{ 'TREATMENT_WAY_NAME' | translate }}
       </ng-template>
-      
+
       <ng-template #editTemplate let-data>
-        <ejs-dropdownlist #treatmentWayDropdownlist [dataSource]='dataTreatmentWay' 
+        <ejs-dropdownlist #treatmentWayDropdownlist [dataSource]='dataTreatmentWay'
           [fields]='ChemicalFields' [allowFiltering]='true'
           [(ngModel)]="schedule.treatmentWayGuid"
           >
@@ -107,7 +107,7 @@
         {{ 'COLOR_NAME' | translate }}
       </ng-template>
       <ng-template #editTemplate let-data>
-        <ejs-dropdownlist #colorDropdownlist [dataSource]='dataColor' 
+        <ejs-dropdownlist #colorDropdownlist [dataSource]='dataColor'
           [fields]='ChemicalFields' [allowFiltering]='true'
           [(ngModel)]="schedule.colorGuid"
           >
@@ -115,7 +115,7 @@
       </ng-template>
     </e-column>
 
-    <e-column field="consumption" textAlign="Left" headerText="{{ 'CONSUMPTION_LABEL' | translate }}"></e-column>
-    
+    <e-column field="consumption" width="50" textAlign="Left" headerText="{{ 'CONSUMPTION_LABEL' | translate }}"></e-column>
+
   </e-columns>
 </ejs-grid>
