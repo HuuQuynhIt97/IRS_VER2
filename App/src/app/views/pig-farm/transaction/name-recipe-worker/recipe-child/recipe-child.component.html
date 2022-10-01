@@ -30,10 +30,13 @@
       [allowEditing]="false"
       textAlign="Center"
       headerTextAlign="Center"
-      width="30"
+      width="20"
       headerTextAlign="Center"
       headerText="{{ 'OPTION' | translate}}"
     >
+    <!-- <ng-template #headerTemplate let-data>
+      <i class="fa fa-cog"></i>
+    </ng-template> -->
 
       <ng-template #template let-data>
         <span (click)="delete(data.id)" *ngIf="groupCode === 'ADMIN'" class="delete-grid">
@@ -42,7 +45,7 @@
       </ng-template>
     </e-column>
 
-    <e-column  textAlign="Left" width="40"  headerText="Part">
+    <e-column  textAlign="Left" width="60"  headerText="Part">
       <ng-template #template let-data>
         {{data.part}}
       </ng-template>
@@ -82,7 +85,7 @@
       </ng-template>
     </e-column> -->
 
-    <e-column  textAlign="Left" width="50" headerText="TreatmentWay">
+    <e-column  textAlign="Left" width="90" headerText="TreatmentWay">
       <ng-template let-data #template>
         {{data.treatmentWay + ' (' + data.process + ')'}}
       </ng-template>
@@ -115,7 +118,7 @@
       </ng-template>
     </e-column>
 
-    <e-column field="consumption" width="50" textAlign="Left" headerText="{{ 'CONSUMPTION_LABEL' | translate }}"></e-column>
+    <e-column field="consumption" width="20" textAlign="Left" headerText="{{ 'CONSUMPTION_LABEL' | translate }}"></e-column>
 
   </e-columns>
 </ejs-grid>

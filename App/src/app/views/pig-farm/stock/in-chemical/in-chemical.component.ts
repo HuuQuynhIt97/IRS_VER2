@@ -134,12 +134,12 @@ export class InChemicalComponent extends BaseComponent implements OnInit, OnDest
     }
     if (args.requestType === "save" ) {
       if (args.action === "edit") {
-        if(args.data.deliver > this.model.unit)
-        {
-          this.alertify.error(this.trans.instant('OVER_QTY_MESSAGE'))
-          args.cancel = true ;
-          return;
-        }
+        // if(Number(args.data.deliver) > Number(this.model.unit))
+        // {
+        //   this.alertify.error(this.trans.instant('OVER_QTY_MESSAGE'))
+        //   args.cancel = true ;
+        //   return;
+        // }
         this.model.deliver = args.data.deliver || 0;
         // this.modelSup.ProcessID = args.data.processID;
         this.update(this.model);
@@ -149,7 +149,7 @@ export class InChemicalComponent extends BaseComponent implements OnInit, OnDest
   }
 
   update(modelSup) {
-    this.alertify.confirm4(
+    this.alertify.alertConfirm(
       this.alert.yes_message,
       this.alert.no_message,
       this.alert.updateTitle,
@@ -299,7 +299,7 @@ export class InChemicalComponent extends BaseComponent implements OnInit, OnDest
             this.showPopupWindow(count, ink);
           })
         } else {
-          this.alertify.error(this.trans.instant('Wrong Ink'));
+          this.alertify.error(this.trans.instant('Wrong Chemical'));
         }
       }));
   }

@@ -134,22 +134,22 @@ export class InInkComponent extends BaseComponent implements OnInit, OnDestroy {
     }
     if (args.requestType === "save" ) {
       if (args.action === "edit") {
-        if(args.data.deliver > this.model.unit)
-        {
-          this.alertify.error(this.trans.instant('OVER_QTY_MESSAGE'))
-          args.cancel = true ;
-          return;
-        }
+        // if(args.data.deliver > this.model.unit)
+        // {
+        //   this.alertify.error(this.trans.instant('OVER_QTY_MESSAGE'))
+        //   args.cancel = true ;
+        //   return;
+        // }
         this.model.deliver = args.data.deliver || 0;
         // this.modelSup.ProcessID = args.data.processID;
         this.update(this.model);
       }
     }
-  
+
   }
 
   update(modelSup) {
-    this.alertify.confirm4(
+    this.alertify.alertConfirm(
       this.alert.yes_message,
       this.alert.no_message,
       this.alert.updateTitle,
@@ -161,7 +161,12 @@ export class InInkComponent extends BaseComponent implements OnInit, OnDestroy {
               this.alertify.success(this.alert.updated_ok_msg);
               this.getInk();
             } else {
-              this.alertify.warning(this.alert.system_error_msg);
+              this.alertify.errorLimitStock(this.alert.yes_message, this.trans.instant('UPDATE_DELIVERY_FAILED'), this.trans.instant('ERROR_UPDATE_DELIVERY'),
+                () => {
+                  this.alertify.error(this.alert.cancelMessage);
+                  this.getInk();
+                }
+              )
             }
           },
           (error) => {
@@ -173,7 +178,7 @@ export class InInkComponent extends BaseComponent implements OnInit, OnDestroy {
         this.getInk();
       }
     );
-  
+
   }
   onClickDefault() {
     this.startDate = new Date();
@@ -257,13 +262,13 @@ export class InInkComponent extends BaseComponent implements OnInit, OnDestroy {
 
   showPopupWindow(count, chemical) {
     this.alertify.$swal.fire({
-      html: `<div class='d-flex justify-content-center align-items-center' style='Width:100%; height: 400px;'>
-               <h1 style='font-size: 150px;' class='display-1 mb-3 align-self-center text-${this.toggleColor === true ? 'success' : 'danger'} font-weight-bold'> ${count} | ${chemical.name}</h1>
+      html: `<div class='d-flex justify-content-center align-items-center' style='Width:100%; height: 100px;'>
+               <h1 style='font-size: 50px;' class='display-1 mb-3 align-self-center text-${this.toggleColor === true ? 'success' : 'danger'} font-weight-bold'> ${count} | ${chemical.name}</h1>
              </div>`,
-      timer: 2000,
+      timer: 3000,
       showConfirmButton: false,
       timerProgressBar: true,
-      width: '90%',
+      width: '60%',
       icon: 'success'
     });
     this.toggleColor = !this.toggleColor;
@@ -309,7 +314,7 @@ export class InInkComponent extends BaseComponent implements OnInit, OnDestroy {
     // if (this.buildingID === 0) {
     //   this.alertify.warning('Vui lòng chọn tòa nhà trước!', true);
     // } else {
-      
+
     // }
   }
 

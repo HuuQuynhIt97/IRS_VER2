@@ -185,6 +185,23 @@ export class AlertifyService {
     });
   }
 
+  alertConfirm(confirmButtonText = 'Yes',cancelButtonText = 'No', title: string, message: string, okCallback: () => void, cancelCallback: () => void ) {
+    Swal.fire({
+      title,
+      html: message,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: confirmButtonText,
+      cancelButtonText: cancelButtonText
+    }).then((result) => {
+      if (result.value) {
+        okCallback();
+      } else if (result.dismiss) {
+        cancelCallback();
+      }
+    });
+  }
+
   errorBackToLogin(message: string, btnText: string, callBack: any, showCancelButton = false, errorCallBack = () => {}) {
     Swal.fire({
       text: message,
