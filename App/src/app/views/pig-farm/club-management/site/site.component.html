@@ -34,7 +34,7 @@
       headerText="{{ 'OPTION' | translate}}"
     >
       <ng-template #template let-data>
-        <span (click)="delete(data.id)" *ngIf="groupCode === 'ADMIN'" class="delete-grid">
+        <span (click)="delete(data.id)" *ngIf="groupCode === 'ADMIN' || groupCode === 'Development Center'" class="delete-grid">
           <i class="fa fa-trash"></i>
         </span>
         <span (click)="openModal(optionModal, data)" class="edit-grid">
@@ -45,7 +45,7 @@
 
     <e-column field="siteNo" textAlign="Left"  headerText="{{ 'SITE_NO' | translate }}"></e-column>
     <e-column field="siteName" textAlign="Left" headerText="{{ 'SITE_NAME' | translate }}"></e-column>
-   
+
   </e-columns>
 </ejs-grid>
 

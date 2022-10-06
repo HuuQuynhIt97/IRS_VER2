@@ -66,8 +66,8 @@ export class StockInInkComponent extends BaseComponent implements OnInit, OnDest
   dataInk: any;
   dataSupplier: any;
   pageSettingsRecipe: any
-  executeDate: any = new Date(); 
-  insertDate: any = new Date(); 
+  executeDate: any = new Date();
+  insertDate: any = new Date();
   flag: boolean;
   constructor(
     private service: StockInInkService,
@@ -77,9 +77,9 @@ export class StockInInkComponent extends BaseComponent implements OnInit, OnDest
     private alertify: AlertifyService,
     private datePipe: DatePipe,
     public translate: TranslateService,
-  ) { 
-    super(translate); 
-    // this.getRecipePageSetting() 
+  ) {
+    super(translate);
+    // this.getRecipePageSetting()
   }
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
@@ -90,7 +90,7 @@ export class StockInInkComponent extends BaseComponent implements OnInit, OnDest
   ngOnInit() {
     // this.Permission(this.route);
     this.groupCode = JSON.parse(localStorage.getItem('user')).groupCode || "";
-    
+
     // this.toolbarOptions = ['Add','Execute','Cancel', 'Search'];
     let lang = localStorage.getItem('lang');
     let languages = JSON.parse(localStorage.getItem('languages'));
@@ -104,7 +104,7 @@ export class StockInInkComponent extends BaseComponent implements OnInit, OnDest
     L10n.load(load);
     this.loadData();
     this.loadDataColor();
-    
+
     // this.loadData();
   }
 
@@ -112,14 +112,14 @@ export class StockInInkComponent extends BaseComponent implements OnInit, OnDest
     const selectedRecords = this.grid.dataSource as any[];
     const data = selectedRecords.filter(x => x.executeDate === null);
     if(data.length > 0) {
-      if (this.groupCode === 'ADMIN') {
+      if (this.groupCode === 'ADMINs') {
         this.toolbarOptions = ['Search'];
       }else {
 
         this.toolbarOptions = ['Add','Execute','Cancel', 'Search'];
       }
     }else {
-      if (this.groupCode === 'ADMIN') {
+      if (this.groupCode === 'ADMINs') {
         this.toolbarOptions = ['Search'];
       }else {
 
@@ -279,7 +279,7 @@ export class StockInInkComponent extends BaseComponent implements OnInit, OnDest
       this.delete(args.data[0].id);
     }
   }
-  
+
   recordClick(args: any) {
     this.service.changeHall(args.rowData);
     // this.serviceBarn.changeBarn({} as any);
@@ -318,7 +318,7 @@ export class StockInInkComponent extends BaseComponent implements OnInit, OnDest
     }
   }
 
-  
+
   // end life cycle ejs-grid
 
   // api
@@ -327,7 +327,7 @@ export class StockInInkComponent extends BaseComponent implements OnInit, OnDest
       this.audit = data;
     });
   }
-  
+
   delete(id) {
     this.alertify.confirm4(
       this.alert.yes_message,

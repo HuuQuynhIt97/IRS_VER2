@@ -79,9 +79,9 @@ export class ShoeGlueChildComponent extends BaseComponent implements OnInit, OnD
     private alertify: AlertifyService,
     private datePipe: DatePipe,
     public translate: TranslateService,
-  ) { 
-    super(translate); 
-    this.getRecipePageSetting() 
+  ) {
+    super(translate);
+    this.getRecipePageSetting()
   }
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
@@ -92,7 +92,7 @@ export class ShoeGlueChildComponent extends BaseComponent implements OnInit, OnD
   ngOnInit() {
     // this.Permission(this.route);
     this.groupCode = JSON.parse(localStorage.getItem('user')).groupCode || "";
-    if (this.groupCode !== 'ADMIN') {
+    if (this.groupCode !== 'ADMIN' && this.groupCode !== 'Development Center') {
       this.toolbarOptions = ['Search'];
     }
     let lang = localStorage.getItem('lang');
@@ -131,7 +131,7 @@ export class ShoeGlueChildComponent extends BaseComponent implements OnInit, OnD
     this.service.loadData(this.shoeGlue.shoesGuid).subscribe((res: any) => {
       this.data = res
     })
-    
+
   }
   loadDataGlue() {
     this.serviceGlue.getAll().subscribe((res: any) => {
@@ -199,7 +199,7 @@ export class ShoeGlueChildComponent extends BaseComponent implements OnInit, OnD
       this.delete(args.data[0].id);
     }
   }
-  
+
   recordClick(args: any) {
     this.service.changeHall(args.rowData);
     // this.serviceBarn.changeBarn({} as any);
@@ -241,7 +241,7 @@ export class ShoeGlueChildComponent extends BaseComponent implements OnInit, OnD
     });
 
   }
-  
+
   delete(id) {
     this.alertify.confirm4(
       this.alert.yes_message,

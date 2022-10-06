@@ -34,7 +34,7 @@
       headerText="{{ 'OPTION' | translate}}"
     >
       <ng-template #template let-data>
-        <span (click)="delete(data.id)" *ngIf="groupCode === 'ADMIN'" class="delete-grid">
+        <span (click)="delete(data.id)" *ngIf="groupCode === 'ADMIN' || groupCode === 'Development Center'" class="delete-grid">
           <i class="fa fa-trash"></i>
         </span>
         <span (click)="openModal(optionModal, data)" class="edit-grid">
@@ -44,7 +44,7 @@
     </e-column>
 
     <e-column field="name" textAlign="Left"  headerText="{{ 'GLUE_NAME' | translate }}"></e-column>
-   
+
   </e-columns>
 </ejs-grid>
 
@@ -85,7 +85,7 @@
       </div>
     </div>
 
-    
+
   </div>
   <div class="modal-footer">
     <div class="mr-auto" *ngIf="model?.id > 0">

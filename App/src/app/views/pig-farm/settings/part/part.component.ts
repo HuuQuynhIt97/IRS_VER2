@@ -63,8 +63,8 @@ export class PartComponent extends BaseComponent implements OnInit, OnDestroy  {
     private datePipe: DatePipe,
     private utilityService: UtilitiesService,
     public translate: TranslateService,
-  ) { 
-    super(translate);  
+  ) {
+    super(translate);
     // this.getMenuPageSetting()
   }
 
@@ -75,10 +75,10 @@ export class PartComponent extends BaseComponent implements OnInit, OnDestroy  {
   ngOnInit() {
     // this.Permission(this.route);
     this.groupCode = JSON.parse(localStorage.getItem('user')).groupCode || "";
-    if (this.groupCode !== 'ADMIN') {
+    if (this.groupCode !== 'ADMIN' && this.groupCode !== 'Development Center') {
       this.toolbarOptions = ['Search'];
     }
-    
+
     let lang = localStorage.getItem('lang');
     let languages = JSON.parse(localStorage.getItem('languages'));
     setCulture(lang);
@@ -267,8 +267,8 @@ export class PartComponent extends BaseComponent implements OnInit, OnDestroy  {
          this.alertify.error(this.alert.cancelMessage);
        }
      );
- 
- 
+
+
    }
   // end api
   NO(index) {

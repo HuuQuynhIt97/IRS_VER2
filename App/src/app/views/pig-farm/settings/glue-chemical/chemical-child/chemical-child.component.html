@@ -35,7 +35,7 @@
       headerText="{{ 'OPTION' | translate}}"
     >
       <ng-template #template let-data>
-        <span (click)="delete(data.id)" *ngIf="groupCode === 'ADMIN'" class="delete-grid">
+        <span (click)="delete(data.id)" *ngIf="groupCode === 'ADMIN' || groupCode === 'Development Center'" class="delete-grid">
           <i class="fa fa-trash"></i>
         </span>
       </ng-template>
@@ -46,7 +46,7 @@
     headerText="{{ 'CHEMICAL_POSITION' | translate }}"
   >
   <ng-template #editTemplate let-data>
-    <ejs-dropdownlist #positionDropdownlist [dataSource]='dataPosition' 
+    <ejs-dropdownlist #positionDropdownlist [dataSource]='dataPosition'
       [fields]='fieldsPosition' [allowFiltering]='true'
       [(ngModel)]="glueChemical.position"
       (change)='onChangePosition($event,data, data.index)'>
@@ -59,7 +59,7 @@
     headerText="{{ 'CHEMICAL_NAME' | translate }}"
   >
   <ng-template #editTemplate let-data>
-    <ejs-dropdownlist #chemicalDropdownlist [dataSource]='dataChemical' 
+    <ejs-dropdownlist #chemicalDropdownlist [dataSource]='dataChemical'
       [fields]='ChemicalFields' [allowFiltering]='true'
       [(ngModel)]="glueChemical.chemicalGuid"
       (change)='onChangeChemical($event,data, data.index)'
@@ -74,6 +74,6 @@
     headerText="{{ 'CHEMICAL_PERCENTAGE' | translate }}"
   >
   </e-column>
-    
+
   </e-columns>
 </ejs-grid>

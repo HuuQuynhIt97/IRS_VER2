@@ -68,6 +68,7 @@ namespace IRS.Installer
             services.AddScoped<IInChemicalService, InChemicalService>();
             services.AddScoped<IWorkPlanService, WorkPlanService>();
             services.AddScoped<IWorkPlan2Service, WorkPlan2Service>();
+            services.AddScoped<IColorWorkPlanService, ColorWorkPlanService>();
 
             services.AddScoped<IStockInInkService, StockInInkService>();
             services.AddScoped<IStockInChemicalService, StockInChemicalService>();

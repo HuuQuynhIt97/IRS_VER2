@@ -23,6 +23,7 @@ import { FilteringEventArgs, highlightSearch } from '@syncfusion/ej2-angular-dro
 export class ColorMixingWorkPlanComponent extends BaseComponent implements OnInit {
   isAdmin = JSON.parse(localStorage.getItem('user'))?.groupCode === 'ADMIN_CANCEL';
   data: DataManager;
+  dataColorWorkPlan: DataManager;
   baseUrl = environment.apiUrl;
   password = '';
   modalReference: NgbModalRef;
@@ -77,6 +78,7 @@ public onFiltering =  (e: FilteringEventArgs) => {
     };
     L10n.load(load);
     this.loadData();
+    this.loadDataColorWorkPlan();
     this.loadLang();
   }
   // life cycle ejs-grid
@@ -179,6 +181,16 @@ toolbarClick(args) {
       headers: [{ authorization: `Bearer ${accessToken}` }]
     });
   }
+
+  loadDataColorWorkPlan() {
+    const accessToken = localStorage.getItem('token');
+    this.dataColorWorkPlan = new DataManager({
+      url: `${this.baseUrl}ColorWorkPlan/LoadDataColorWorkPlan`,
+      adaptor: new UrlAdaptor,
+      headers: [{ authorization: `Bearer ${accessToken}` }]
+    });
+  }
+
   delete(id) {
     this.alertify.confirm4(
       this.alert.yes_message,

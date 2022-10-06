@@ -97,7 +97,7 @@ export class ColorParentComponent extends BaseComponent implements OnInit, OnDes
     this.loadDataAsync()
     // this.Permission(this.route);
     this.groupCode = JSON.parse(localStorage.getItem('user')).groupCode || "";
-    if (this.groupCode !== 'ADMIN') {
+    if (this.groupCode !== 'ADMIN' && this.groupCode !== 'Development Center') {
       this.toolbarOptions = ['Search'];
     }
 

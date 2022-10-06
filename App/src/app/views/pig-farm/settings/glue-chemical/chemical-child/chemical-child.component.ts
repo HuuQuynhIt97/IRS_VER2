@@ -80,7 +80,7 @@ export class ChemicalChildComponent extends BaseComponent implements OnInit, OnD
   ngOnInit() {
     // this.Permission(this.route);
     this.groupCode = JSON.parse(localStorage.getItem('user')).groupCode || "";
-    if (this.groupCode !== 'ADMIN') {
+    if (this.groupCode !== 'ADMIN' && this.groupCode !== 'Development Center') {
       this.toolbarOptions = ['Search'];
     }
     let lang = localStorage.getItem('lang');
@@ -108,7 +108,7 @@ export class ChemicalChildComponent extends BaseComponent implements OnInit, OnD
     this.service.loadData(this.glueChemical.glueGuid).subscribe((res: any) => {
       this.data = res
     })
-    
+
   }
   loadDataChemical() {
     this.serviceChemical.getAll().subscribe((res: any) => {
@@ -177,7 +177,7 @@ export class ChemicalChildComponent extends BaseComponent implements OnInit, OnD
       this.delete(args.data[0].id);
     }
   }
-  
+
   recordClick(args: any) {
     this.service.changeHall(args.rowData);
     // this.serviceBarn.changeBarn({} as any);
@@ -219,7 +219,7 @@ export class ChemicalChildComponent extends BaseComponent implements OnInit, OnD
     });
 
   }
-  
+
   delete(id) {
     this.alertify.confirm4(
       this.alert.yes_message,

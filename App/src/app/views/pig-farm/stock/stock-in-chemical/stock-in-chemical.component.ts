@@ -69,8 +69,8 @@ export class StockInChemicalComponent extends BaseComponent implements OnInit, O
   dataInk: any;
   dataSupplier: any;
   pageSettingsRecipe: any
-  executeDate: any = new Date(); 
-  insertDate: any = new Date(); 
+  executeDate: any = new Date();
+  insertDate: any = new Date();
   flag: boolean;
   constructor(
     private service: StockInChemicalService,
@@ -81,9 +81,9 @@ export class StockInChemicalComponent extends BaseComponent implements OnInit, O
     private alertify: AlertifyService,
     private datePipe: DatePipe,
     public translate: TranslateService,
-  ) { 
-    super(translate); 
-    // this.getRecipePageSetting() 
+  ) {
+    super(translate);
+    // this.getRecipePageSetting()
   }
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
@@ -94,7 +94,7 @@ export class StockInChemicalComponent extends BaseComponent implements OnInit, O
   ngOnInit() {
     // this.Permission(this.route);
     this.groupCode = JSON.parse(localStorage.getItem('user')).groupCode || "";
-    
+
     // this.toolbarOptions = ['Add','Execute','Cancel', 'Search'];
     let lang = localStorage.getItem('lang');
     let languages = JSON.parse(localStorage.getItem('languages'));
@@ -105,7 +105,7 @@ export class StockInChemicalComponent extends BaseComponent implements OnInit, O
         pager: languages['pager']
       }
     };
-    
+
     L10n.load(load);
     this.loadData();
     this.loadDataColor();
@@ -116,14 +116,14 @@ export class StockInChemicalComponent extends BaseComponent implements OnInit, O
     const selectedRecords = this.grid.dataSource as any[];
     const data = selectedRecords.filter(x => x.executeDate === null);
     if(data.length > 0) {
-      if (this.groupCode === 'ADMIN') {
+      if (this.groupCode === 'ADMINs') {
         this.toolbarOptions = ['Search'];
       }else {
 
         this.toolbarOptions = ['Add','Execute','Cancel', 'Search'];
       }
     }else {
-      if (this.groupCode === 'ADMIN') {
+      if (this.groupCode === 'ADMINs') {
         this.toolbarOptions = ['Search'];
       }else {
 
@@ -283,7 +283,7 @@ export class StockInChemicalComponent extends BaseComponent implements OnInit, O
       this.delete(args.data[0].id);
     }
   }
-  
+
   recordClick(args: any) {
     this.service.changeHall(args.rowData);
     // this.serviceBarn.changeBarn({} as any);
@@ -322,7 +322,7 @@ export class StockInChemicalComponent extends BaseComponent implements OnInit, O
     }
   }
 
-  
+
   // end life cycle ejs-grid
 
   // api
@@ -331,7 +331,7 @@ export class StockInChemicalComponent extends BaseComponent implements OnInit, O
       this.audit = data;
     });
   }
-  
+
   delete(id) {
     this.alertify.confirm4(
       this.alert.yes_message,

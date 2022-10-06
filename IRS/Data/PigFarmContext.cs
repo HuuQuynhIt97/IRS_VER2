@@ -46,6 +46,7 @@ namespace IRS.Data
         public virtual DbSet<TreatmentWay> TreatmentWays { get; set; }
         public virtual DbSet<WorkPlan> WorkPlans { get; set; }
         public virtual DbSet<WorkPlanNew> WorkPlanNews { get; set; }
+        public virtual DbSet<ColorWorkPlan> ColorWorkPlans { get; set; }
 
         public virtual DbSet<Chemical> Chemicals { get; set; }
         public virtual DbSet<Glue> Glues { get; set; }
@@ -1129,6 +1130,31 @@ namespace IRS.Data
                 entity.Property(e => e.UpdateDate)
                     .HasColumnType("datetime")
                     .HasColumnName("UPDATE_DATE");
+            });
+
+            modelBuilder.Entity<ColorWorkPlan>(entity =>
+            {
+                entity.ToTable("ColorWorkPlan");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.CreateBy)
+                    .HasMaxLength(40)
+                    .HasColumnName("CREATE_BY");
+
+                entity.Property(e => e.CreateDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("CREATE_DATE");
+
+                entity.Property(e => e.ExecuteDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("EXECUTE_DATE");
+
+                entity.Property(e => e.Guid)
+                    .HasMaxLength(50)
+                    .HasColumnName("GUID");
+
+                entity.Property(e => e.ShoeGuid).HasColumnName("SHOE_GUID");
             });
 
             modelBuilder.Entity<Chemical>(entity =>

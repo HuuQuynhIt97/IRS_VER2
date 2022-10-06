@@ -35,7 +35,7 @@
       headerText="{{ 'OPTION' | translate}}"
     >
       <ng-template #template let-data>
-        <span (click)="delete(data.id)" *ngIf="groupCode === 'ADMIN'" class="delete-grid">
+        <span (click)="delete(data.id)" *ngIf="groupCode === 'ADMIN' || groupCode === 'Development Center'" class="delete-grid">
           <i class="fa fa-trash"></i>
         </span>
       </ng-template>
@@ -47,7 +47,7 @@
       headerText="{{ 'GLUE_NAME' | translate }}"
     >
     <ng-template #editTemplate let-data>
-      <ejs-dropdownlist #chemicalDropdownlist [dataSource]='dataGlue' 
+      <ejs-dropdownlist #chemicalDropdownlist [dataSource]='dataGlue'
         [fields]='ChemicalFields' [allowFiltering]='true'
         [(ngModel)]="shoeGlue.glueGuid"
         >
@@ -60,9 +60,9 @@
       textAlign="Left"
       headerText="{{ 'UNIT_LABEL' | translate }}"
     >
-    
+
     </e-column>
 
-    
+
   </e-columns>
 </ejs-grid>

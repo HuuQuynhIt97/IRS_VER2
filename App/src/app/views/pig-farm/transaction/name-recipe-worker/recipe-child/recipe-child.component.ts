@@ -102,7 +102,7 @@ export class RecipeChildComponent extends BaseComponent implements OnInit, OnDes
   ngOnInit() {
     // this.Permission(this.route);
     this.groupCode = JSON.parse(localStorage.getItem('user')).groupCode || "";
-    if (this.groupCode !== 'ADMIN') {
+    if (this.groupCode !== 'ADMIN' && this.groupCode !== 'Development Center') {
       this.toolbarOptions = ['Search'];
     }
     let lang = localStorage.getItem('lang');

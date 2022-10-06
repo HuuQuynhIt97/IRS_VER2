@@ -35,7 +35,7 @@
       headerText="{{ 'OPTION' | translate}}"
     >
       <ng-template #template let-data>
-        <span (click)="delete(data.id)" *ngIf="groupCode === 'ADMIN'" class="delete-grid">
+        <span (click)="delete(data.id)" *ngIf="groupCode === 'ADMIN' || groupCode === 'Development Center'" class="delete-grid">
           <i class="fa fa-trash"></i>
         </span>
       </ng-template>

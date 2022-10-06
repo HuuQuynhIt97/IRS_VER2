@@ -65,7 +65,7 @@ export class GlueChildComponent extends BaseComponent implements OnInit, OnDestr
   ngOnInit() {
     // this.Permission(this.route);
     this.groupCode = JSON.parse(localStorage.getItem('user')).groupCode || "";
-    if (this.groupCode !== 'ADMIN') {
+    if (this.groupCode !== 'ADMIN' && this.groupCode !== 'Development Center') {
       this.toolbarOptions = ['Search'];
     }
 
@@ -221,8 +221,8 @@ export class GlueChildComponent extends BaseComponent implements OnInit, OnDestr
          this.alertify.error(this.alert.cancelMessage);
        }
      );
- 
- 
+
+
    }
   // end api
   NO(index) {

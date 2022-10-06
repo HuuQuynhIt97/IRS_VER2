@@ -4,7 +4,7 @@
       <ejs-grid
         #grid
         id="grid"
-        [dataSource]="data"
+        [dataSource]="dataColorWorkPlan"
         [allowPaging]="true"
         [allowResizing]="true"
         [allowSorting]="true"
@@ -59,31 +59,16 @@
           </e-column>
 
           <e-column
-            field="codeType"
+            field="guid"
             textAlign="Left"
           headerTextAlign="Center"
-            headerText="{{ 'CODE_PERMISSION_TYPE' | translate }}"
+            headerText="{{ 'Guid' | translate }}"
           >
           </e-column>
-          <e-column field="codeName" textAlign="Left" headerTextAlign="Center" headerText="{{ 'CODE_PERMISSION_NAMETW' | translate }}">
+          <e-column field="shoeGuid" textAlign="Left" headerTextAlign="Center" headerText="{{ 'Shoe' | translate }}">
           </e-column>
 
-          <e-column field="codeNameCn" textAlign="Left"  headerTextAlign="Center" headerText="{{ 'CODE_PERMISSION_NAMECN' | translate }}">
-
-          </e-column>
-
-          <e-column field="codeNameEn" textAlign="Left" headerTextAlign="Center" headerText="{{ 'CODE_PERMISSION_NAMEEN' | translate }}"></e-column>
-          <e-column field="codeNameVn" textAlign="Left" headerTextAlign="Center" headerText="{{ 'CODE_PERMISSION_NAMEVN' | translate }}"></e-column>
-
-          <e-column
-          field="sort"
-          textAlign="Left"
-          headerTextAlign="Center"
-          headerText="{{ 'CODE_PERMISSION_SORT' | translate }}"
-        >
-        </e-column>
-
-          <e-column
+          <!-- <e-column
             field="comment"
             [allowSearching]="false"
             [allowSorting]="false"
@@ -91,7 +76,7 @@
           headerTextAlign="Center"
             headerText="{{ 'CODE_PERMISSION_COMMENT' | translate }}"
           >
-          </e-column>
+          </e-column> -->
         </e-columns>
       </ejs-grid>
     </div>
