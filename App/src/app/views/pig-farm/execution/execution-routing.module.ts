@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ExecutionComponent } from './execution.component';
 import { AuthGuard } from 'src/app/_core/_guards/auth.guard';
 import { Workplan2Component } from './workplan2/workplan2.component';
+import { ColorMixingWorkPlanComponent } from './color-mixing-work-plan/color-mixing-work-plan.component';
 
 const routes: Routes = [
   {
@@ -29,6 +30,17 @@ const routes: Routes = [
       module: 'execution',
       breadcrumb: 'Buying List',
       functionCode: 'buying-list'
+    },
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'color-mixing-work-plan',
+    component: ColorMixingWorkPlanComponent,
+    data: {
+      title: 'Color Mixing Work Plan',
+      module: 'execution',
+      breadcrumb: 'Color Mixing Work Plan',
+      functionCode: 'color-mixing-wp'
     },
     canActivate: [AuthGuard]
   },

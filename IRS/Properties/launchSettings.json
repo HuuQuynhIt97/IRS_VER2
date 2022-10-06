@@ -24,8 +24,8 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": "true",
-      // "applicationUrl": "http://localhost:58",
-      "applicationUrl": "http://10.4.5.132:58"
+      "applicationUrl": "http://localhost:58",
+      // "applicationUrl": "http://10.4.5.132:58"
     },
     "API": {
       "commandName": "Project",
@@ -34,8 +34,8 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      // "applicationUrl": "http://localhost:58",
-      "applicationUrl": "http://10.4.5.132:58"
+      "applicationUrl": "http://localhost:58",
+      // "applicationUrl": "http://10.4.5.132:58"
     },
     "Docker": {
       "commandName": "Docker",

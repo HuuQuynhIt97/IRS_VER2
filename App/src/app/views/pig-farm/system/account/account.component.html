@@ -74,12 +74,12 @@
               <span (click)="openModal(optionModal, data)" class="edit-grid">
                 <i class="fa fa-edit"></i>
               </span>
-              <span
+              <!-- <span
                 (click)="openPermissionModal(permissionModal, data)"
                 class="permission-grid"
               >
                 <i class="fa fa-cog"></i>
-              </span>
+              </span> -->
             </ng-template>
           </e-column>
 
@@ -101,7 +101,7 @@
                 style="cursor: pointer"
                 [src]="imagePath(data.photoPath) | image: 'url'"
                 class="avatar"
-                
+
                 (click)="preview(previewModal, data)"
                 [alt]="data.nickName"
               />
@@ -262,7 +262,7 @@
         </div>
 
         <div class="row">
-          
+
 
           <div class="col-md-6">
             <div class="form-group">
@@ -342,7 +342,7 @@
         !model.accountNo ||
         !model.uid ||
         !model.upwd ||
-        !model.accountGroup 
+        !model.accountGroup
       "
       (click)="save()"
       ngbTooltip="SAVE"
