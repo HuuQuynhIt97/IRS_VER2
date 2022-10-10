@@ -3,17 +3,17 @@ import { BaseComponent } from 'src/app/_core/_component/base.component';
 import { TranslateService } from '@ngx-translate/core';
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { AlertifyService } from 'src/app/_core/_service/alertify.service';
-import { ExcelExportCompleteArgs, ExcelExportProperties, GridComponent, QueryCellInfoEventArgs } from '@syncfusion/ej2-angular-grids';
-import { Tooltip } from '@syncfusion/ej2-angular-popups';
+import { GridComponent } from '@syncfusion/ej2-angular-grids';
 import { NgbModal, NgbModalRef, NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
 import { CodePermission } from 'src/app/_core/_model/code-permission';
-import { MessageConstants } from 'src/app/_core/_constants';
-import { CodePermissionService } from 'src/app/_core/_service/code-permission.service';
 import { EmitType, setCulture, L10n } from '@syncfusion/ej2-base';
 import { environment } from 'src/environments/environment';
 import { DatePipe } from '@angular/common';
 import { FilteringEventArgs, highlightSearch } from '@syncfusion/ej2-angular-dropdowns';
+import { ColorWorkPlanService } from 'src/app/_core/_service/execution/color-work-plan.service';
+import { ColorWorkPlan } from 'src/app/_core/_model/execution/color-work-plan';
+
 
 @Component({
   selector: 'app-color-mixing-work-plan',
@@ -22,14 +22,20 @@ import { FilteringEventArgs, highlightSearch } from '@syncfusion/ej2-angular-dro
 })
 export class ColorMixingWorkPlanComponent extends BaseComponent implements OnInit {
   isAdmin = JSON.parse(localStorage.getItem('user'))?.groupCode === 'ADMIN_CANCEL';
-  data: DataManager;
+
   dataColorWorkPlan: DataManager;
   baseUrl = environment.apiUrl;
   password = '';
   modalReference: NgbModalRef;
+  pageSettingss = { pageCount: 20, pageSizes: true, pageSize: 20 };
 
   @ViewChild('grid') public grid: GridComponent;
-  model: CodePermission;
+
+  colorWPModel: ColorWorkPlan;
+  dataShoe: any = [];
+  shoeFields: object = {text: 'name', value: 'guid'};
+  currentTime: any;
+  user = JSON.parse(localStorage.getItem('user')).id;
   setFocus: any;
   locale ;
   editSettings = { showDeleteConfirmDialog: false, allowEditing: false, allowAdding: true, allowDeleting: false, mode: 'Normal' };
@@ -39,7 +45,6 @@ export class ColorMixingWorkPlanComponent extends BaseComponent implements OnIni
 } };
   parentData: any = [];
   @ViewChild('optionModal') templateRef: TemplateRef<any>;
-  @ViewChild('odsTemplate', {static:true}) public odsTemplate: any;
 
 public onFiltering =  (e: FilteringEventArgs) => {
    // take text for highlight the character in list items.
@@ -50,7 +55,8 @@ public onFiltering =  (e: FilteringEventArgs) => {
 };
   queryString: string;
   constructor(
-    private service: CodePermissionService,
+
+    private serviceColorWorkPlan: ColorWorkPlanService,
     public modalService: NgbModal,
     private alertify: AlertifyService,
     private route: ActivatedRoute,
@@ -65,8 +71,9 @@ public onFiltering =  (e: FilteringEventArgs) => {
   }
 
   ngOnInit() {
-    this.toolbarOptions = ['ExcelExport',{template: this.odsTemplate}, 'Add', 'Search'];
+    this.toolbarOptions = ['Add', 'Search'];
     let lang = localStorage.getItem('lang');
+
     this.locale = lang;
     let languages = JSON.parse(localStorage.getItem('languages'));
     setCulture(lang);
@@ -77,9 +84,9 @@ public onFiltering =  (e: FilteringEventArgs) => {
       }
     };
     L10n.load(load);
-    this.loadData();
     this.loadDataColorWorkPlan();
-    this.loadLang();
+    this.getAllShoes();
+
   }
   // life cycle ejs-grid
   headerCellInfo(args) {
@@ -105,56 +112,14 @@ public onFiltering =  (e: FilteringEventArgs) => {
   actionBegin(args) {
   }
 
-loadLang() {
-  this.translate.get('Code Permission').subscribe( functionName => {
-    this.functionName = functionName;
-  });
-   this.translate.get('Print by').subscribe(printBy => {
-    this.printBy = printBy;
-  });
-}
+
 // life cycle ejs-grid
 toolbarClick(args) {
-  const functionName = this.functionName;
-  const printBy = this.printBy;
-      switch (args.item.id) {
-        case 'grid_excelexport':
-          const accountName = JSON.parse(localStorage.getItem('user'))?.accountName || 'N/A';
-          const header = {
-            headerRows: 3,
-            rows: [
-              {
-                cells: [{
-                    colSpan: 5, value: `* ${functionName}`,
-                    style: { fontColor: '#fd7e14', fontSize: 18, hAlign: 'Left', bold: true, }
-                }]
-            },
-            {
-              cells: [{
-                  colSpan: 5, value: `* ${this.datePipe.transform(new Date(), 'yyyyMMdd_HHmmss')}`,
-                  style: { fontColor: '#fd7e14', fontSize: 18, hAlign: 'Left', bold: true, }
-              }]
-          },
-          {
-            cells: [{
-                colSpan: 5, value: `* ${printBy} ${accountName}`,
-                style: { fontColor: '#fd7e14', fontSize: 18, hAlign: 'Left', bold: true, }
-            }]
-        },
-            ]
-          } as any;
 
-          const fileName = `${functionName}_${this.datePipe.transform(new Date(), 'yyyyMMdd_HHmmss')}.xlsx`
-          const excelExportProperties: ExcelExportProperties = {
-            hierarchyExportMode: 'All',
-            fileName: fileName,
-            header: header
-        };
-          this.grid.excelExport(excelExportProperties);
-          break;
+      switch (args.item.id) {
         case 'grid_add':
           args.cancel = true;
-          this.model = {} as any;
+          this.colorWPModel = {} as any;
           this.openModal(this.templateRef);
           break;
         default:
@@ -167,20 +132,6 @@ toolbarClick(args) {
   // end life cycle ejs-grid
 
   // api
-  getAudit(id) {
-    this.service.getAudit(id).subscribe(data => {
-      this.audit = data;
-    });
-
-  }
-  loadData() {
-    const accessToken = localStorage.getItem('token');
-    this.data = new DataManager({
-      url: `${this.baseUrl}CodePermission/LoadData`,
-      adaptor: new UrlAdaptor,
-      headers: [{ authorization: `Bearer ${accessToken}` }]
-    });
-  }
 
   loadDataColorWorkPlan() {
     const accessToken = localStorage.getItem('token');
@@ -190,6 +141,11 @@ toolbarClick(args) {
       headers: [{ authorization: `Bearer ${accessToken}` }]
     });
   }
+  getAllShoes() {
+    this.serviceColorWorkPlan.getAllShoes().subscribe((res) => {
+      this.dataShoe = res
+    })
+  }
 
   delete(id) {
     this.alertify.confirm4(
@@ -198,12 +154,11 @@ toolbarClick(args) {
       this.alert.deleteTitle,
       this.alert.deleteMessage,
       () => {
-
-        this.service.delete(id).subscribe(
+        this.serviceColorWorkPlan.deleteColorWorkPlan(id).subscribe(
           (res) => {
             if (res.success === true) {
               this.alertify.success(this.alert.deleted_ok_msg);
-              this.loadData();
+              this.loadDataColorWorkPlan();
             } else {
               this.alertify.warning(this.alert.system_error_msg);
             }
@@ -223,15 +178,18 @@ toolbarClick(args) {
       this.alert.createTitle,
       this.alert.createMessage,
       () => {
+        this.colorWPModel.shoeGuid = this.colorWPModel.shoeGuid
+        this.colorWPModel.executeDate = this.datePipe.transform(this.colorWPModel.executeDate, 'MM/dd/yyyy')
+        // this.colorWPModel.executeDate = this.datePipe.transform(this.colorWPModel.executeDate, 'MM/dd/yyyy HH:mm:ss')
 
-        this.service.add(this.model).subscribe(
+        this.serviceColorWorkPlan.addColorWorkPlan(this.colorWPModel).subscribe(
           (res) => {
             if (res.success === true) {
               this.alertify.success(this.alert.created_ok_msg);
-              this.loadData();
+              this.loadDataColorWorkPlan();
               this.modalReference.dismiss();
             } else {
-              this.alertify.warning(this.alert.system_error_msg);
+              this.alertify.warning(this.alert.created_failed_msg);
             }
           },
           (error) => {
@@ -251,15 +209,16 @@ toolbarClick(args) {
       this.alert.updateTitle,
       this.alert.updateMessage,
       () => {
+      this.colorWPModel.executeDate = this.datePipe.transform(this.colorWPModel.executeDate, 'MM/dd/yyyy')
 
-    this.service.update(this.model).subscribe(
+    this.serviceColorWorkPlan.updateColorWorkPlan(this.colorWPModel).subscribe(
       (res) => {
         if (res.success === true) {
           this.alertify.success(this.alert.updated_ok_msg);
-          this.loadData();
+          this.loadDataColorWorkPlan();
           this.modalReference.dismiss();
         } else {
-          this.alertify.warning(this.alert.system_error_msg);
+          this.alertify.warning(this.alert.updated_failed_msg);
         }
       },
       (error) => {
@@ -278,78 +237,31 @@ toolbarClick(args) {
     return (this.grid.pageSettings.currentPage - 1) * this.grid.pageSettings.pageSize + Number(index) + 1;
   }
   save() {
-    if (this.model.id > 0) {
+    if (this.colorWPModel.id > 0) {
       this.update();
     } else {
       this.create();
     }
   }
- async openModal(template, data = {} as CodePermission) {
-    this.model = {...data};
-    if (this.model.id > 0) {
-      this.title = 'CODE_PERMISSION_EDIT_MODAL';
-      this.getAudit(this.model.id);
+ async openModal(template, data = {} as ColorWorkPlan) {
+    this.colorWPModel = {...data};
+    if (this.colorWPModel.id > 0) {
+      this.title = 'COLOR_WORK_PLAN_EDIT_MODAL';
+      // this.currentTime = this.datePipe.transform(this.colorWPModel.executeDate, 'dd/MM/yyyy');
+      // this.getAudit(this.colorWPModel.id);
 
     } else {
-      this.title = 'CODE_PERMISSION_ADD_MODAL';
-      this.model.id = 0;
+      this.title = 'COLOR_WORK_PLAN_ADD_MODAL';
+      this.colorWPModel.id = 0;
+      this.currentTime = new Date();
+      this.colorWPModel.executeDate = this.datePipe.transform(this.currentTime, 'MM/dd/yyyy')
+      this.colorWPModel.shoeGuid = this.colorWPModel.shoeGuid
+      // this.colorWPModel.executeDate = this.datePipe.transform(this.currentTime, 'MM/dd/yyyy HH:mm:ss')
+      // this.colorWPModel.createDate = this.datePipe.transform(this.currentTime, 'dd/MM/yyyy HH:mm:ss');
+      this.colorWPModel.createBy = this.user;
 
     }
     this.modalReference = this.modalService.open(template, { size: 'xl' });
   }
-  odsExport() {
-    const functionName = this.functionName;
-    const printBy = this.printBy;
-    const accountName = JSON.parse(localStorage.getItem('user'))?.accountName || 'N/A';
-          const header = {
-            headerRows: 3,
-            rows: [
-              {
-                cells: [{
-                    colSpan: 5, value: `* ${functionName}`,
-                    style: { fontColor: '#fd7e14', fontSize: 18, hAlign: 'Left', bold: true, }
-                }]
-            },
-            {
-              cells: [{
-                  colSpan: 5, value: `* ${this.datePipe.transform(new Date(), 'yyyyMMdd_HHmmss')}`,
-                  style: { fontColor: '#fd7e14', fontSize: 18, hAlign: 'Left', bold: true, }
-              }]
-          },
-          {
-            cells: [{
-                colSpan: 5, value: `* ${printBy} ${accountName}`,
-                style: { fontColor: '#fd7e14', fontSize: 18, hAlign: 'Left', bold: true, }
-            }]
-        },
-            ]
-          } as any;
 
-          const fileName = `${functionName}_${this.datePipe.transform(new Date(), 'yyyyMMdd_HHmmss')}.ods`
-          const excelExportProperties: ExcelExportProperties = {
-            hierarchyExportMode: 'All',
-            fileName: fileName,
-            header: header
-        };
-
-    this.isodsExport = true;
-
-    this.grid.excelExport(excelExportProperties, null, null, true);
-  }
-  excelExpComplete(args: ExcelExportCompleteArgs) {
-    if (this.isodsExport) {
-      const fileName = `${this.functionName}_${this.datePipe.transform(new Date(), 'yyyyMMdd_HHmmss')}.ods`
-
-      args.promise.then((e: { blobData: Blob }) => {
-        const model = {
-          functionName: fileName,
-          file: e.blobData
-        }
-        this.service.downloadODSFile(model).subscribe((res: any) => {
-        this.service.downloadBlob(res.body, fileName, 'application/vnd.oasis.opendocument.spreadsheet')
-        })
-      });
-    }
-
-  }
 }

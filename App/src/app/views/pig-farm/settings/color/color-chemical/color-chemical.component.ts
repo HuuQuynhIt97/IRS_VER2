@@ -214,8 +214,8 @@ export class ColorChemicalComponent extends BaseComponent implements OnInit, OnD
     // this.serviceBarn.changeBarn({} as any);
    }
   dataBound() {
-    // this.grid.selectRow(this.rowIndex);
-    this.grid.autoFitColumns();
+    this.grid.selectRow(this.rowIndex);
+    // this.grid.autoFitColumns();
   }
 
   toolbarClick(args) {

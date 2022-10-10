@@ -5,15 +5,18 @@ using System.Collections.Generic;
 
 namespace IRS.Models
 {
-    public partial class ColorWorkPlan
+    public partial class ColorWorkPlanNew
     {
-        public int Id { get; set; }
-        // public decimal Id { get; set; }
+        public decimal Id { get; set; }
         public string Guid { get; set; }
         public string ShoeGuid { get; set; }
         public DateTime? CreateDate { get; set; }
-        // public string CreateBy { get; set; }
         public decimal? CreateBy { get; set; }
         public DateTime? ExecuteDate { get; set; }
+        public DateTime? UpdateDate { get; set; }
+        public decimal? UpdateBy { get; set; }
+        public DateTime? DeleteDate { get; set; }
+        public decimal? DeleteBy { get; set; }
+        public decimal? Status { get; set; }
     }
 }

@@ -114,7 +114,9 @@ export class MessageConstants {
   public static CONFIRM_PUBLISH_POST = 'Are you sure you want to publish this article??';
   public static LOGIN_AGAIN_MSG = 'Your login session is over. Please login again.';
   public static CREATED_OK_MSG = 'Create Successfully';
+  public static CREATED_FAILED_MSG = 'Create Failed';
   public static UPDATED_OK_MSG = 'Update successfully';
+  public static UPDATED_FAILED_MSG = 'Update Failed';
   public static DELETED_OK_MSG = 'Delete successfully';
   public static LOCKED_OK_MSG = 'Locked successfully';
   public static UNLOCKED_OK_MSG = 'Unlock successfully';

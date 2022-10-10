@@ -82,6 +82,7 @@ namespace IRS.Helpers.AutoMapper
             CreateMap<WorkPlanNew, WorkPlanNewDto>();
             CreateMap<WorkPlan2, WorkPlan2Dto>();
             CreateMap<ColorWorkPlan, ColorWorkPlanDto>();
+            CreateMap<ColorWorkPlanNew, ColorWorkPlanNewDto>();
 
 
             CreateMap<StockInChemical, StockInChemicalDto>();

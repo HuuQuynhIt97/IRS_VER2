@@ -47,6 +47,7 @@ namespace IRS.Data
         public virtual DbSet<WorkPlan> WorkPlans { get; set; }
         public virtual DbSet<WorkPlanNew> WorkPlanNews { get; set; }
         public virtual DbSet<ColorWorkPlan> ColorWorkPlans { get; set; }
+        // public virtual DbSet<ColorWorkPlan> ColorWorkPlans2 { get; set; }
 
         public virtual DbSet<Chemical> Chemicals { get; set; }
         public virtual DbSet<Glue> Glues { get; set; }
@@ -110,10 +111,63 @@ namespace IRS.Data
         public virtual DbSet<InInk> InInks { get; set; }
         public virtual DbSet<StockInChemical> StockInChemicals { get; set; }
         public virtual DbSet<StockInInk> StockInInks { get; set; }
+
+        public virtual DbSet<ColorWorkPlanNew> ColorWorkPlanNews { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "Chinese_Taiwan_Stroke_CI_AS");
             //modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
+
+            modelBuilder.Entity<ColorWorkPlanNew>(entity =>
+            {
+                entity.ToTable("ColorWorkPlanNew");
+
+                entity.Property(e => e.Id)
+                    .HasColumnType("numeric(18, 0)")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnName("ID");
+
+                entity.Property(e => e.CreateBy)
+                    .HasColumnType("numeric(18, 0)")
+                    .HasColumnName("CREATE_BY");
+
+                entity.Property(e => e.CreateDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("CREATE_DATE");
+
+                entity.Property(e => e.DeleteBy)
+                    .HasColumnType("numeric(18, 0)")
+                    .HasColumnName("DELETE_BY");
+
+                entity.Property(e => e.DeleteDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("DELETE_DATE");
+
+                entity.Property(e => e.ExecuteDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("EXECUTE_DATE");
+
+                entity.Property(e => e.Guid)
+                    .HasMaxLength(50)
+                    .HasColumnName("GUID");
+
+                entity.Property(e => e.ShoeGuid)
+                    .HasMaxLength(50)
+                    .HasColumnName("SHOE_GUID");
+
+                entity.Property(e => e.Status)
+                    .HasColumnType("numeric(18, 0)")
+                    .HasColumnName("STATUS");
+
+                entity.Property(e => e.UpdateBy)
+                    .HasColumnType("numeric(18, 0)")
+                    .HasColumnName("UPDATE_BY");
+
+                entity.Property(e => e.UpdateDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("UPDATE_DATE");
+            });
 
             modelBuilder.Entity<StockInChemical>(entity =>
             {
@@ -1136,10 +1190,19 @@ namespace IRS.Data
             {
                 entity.ToTable("ColorWorkPlan");
 
-                entity.Property(e => e.Id).HasColumnName("ID");
+                entity.Property(e => e.Id).ValueGeneratedOnAdd().HasColumnName("ID");
+
+                // entity.Property(e => e.CreateBy)
+                //     .HasMaxLength(40)
+                //     .HasColumnName("CREATE_BY");
+
+                // entity.Property(e => e.Id)
+                //     .HasColumnType("numeric(18, 0)")
+                //     .ValueGeneratedOnAdd()
+                //     .HasColumnName("ID");
 
                 entity.Property(e => e.CreateBy)
-                    .HasMaxLength(40)
+                    .HasColumnType("numeric(18, 0)")
                     .HasColumnName("CREATE_BY");
 
                 entity.Property(e => e.CreateDate)
@@ -1154,8 +1217,42 @@ namespace IRS.Data
                     .HasMaxLength(50)
                     .HasColumnName("GUID");
 
-                entity.Property(e => e.ShoeGuid).HasColumnName("SHOE_GUID");
+                entity.Property(e => e.ShoeGuid).HasColumnType("nvarchar(max)").HasColumnName("SHOE_GUID");
             });
+
+            // modelBuilder.Entity<ColorWorkPlan>(entity =>
+            // {
+            //     entity.ToTable("ColorWorkPlan2");
+
+            //     entity.Property(e => e.Id).ValueGeneratedOnAdd().HasColumnName("ID");
+
+            //     // entity.Property(e => e.CreateBy)
+            //     //     .HasMaxLength(40)
+            //     //     .HasColumnName("CREATE_BY");
+
+            //     // entity.Property(e => e.Id)
+            //     //     .HasColumnType("numeric(18, 0)")
+            //     //     .ValueGeneratedOnAdd()
+            //     //     .HasColumnName("ID");
+
+            //     entity.Property(e => e.CreateBy)
+            //         .HasColumnType("numeric(18, 0)")
+            //         .HasColumnName("CREATE_BY");
+
+            //     entity.Property(e => e.CreateDate)
+            //         .HasColumnType("datetime")
+            //         .HasColumnName("CREATE_DATE");
+
+            //     entity.Property(e => e.ExecuteDate)
+            //         .HasColumnType("datetime")
+            //         .HasColumnName("EXECUTE_DATE");
+
+            //     entity.Property(e => e.Guid)
+            //         .HasMaxLength(50)
+            //         .HasColumnName("GUID");
+
+            //     entity.Property(e => e.ShoeGuid).HasColumnType("nvarchar(max)").HasColumnName("SHOE_GUID");
+            // });
 
             modelBuilder.Entity<Chemical>(entity =>
             {
