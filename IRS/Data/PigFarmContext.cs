@@ -47,6 +47,7 @@ namespace IRS.Data
         public virtual DbSet<WorkPlan> WorkPlans { get; set; }
         public virtual DbSet<WorkPlanNew> WorkPlanNews { get; set; }
         public virtual DbSet<ColorWorkPlan> ColorWorkPlans { get; set; }
+        public virtual DbSet<ColorTodo> ColorTodos { get; set; }
         // public virtual DbSet<ColorWorkPlan> ColorWorkPlans2 { get; set; }
 
         public virtual DbSet<Chemical> Chemicals { get; set; }
@@ -1218,6 +1219,8 @@ namespace IRS.Data
                     .HasColumnName("GUID");
 
                 entity.Property(e => e.ShoeGuid).HasColumnType("nvarchar(max)").HasColumnName("SHOE_GUID");
+
+                entity.Property(e => e.Active).HasColumnName("Active");
             });
 
             // modelBuilder.Entity<ColorWorkPlan>(entity =>
@@ -1253,6 +1256,60 @@ namespace IRS.Data
 
             //     entity.Property(e => e.ShoeGuid).HasColumnType("nvarchar(max)").HasColumnName("SHOE_GUID");
             // });
+
+            // modelBuilder.Entity<ColorTodo>(entity =>
+            // {
+            //     entity.ToTable("ColorTodo");
+
+            //     entity.Property(e => e.Id).ValueGeneratedOnAdd().HasColumnName("ID");
+
+            //     entity.Property(e => e.ColorGuid)
+            //         .HasColumnName("Color_GUID")
+            //         .HasMaxLength(40);
+
+            //     entity.Property(e => e.ColorWorkPlanGuid)
+            //         .HasColumnName("ColorWorkPlan_GUID")
+            //         .HasMaxLength(50);
+
+            //     entity.Property(e => e.ExecuteAmount).HasColumnType("decimal(18, 0)");
+
+            //     entity.Property(e => e.ExecuteDate).HasColumnType("datetime");
+
+            //     entity.Property(e => e.FinishedBy).HasColumnType("numeric(18, 0)");
+
+            //     entity.Property(e => e.FinishedTime).HasColumnType("datetime");
+
+            //     entity.Property(e => e.Guid)
+            //         .HasColumnName("GUID")
+            //         .HasMaxLength(50);
+            // });
+
+            modelBuilder.Entity<ColorTodo>(entity =>
+            {
+                entity.ToTable("ColorTodo");
+
+                entity.Property(e => e.Id).ValueGeneratedOnAdd().HasColumnName("ID");
+
+                entity.Property(e => e.ColorWorkPlanGuid)
+                    .HasColumnName("ColorWorkPlan_GUID")
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.ExecuteAmount).HasColumnType("decimal(18, 0)");
+
+                entity.Property(e => e.ExecuteDate).HasColumnType("datetime");
+
+                entity.Property(e => e.FinishedBy).HasColumnType("numeric(18, 0)");
+
+                entity.Property(e => e.FinishedTime).HasColumnType("datetime");
+
+                entity.Property(e => e.Guid)
+                    .HasColumnName("GUID")
+                    .HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.SchedulesGuid)
+                    .HasColumnName("Schedules_GUID")
+                    .HasMaxLength(50);
+            });
 
             modelBuilder.Entity<Chemical>(entity =>
             {

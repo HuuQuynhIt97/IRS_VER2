@@ -1,5 +1,5 @@
 ﻿{
-   "CodeGenerationMode": 0,
+   "CodeGenerationMode": 1,//0
    "ContextClassName": "Pigfarm3Context",
    "ContextNamespace": null,
    "DefaultDacpacSchema": null,
@@ -8,17 +8,14 @@
    "ModelNamespace": "",
    "OutputContextPath": "Data",
    "OutputPath": "Models3",
+   "PreserveCasingWithRegex": true,//
    "ProjectRootNamespace": "IRS",
    "Schemas": null,
    "SelectedHandlebarsLanguage": 0,
    "SelectedToBeGenerated": 0,
    "Tables": [
       {
-         "Name": "[dbo].[StockInChemical]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[StockInInk]",
+         "Name": "[dbo].[ColorTodo]",
          "ObjectType": 0
       }
    ],
@@ -39,5 +36,6 @@
    "UseNodaTime": false,
    "UseNullableReferences": false,
    "UseSchemaFolders": false,
-   "UseSpatial": false
+   "UseSpatial": false,
+   "UseT4": false
 }

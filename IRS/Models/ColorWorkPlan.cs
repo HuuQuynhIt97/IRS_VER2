@@ -15,5 +15,6 @@ namespace IRS.Models
         // public string CreateBy { get; set; }
         public decimal? CreateBy { get; set; }
         public DateTime? ExecuteDate { get; set; }
+        public int Active { get; set; }
     }
 }

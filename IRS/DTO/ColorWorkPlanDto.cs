@@ -17,5 +17,6 @@ namespace IRS.DTO
         public decimal? CreateBy { get; set; }
         public DateTime? ExecuteDate { get; set; }
         public string Execute { get; set; }
+        public int Active { get; set; }
     }
 }

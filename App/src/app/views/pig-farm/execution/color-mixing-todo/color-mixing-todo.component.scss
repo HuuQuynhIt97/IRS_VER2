@@ -1,0 +1,29 @@
+input, textarea {
+  box-shadow: 0.5px 0.5px 1px;
+}
+label {
+  font-weight: 700;
+  font-size: 1rem;
+}
+.e-input-group {
+  box-shadow: 0.5px 0.5px 1px !important;
+  padding:3px !important;
+
+}
+
+.e-grid td.e-active {
+  background: rgb(185, 3, 61) !important;
+  color: #ffff !important;
+}
+
+.e-checkbox-wrapper .e-frame {
+  /* To change the size of the Checkbox*/
+  height: 25px !important;
+  line-height: 22px !important;
+  width: 25px !important;
+}
+
+.e-checkbox-wrapper .e-check {
+  /* To change the size of the tick icon*/
+  font-size: 15px !important;
+}

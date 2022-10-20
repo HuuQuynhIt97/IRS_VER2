@@ -1,0 +1,119 @@
+<ngx-spinner [fullScreen]="true" type="square-jelly-box" size="medium">
+  <p class="loading">Loading data...</p>
+</ngx-spinner>
+
+<div class="col-md-12" style="box-shadow: 1px 1px 20px; padding: 0">
+
+  <div class="card main-card">
+    <div class="card-body table-responsive p-0">
+      <ejs-grid
+        #grid
+        id="grid"
+        [dataSource]="dataColorToDo"
+        [allowPaging]="true"
+        [allowResizing]="true"
+        [allowSorting]="true"
+        gridLines="Both"
+        [locale]="locale"
+        (actionBegin)="actionBegin($event)"
+        (actionComplete)="actionComplete($event)"
+        [editSettings]="editSettings"
+        [pageSettings]="pageSettingss"
+        [toolbar]="toolbarOptions"
+
+        (recordDoubleClick)="onDoubleClick($event)"
+
+        (headerCellInfo)='headerCellInfo($event)'
+
+        >
+
+        <e-columns>
+          <!-- <e-column
+            field="option"
+            textAlign="Center"
+            headerTextAlign="Center"
+            width="50"
+            [allowSorting]="false"
+            [allowSearching]="false"
+            [allowGrouping]="false"
+            [allowFiltering]="false"
+            [allowEditing]="false"
+            headerText="{{ 'OPTION' | translate }}"
+          >
+            <ng-template #template let-data>
+              <ng-container *ngIf="data.active == 1; else elseTemplate">
+                N/A
+              </ng-container>
+              <ng-template #elseTemplate>
+                <span (click)="delete(data.id)" class="delete-grid">
+                  <i class="fa fa-trash"></i>
+                </span>
+                <span (click)="openModal(optionModal, data)" class="edit-grid">
+                  <i class="fa fa-edit"></i>
+                </span>
+              </ng-template>
+
+            </ng-template>
+          </e-column> -->
+
+          <e-column
+            field="colorName"
+            textAlign="Left"
+            [allowEditing]="false"
+          headerTextAlign="Center"
+            headerText="{{ 'COLOR_TODO' | translate }}"
+          >
+          </e-column>
+
+          <e-column
+            field="executeAmount"
+            textAlign="Center"
+            width="50"
+          headerTextAlign="Center"
+            headerText="{{ 'AMOUNT_COLOR_TODO' | translate }}"
+          >
+          </e-column>
+
+          <e-column field="executeDate" width="100" [allowEditing]="false" textAlign="Center" headerTextAlign="Center" headerText="{{ 'EXECUTE_DATE_COLOR_TODO' | translate }}">
+            <ng-template #template let-data>
+              {{data.executeDate | date: 'MM/dd/yyyy'}}
+            </ng-template>
+            <ng-template #editTemplate let-data>
+              {{data.executeDate | date: 'MM/dd/yyyy'}}
+            </ng-template>
+          </e-column>
+
+          <e-column
+            field="isFinished"
+            textAlign="Center"
+            headerTextAlign="Center"
+            [allowEditing]="false"
+            width="50"
+            headerText="{{ 'STATUS' | translate }}"
+          >
+            <ng-template #template let-data>
+              <!-- <ng-container *ngIf="data.isFinished == 1; else elseTemplate">
+                <i class="fa fa-check" style="color: green; font-size: 20px;"></i>
+              </ng-container>
+              <ng-template #elseTemplate>
+                N/A
+              </ng-template> -->
+              <ejs-checkbox cssClass="e-info" #checkbox
+              [disabled]="data.isFinished == 1 ? true : false"
+              [checked]="data.isFinished == 1 ? true : false"
+              (click)="updateIsFinishedColorToDo(data.id)">
+            </ejs-checkbox>
+
+            </ng-template>
+            <ng-template #editTemplate let-data>
+              N/A
+            </ng-template>
+          </e-column>
+
+        </e-columns>
+      </ejs-grid>
+    </div>
+  </div>
+</div>
+
+

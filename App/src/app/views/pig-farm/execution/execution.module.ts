@@ -11,19 +11,23 @@ import { Common2Module } from 'src/app/_core/commons/common2.module';
 import { Workplan2Component } from './workplan2/workplan2.component';
 import { ColorMixingWorkPlanComponent } from './color-mixing-work-plan/color-mixing-work-plan.component';
 import { NgbModule, NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
+import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
+import { ColorMixingTodoComponent } from './color-mixing-todo/color-mixing-todo.component';
 
 @NgModule({
   declarations: [
     ExecutionComponent,
     WorkplanComponent,
     Workplan2Component,
-    ColorMixingWorkPlanComponent
+    ColorMixingWorkPlanComponent,
+    ColorMixingTodoComponent
   ],
   imports: [
     CommonModule,
     ExecutionRoutingModule,
     FormsModule,
     NgbModule,
+    NgxSpinnerModule,
     CoreDirectivesModule,
     SharedModule.forRoot(),
     Common2Module.forRoot()

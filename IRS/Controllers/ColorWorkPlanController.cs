@@ -89,5 +89,30 @@ namespace IRS.Controllers
             return StatusCodeResult(await _service.DeleteColorWorkPlan(id));
         }
 
+        [HttpGet("StoreProcedureCreateColorTodo")]
+        public async Task<object> StoreProcedureCreateColorTodo(DateTime currentDate)
+        {
+            return await _service.StoreProcedureCreateColorTodo(currentDate);
+        }
+
+        [HttpGet("LoadColorToDo")]
+        public async Task<ActionResult> LoadColorToDo()
+        {
+            var data = await _service.LoadColorToDo();
+            return Ok(data);
+        }
+
+        [HttpPut("UpdateIsFinishedColorToDo")]
+        public async Task<ActionResult> UpdateIsFinishedColorToDo(ColorTodoDto model)
+        {
+            return StatusCodeResult(await _service.UpdateIsFinishedColorToDo(model));
+        }
+
+        [HttpPut("UpdateColorToDoAmount")]
+        public async Task<ActionResult> UpdateColorToDoAmount(ColorTodoDto model)
+        {
+            return StatusCodeResult(await _service.UpdateColorToDoAmount(model));
+        }
+
     }
 }

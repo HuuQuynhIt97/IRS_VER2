@@ -15,6 +15,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
+
+using Microsoft.Extensions.Configuration;
+using System.Data;
+using Dapper;
 
 namespace IRS.Services
 {
@@ -26,6 +31,11 @@ namespace IRS.Services
         Task<object> LoadShoes();
         Task<OperationResult> AddColorWorkPlan(ColorWorkPlanDto model);
         Task<OperationResult> UpdateColorWorkPlan(ColorWorkPlanDto model);
+        Task<object> StoreProcedureCreateColorTodo(DateTime currentDate);
+
+        Task<object> LoadColorToDo();
+        Task<OperationResult> UpdateIsFinishedColorToDo(ColorTodoDto model);
+        Task<OperationResult> UpdateColorToDoAmount(ColorTodoDto model);
     }
     public class ColorWorkPlanService : IColorWorkPlanService
     {
@@ -35,7 +45,12 @@ namespace IRS.Services
         private readonly IRepositoryBase<Shoe> _repoShoe;
         private readonly IRepositoryBase<Process> _repoTreatment;
         private readonly IRepositoryBase<Process2> _repoProcess;
+        private readonly IConfiguration _configuration;
        
+
+        private readonly IRepositoryBase<ColorTodo> _repoColorTodo;
+        private readonly IRepositoryBase<Models.Schedule> _repoSchedule;
+        private readonly IRepositoryBase<Color> _repoColor;
         
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -49,6 +64,13 @@ namespace IRS.Services
             
             IRepositoryBase<Process> repoTreatment,
             IRepositoryBase<Process2> repoProcess,
+
+            IConfiguration configuration,
+
+
+            IRepositoryBase<ColorTodo> repoColorTodo,
+            IRepositoryBase<Models.Schedule> repoSchedule,
+            IRepositoryBase<Color> repoColor,
             
             IUnitOfWork unitOfWork,
             IMapper mapper,
@@ -61,6 +83,10 @@ namespace IRS.Services
             _repoShoe = repoShoe;
             _repoTreatment = repoTreatment;
             _repoProcess = repoProcess;
+            _configuration = configuration;
+            _repoColorTodo = repoColorTodo;
+            _repoSchedule = repoSchedule;
+            _repoColor = repoColor;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _configMapper = configMapper;
@@ -98,7 +124,8 @@ namespace IRS.Services
                                 ShoeName = Shoe,
                                 CreateDate = a.CreateDate,
                                 CreateBy = a.CreateBy,
-                                ExecuteDate = a.ExecuteDate
+                                ExecuteDate = a.ExecuteDate,
+                                Active = a.Active
                            });
 
             var queryable = result.AsQueryable();
@@ -156,7 +183,8 @@ namespace IRS.Services
                               ShoeName = Shoe,
                               CreateDate = a.CreateDate,
                               CreateBy = a.CreateBy,
-                              ExecuteDate = a.ExecuteDate
+                              ExecuteDate = a.ExecuteDate,
+                              Active = a.Active
                           }).ToList();
 
 
@@ -203,6 +231,7 @@ namespace IRS.Services
                 var item = _mapper.Map<ColorWorkPlan>(model);
                 item.Guid = Guid.NewGuid().ToString("N") + DateTime.Now.ToString("ssff").ToUpper();
                 item.CreateDate = DateTime.Now;
+                item.Active = 0;
                 _repoColorWP.Add(item);
 
                var data = await _unitOfWork.SaveChangeAsync();
@@ -263,6 +292,114 @@ namespace IRS.Services
                 };
             }
             catch (System.Exception ex)
+            {
+                operationResult = ex.GetMessageError();
+            }
+            return operationResult;
+        }
+
+        public async Task<object> StoreProcedureCreateColorTodo(DateTime currentDate)
+        {
+            using (SqlConnection conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+            {
+                if (conn.State == ConnectionState.Closed)
+                {
+                    await conn.OpenAsync();
+                }
+                    string storeName = "CreateColorTodo";
+                    string executeDate = currentDate.ToString("yyyy-MM-dd");
+                    var values = new { exedate = executeDate, building = 1 };
+                try
+                {
+                    var data = await conn.QueryAsync(storeName, values, commandType: CommandType.StoredProcedure);
+                    return data;
+                }
+                catch (Exception ex)
+                {
+                    return new object[] {};
+                }
+            }
+        }
+
+        public async Task<object> LoadColorToDo()
+        {
+            var query = await (from a in _repoColorTodo.FindAll()
+                            join b in _repoSchedule.FindAll() on a.SchedulesGuid equals b.Guid
+                            join c in _repoColor.FindAll() on b.ColorGuid equals c.Guid
+                            
+                            select new ColorTodoDto()
+                            {
+                                Id = a.Id,
+                                Guid = a.Guid.ToString(),
+                                ColorName = c.Name,
+                                ExecuteDate = a.ExecuteDate,
+                                ExecuteAmount = a.ExecuteAmount,
+                                IsFinished = a.IsFinished
+
+                            }).OrderByDescending(x => x.ExecuteDate).ToListAsync();
+            return query;
+        }
+
+        public async Task<OperationResult> UpdateIsFinishedColorToDo(ColorTodoDto model)
+        {
+            var item = await _repoColorTodo.FindByIDAsync(model.Id);
+            if (item == null)
+            {
+                return new OperationResult { 
+                    StatusCode = HttpStatusCode.NotFound, 
+                    Message = "Update Error", Success = false 
+                    };
+            }
+            item.IsFinished = 1;
+            item.FinishedBy = model.FinishedBy;
+            item.FinishedTime = model.FinishedTime;
+            
+           try
+            {
+                _repoColorTodo.Update(item);
+                await _unitOfWork.SaveChangeAsync();
+
+                operationResult = new OperationResult
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Message = MessageReponse.UpdateSuccess,
+                    Success = true,
+                    Data = item
+                };
+            }
+            catch (Exception ex)
+            {
+                operationResult = ex.GetMessageError();
+            }
+            return operationResult;
+        }
+
+        public async Task<OperationResult> UpdateColorToDoAmount(ColorTodoDto model)
+        {
+            var item = await _repoColorTodo.FindByIDAsync(model.Id);
+            if (item == null)
+            {
+                return new OperationResult { 
+                    StatusCode = HttpStatusCode.NotFound, 
+                    Message = "Update Error", Success = false 
+                    };
+            }
+            item.ExecuteAmount = model.ExecuteAmount;
+            
+           try
+            {
+                _repoColorTodo.Update(item);
+                await _unitOfWork.SaveChangeAsync();
+
+                operationResult = new OperationResult
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Message = MessageReponse.UpdateSuccess,
+                    Success = true,
+                    Data = item
+                };
+            }
+            catch (Exception ex)
             {
                 operationResult = ex.GetMessageError();
             }

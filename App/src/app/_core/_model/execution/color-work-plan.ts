@@ -6,4 +6,5 @@ export interface ColorWorkPlan {
   createBy: string;
   executeDate: any | null;
   execute: string | null;
+  active: number;
 }

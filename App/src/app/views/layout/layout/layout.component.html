@@ -5,12 +5,12 @@
   <main>
     <aside class="sidebar slimScroll" [style.background-color]="sysConf.SystemMenuBGColor + '!important'">
       <ul class="sidemenu side-mini active">
-        <ngx-spinner bdColor="rgba(255,255,255,0.62)" size="default" color="#007bff" type="la-ball-clip-rotate"
+        <!-- <ngx-spinner bdColor="rgba(255,255,255,0.62)" size="default" color="#007bff" type="la-ball-clip-rotate"
           [fullScreen]="false">
           <div class="la-ball-clip-rotate">
             <div></div>
           </div>
-        </ngx-spinner>
+        </ngx-spinner> -->
         <ng-container *ngFor="let item of menus">
           <li *ngIf="item.hasChildren">
             <a class="toggle">

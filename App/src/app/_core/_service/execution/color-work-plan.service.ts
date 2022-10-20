@@ -46,4 +46,20 @@ export class ColorWorkPlanService  {
     return this.http.delete<OperationResult>(`${this.base}ColorWorkPlan/DeleteColorWorkPlan/${id}`,{});
   }
 
+  createColorTodo(currentTime: any) {
+    return this.http.get(this.base + `ColorWorkPlan/StoreProcedureCreateColorTodo?currentDate=` + currentTime, {});
+  }
+
+  loadColorToDo() {
+    return this.http.get(this.base + `ColorWorkPlan/LoadColorToDo`, {});
+  }
+
+  updateIsFinishedColorToDo(model): Observable<OperationResult> {
+    return this.http.put<OperationResult>(this.base + `ColorWorkPlan/UpdateIsFinishedColorToDo`, model);
+  }
+
+  updateColorToDoAmount(model): Observable<OperationResult> {
+    return this.http.put<OperationResult>(this.base + `ColorWorkPlan/UpdateColorToDoAmount`, model);
+  }
+
 }

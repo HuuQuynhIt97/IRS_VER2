@@ -56,7 +56,7 @@ export class LayoutComponent implements OnInit,AfterViewInit, OnDestroy {
         e.preventDefault();
         $('.dropdown-menu.dropdown-menu-right.navbar-dropdown').removeClass('show');
       });
-      
+
     });
   }
 
@@ -86,7 +86,7 @@ export class LayoutComponent implements OnInit,AfterViewInit, OnDestroy {
       });
     }
   getMenu() {
-    this.spinner.show();
+    // this.spinner.show();
     this.sysMenuService.getMenusByFarm(this.lang, this.farmGuid).subscribe((menus: any) => {
       this.menus = menus.filter(x => x.children.length > 0);
       localStorage.setItem('menus', JSON.stringify(menus));
@@ -99,10 +99,10 @@ export class LayoutComponent implements OnInit,AfterViewInit, OnDestroy {
         });
       });
       setTimeout(() => {
-        this.spinner.hide();
+        // this.spinner.hide();
       }, 500)
     }, (err) => {
-      this.spinner.hide();
+      // this.spinner.hide();
     });
   }
   checkRole(data) {

@@ -13,6 +13,7 @@ import { DatePipe } from '@angular/common';
 import { FilteringEventArgs, highlightSearch } from '@syncfusion/ej2-angular-dropdowns';
 import { ColorWorkPlanService } from 'src/app/_core/_service/execution/color-work-plan.service';
 import { ColorWorkPlan } from 'src/app/_core/_model/execution/color-work-plan';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 
 @Component({
@@ -30,11 +31,11 @@ export class ColorMixingWorkPlanComponent extends BaseComponent implements OnIni
   pageSettingss = { pageCount: 20, pageSizes: true, pageSize: 20 };
 
   @ViewChild('grid') public grid: GridComponent;
-
   colorWPModel: ColorWorkPlan;
   dataShoe: any = [];
   shoeFields: object = {text: 'name', value: 'guid'};
   currentTime: any;
+  timeCreateTodo: any;
   user = JSON.parse(localStorage.getItem('user')).id;
   setFocus: any;
   locale ;
@@ -63,6 +64,7 @@ public onFiltering =  (e: FilteringEventArgs) => {
     private datePipe: DatePipe,
      private config: NgbTooltipConfig,
     public translate: TranslateService,
+    private spinner: NgxSpinnerService,
   ) {
 	    super(translate);
       if (this.isAdmin === false) {
@@ -134,14 +136,41 @@ toolbarClick(args) {
   // api
 
   loadDataColorWorkPlan() {
+    this.spinner.show();
     const accessToken = localStorage.getItem('token');
+
+    let query = new Query();
+    // new DataManager({
+    //   url: `${this.baseUrl}WorkOrder/LoadData`,
+    //   adaptor: new UrlAdaptor,
+    // }).executeQuery(query).then((x: any) => {
+    //   this.data = x.result
+    //   this.spinner.hide()
+    // });
+
     this.dataColorWorkPlan = new DataManager({
       url: `${this.baseUrl}ColorWorkPlan/LoadDataColorWorkPlan`,
       adaptor: new UrlAdaptor,
       headers: [{ authorization: `Bearer ${accessToken}` }]
     });
+    setTimeout(() => {
+      this.spinner.hide();
+    }, 1000);
+
+    // new DataManager({
+    //   url: `${this.baseUrl}ColorWorkPlan/LoadDataColorWorkPlan`,
+    //   adaptor: new UrlAdaptor,
+    //   headers: [{ authorization: `Bearer ${accessToken}` }]
+    // }).executeQuery(query).then((x: any) => {
+    //   this.dataColorWorkPlan = x.result
+    //   console.log(this.dataColorWorkPlan)
+    //   this.spinner.hide()
+    // });
+
+
   }
   getAllShoes() {
+
     this.serviceColorWorkPlan.getAllShoes().subscribe((res) => {
       this.dataShoe = res
     })
@@ -203,7 +232,7 @@ toolbarClick(args) {
 
   }
   update() {
-   this.alertify.confirm4(
+    this.alertify.confirm4(
       this.alert.yes_message,
       this.alert.no_message,
       this.alert.updateTitle,
@@ -262,6 +291,17 @@ toolbarClick(args) {
 
     }
     this.modalReference = this.modalService.open(template, { size: 'xl' });
+  }
+
+  createColorTodo () {
+    this.timeCreateTodo = new Date().toISOString();// yyyy-MM-ddTHH:mm:ssZ (2022-10-19T04:50:15.520Z)
+    // this.timeCreateTodo = this.datePipe.transform(this.timeCreateTodo, 'yyyy-MM-dd')
+    this.spinner.show();
+    this.serviceColorWorkPlan.createColorTodo(this.timeCreateTodo).subscribe(res => {
+      this.loadDataColorWorkPlan();
+      this.spinner.hide();
+      this.alertify.success(this.alert.updated_ok_msg);
+    })
   }
 
 }

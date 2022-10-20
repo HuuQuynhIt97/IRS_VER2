@@ -7683,10 +7683,10 @@ ngx-moment@^3.5.0:
   dependencies:
     tslib "^1.9.0"
 
-ngx-spinner@^10.0.1:
-  version "10.0.1"
-  resolved "https://registry.yarnpkg.com/ngx-spinner/-/ngx-spinner-10.0.1.tgz#f08932a34bf98b302488a9c475584970ed386d23"
-  integrity sha512-3fkzS4t+oKg1jobUmWxeGD3zLymdIOMijib517tgrDnW4Q2fKKwZPVCfTR5ztm9G0/l9G/DRoOoBcHPPupUBdg==
+ngx-spinner@11.0.2:
+  version "11.0.2"
+  resolved "https://registry.yarnpkg.com/ngx-spinner/-/ngx-spinner-11.0.2.tgz#7225e6de56d1f2f5f332cad6a7e087b758ca9499"
+  integrity sha512-F38W6Fow2BdIXz6V69to5lRje+woUKmJ+TByp6M/Z0osl4gzieOcUdHvu72BO4tKTLh6UgrbS1Owxj9uZ3CjKQ==
   dependencies:
     tslib "^2.0.0"
 
