@@ -72,6 +72,33 @@
           headerTextAlign="Center"
             headerText="{{ 'AMOUNT_COLOR_TODO' | translate }}"
           >
+          <!-- <ng-template #editTemplate let-data *ngIf="data.isFinished == 1">
+            {{data.executeAmount}}
+          </ng-template> -->
+
+          <ng-template #editTemplate let-data>
+
+            <span class="e-input-group e-control-wrapper e-valid-input">
+              <ng-container>
+                <input [disabled]="data.isFinished == 1 ? true : false" [(ngModel)]="amount" class="e-field e-input e-defaultcell" type="text"  name="point" style="text-align:Center">
+              </ng-container>
+            </span>
+          </ng-template>
+
+
+          <!-- <ng-template #template let-data>
+            <ng-container *ngIf="data.isBooking; else elseTemplate">
+
+                <i  class="fa fa-plus"></i> {{'DETAIL' | translate}}
+              </button>
+            </ng-container>
+            <ng-template #elseTemplate>
+              <button routerLink="/mobile/booking/0" type="button" class="btn btn-xs btn-success">
+                <i  class="fa fa-plus"></i> {{'BOOKING' | translate}}
+              </button>
+            </ng-template>
+
+          </ng-template> -->
           </e-column>
 
           <e-column field="executeDate" width="100" [allowEditing]="false" textAlign="Center" headerTextAlign="Center" headerText="{{ 'EXECUTE_DATE_COLOR_TODO' | translate }}">

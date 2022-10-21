@@ -31,6 +31,7 @@ export class ColorMixingTodoComponent extends BaseComponent implements OnInit {
 
   @ViewChild('grid') public grid: GridComponent;
 
+  amount: number = 0;
 
   dataColorToDo: any;
   colorToDo: any;
@@ -115,11 +116,25 @@ public onFiltering =  (e: FilteringEventArgs) => {
 
   }
 
+  // actionBegin(args) {
+  //   if (args.requestType === 'save') {
+  //     if (args.action === 'edit') {
+  //       this.colorToDo.id = args.data.id;
+  //       this.colorToDo.executeAmount = args.data.executeAmount;
+  //       this.update();
+  //     }
+  //   }
+  // }
+
   actionBegin(args) {
+    if (args.requestType === 'beginEdit') {
+      this.amount = args.rowData.executeAmount;
+    }
+
     if (args.requestType === 'save') {
       if (args.action === 'edit') {
         this.colorToDo.id = args.data.id;
-        this.colorToDo.executeAmount = args.data.executeAmount;
+        this.colorToDo.executeAmount = this.amount;
         this.update();
       }
     }
